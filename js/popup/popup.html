@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="popup.css">
+</head>
+<body>
+<div class="popup-overlay">
+    <div class="popup-content">
+        <button id="btnClose" class="close-btn">&times;</button>
+        <label>OD: <input type="text" id="inputOD" maxlength="3"></label>
+        <label>OI: <input type="text" id="inputOI" maxlength="3"></label>
+
+        <div class="checkbox-group">
+            <label>OD:
+                <input type="checkbox" id="checkboxI"> I
+                <input type="checkbox" id="checkboxS"> S
+                <input type="checkbox" id="checkboxN"> N
+                <input type="checkbox" id="checkboxT"> T
+            </label>
+        </div>
+
+        <div class="checkbox-group">
+            <label>OI:
+                <input type="checkbox" id="checkboxI_OI"> I
+                <input type="checkbox" id="checkboxS_OI"> S
+                <input type="checkbox" id="checkboxN_OI"> N
+                <input type="checkbox" id="checkboxT_OI"> T
+            </label>
+        </div>
+
+        <button id="btnAceptar">Aceptar</button>
+    </div>
+</div>
+<script src="octno.js"></script>
+</body>
+</html>

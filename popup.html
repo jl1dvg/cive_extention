@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Popup</title>
+    <style>
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div id="inicio" class="section active">
+    <button id="btnExamenes">Examenes</button>
+    <button id="btnProtocolos">Protocolos</button>
+</div>
+<div id="examenes" class="section">
+    <button id="btnBackExamenes">Back</button>
+    <div id="contenedorExamenes"></div>
+</div>
+<div id="protocolos" class="section">
+    <button id="btnBackProtocolos">Back</button>
+    <div id="contenedorProtocolos"></div>
+</div>
+<div id="od-oi-inputs" class="section">
+    <label>OD: <input type="text" id="inputOD" maxlength="3"></label>
+    <label>OI: <input type="text" id="inputOI" maxlength="3"></label>
+    <button id="btnAceptarOD_OI">Aceptar</button>
+</div>
+<script type="module" src="js/popup.js"></script>
+</body>
+</html>

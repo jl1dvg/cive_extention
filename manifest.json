@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Protocolos CIVE",
+  "version": "1.0",
+  "description": "Descripción de mi extensión",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "faco.png",
+        "js/popup/popup.html",
+        "js/popup/popup.css",
+        "js/cv/cv.html",
+        "js/cv/cv.css"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}
