@@ -1,7 +1,7 @@
 {
   "procedimientos": [
     {
-      "id": 1,
+      "id": "faco",
       "cirugia": "Faco + LIO",
       "membrete": "Facoemulsificacion mas implante de lente intraocular",
       "dieresis": "INCISION CORNEAL",
@@ -79,7 +79,7 @@
       ]
     },
     {
-      "id": 2,
+      "id": "vpp",
       "cirugia": "Procedimiento 2",
       "motivo": "Motivo 2",
       "membrete": "Vitrectomia via pars plana",
