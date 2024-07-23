@@ -1,0 +1,81 @@
+[
+  {
+    "id": "dln",
+    "label": "DLN",
+    "text": "disco óptico muestra una relación copa/disco 0.3 sin cambios patológicos en el margen. Vasos sanguíneos retinianos con arborización vascular regular, sin estrechamientos significativos, cruces arteriovenosos patológicos ni hemorragias. Mácula íntegra, sin evidencia de edema ni exudados, y periferia retiniana exhibe pigmentación y vascularización normales, sin desgarros ni degeneraciones."
+  },{
+    "id": "no",
+    "label": "NO",
+    "text": "NERVIO ÓPTICO REDONDO DE BORDES DEFINIDOS CON EMERGENCIA NASAL DE LOS VASOS, EXCAVACIÓN FISIOLÓGICA 0.7, ADELGAZAMIENTO DEL ANILLO NEURAL CUADRANTE TEMPORAL, CON VISUALIZACIÓN DE LÁMINA CRIBOSA Y ATROFIA PERIPAPILAR TEMPORAL"
+  },
+  {
+    "id": "microaneurismas",
+    "label": "Microaneurismas",
+    "text": "PEQUEÑAS ÁREAS DE DILATACIÓN CAPILAR"
+  },
+  {
+    "id": "hemorragias_retinianas",
+    "label": "Hemorragias Retinianas",
+    "text": "ÁREAS DE SANGRADO DENTRO DE LA RETINA"
+  },
+  {
+    "id": "exudados_duros",
+    "label": "Exudados Duros",
+    "text": "DEPÓSITOS LIPÍDICOS AMARILLOS EN LA RETINA"
+  },
+  {
+    "id": "exudados_algodonosos",
+    "label": "Exudados Algodonosos",
+    "text": "ÁREAS BLANCAS Y SUAVES EN LA RETINA DEBIDO A ISQUEMIA"
+  },
+  {
+    "id": "neovascularizacion",
+    "label": "Neovascularización",
+    "text": "CRECIMIENTO ANORMAL DE NUEVOS VASOS SANGUÍNEOS"
+  },
+  {
+    "id": "edema_macular",
+    "label": "Edema Macular",
+    "text": "ACUMULACIÓN DE LÍQUIDO EN LA MÁCULA"
+  },
+  {
+    "id": "drusen",
+    "label": "Drusen",
+    "text": "DEPÓSITOS AMARILLOS EN LA RETINA"
+  },
+  {
+    "id": "atrofia_geografica",
+    "label": "Atrofia Geográfica",
+    "text": "ÁREAS DE PÉRDIDA DE TEJIDO RETINIANO"
+  },
+  {
+    "id": "retinopatia_diabetica",
+    "label": "Retinopatía Diabética",
+    "text": "DAÑO A LOS VASOS SANGUÍNEOS DE LA RETINA DEBIDO A LA DIABETES"
+  },
+  {
+    "id": "cicatrices_coriorretinianas",
+    "label": "Cicatrices Coriorretinianas",
+    "text": "ÁREAS DE FIBROSIS EN LA RETINA Y COROIDES"
+  },
+  {
+    "id": "desprendimiento_retina",
+    "label": "Desprendimiento de Retina",
+    "text": "SEPARACIÓN DE LA RETINA DE LA PARTE POSTERIOR DEL OJO"
+  },
+  {
+    "id": "anomalias_vasculares",
+    "label": "Anomalías Vasculares",
+    "text": "ANORMALIDADES EN LOS VASOS SANGUÍNEOS DE LA RETINA"
+  },
+  {
+    "id": "cambios_pigmentarios",
+    "label": "Cambios Pigmentarios",
+    "text": "ALTERACIONES EN LA PIGMENTACIÓN DE LA RETINA"
+  },
+  {
+    "id": "traccion_vitreorretiniana",
+    "label": "Tracción Vitreorretiniana",
+    "text": "TENSIÓN ANORMAL ENTRE EL VÍTREO Y LA RETINA"
+  }
+]

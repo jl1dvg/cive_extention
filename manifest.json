@@ -24,7 +24,9 @@
         "js/cv/cv.html",
         "js/cv/cv.css",
         "js/eco/eco.html",
-        "js/eco/eco.css"
+        "js/eco/eco.css",
+        "js/retino/retino.html",
+        "js/retino/retino.css"
       ],
       "matches": [
         "<all_urls>"
