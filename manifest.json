@@ -22,7 +22,9 @@
         "js/popup/popup.html",
         "js/popup/popup.css",
         "js/cv/cv.html",
-        "js/cv/cv.css"
+        "js/cv/cv.css",
+        "js/eco/eco.html",
+        "js/eco/eco.css"
       ],
       "matches": [
         "<all_urls>"

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Asumiendo que tu JSON se llama 'checkboxes.json' y está en la misma carpeta
-    fetch(chrome.runtime.getURL('js/cv/checkboxes.json'))
+    fetch(chrome.runtime.getURL('js/eco/checkboxes.json'))
         .then(response => response.json())
         .then(data => {
             const checkboxContainerOD = document.getElementById('checkboxContainerOD');
@@ -20,10 +20,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('btnAceptar').addEventListener('click', () => {
         const OD = document.getElementById('inputOD').value;
         const OI = document.getElementById('inputOI').value;
-        const DLN_OD = document.getElementById('checkboxOD_dln').checked;
-        const DLN_OI = document.getElementById('checkboxOI_dln').checked;
 
-        window.parent.postMessage({OD, OI, DLN_OD, DLN_OI}, '*');
+        window.parent.postMessage({OD, OI}, '*');
     });
 
     document.getElementById('btnClose').addEventListener('click', () => {
@@ -61,24 +59,22 @@ function createCheckbox(item, eye) {
 
 function updateTextarea(textareaId, checkbox) {
     const textarea = document.getElementById(textareaId);
-    const currentValues = textarea.value.split(',').map(item => item.trim()).filter(Boolean);
 
-    if (checkbox.id.includes('dln')) {
-        return; // No hacer nada si el checkbox es DLN
-    }
+    const cursorPosition = textarea.selectionStart;
+    const currentValue = textarea.value;
+    const beforeCursor = currentValue.substring(0, cursorPosition);
+    const afterCursor = currentValue.substring(cursorPosition);
+
+    let newText;
 
     if (checkbox.checked) {
-        if (currentValues.length === 0) {
-            textarea.value = `SE APRECIAN PUNTOS DE DISMINUCION DE LA SENSIBILIDAD RETINIANA DE BAJA, MEDIA Y ALTA SIGNIFICANCIA QUE CONFORMAN ESCOTOMA CON PATRON ${checkbox.value}`;
-        } else {
-            currentValues.push(checkbox.value);
-            textarea.value = currentValues.join(', ');
-        }
+        newText = `${beforeCursor}${beforeCursor.trim().length > 0 ? ', ' : ''}${checkbox.value}${afterCursor}`;
     } else {
-        const index = currentValues.indexOf(checkbox.value);
-        if (index > -1) {
-            currentValues.splice(index, 1);
-            textarea.value = currentValues.join(', ');
-        }
+        const textToRemove = checkbox.value;
+        newText = currentValue.replace(new RegExp(`,? ?${textToRemove}`, 'g'), '');
     }
+
+    textarea.value = newText;
+    textarea.setSelectionRange(cursorPosition, cursorPosition);
 }
+

@@ -102,6 +102,43 @@ function ejecutarEnPagina(item) {
         });
     }
 
+    function mostrarPopupEco() {
+        return new Promise((resolve) => {
+            const popup = document.createElement('div');
+            popup.style.position = 'fixed';
+            popup.style.top = '0';
+            popup.style.left = '0';
+            popup.style.width = '100%';
+            popup.style.height = '100%';
+            popup.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            popup.style.display = 'flex';
+            popup.style.justifyContent = 'center';
+            popup.style.alignItems = 'center';
+            popup.style.zIndex = '9999';
+
+            const popupURL = chrome.runtime.getURL('js/eco/eco.html');
+
+            popup.innerHTML = `
+            <button id="btnClose" style="position: absolute; top: 10px; right: 10px; font-size: 24px; border: none; background: transparent; cursor: pointer;">&times;</button>
+            <iframe class="content-panel-frame placeholder-frame" id="placeholder-dialog" src="${popupURL}" style="height: 600px; width: 600px; border: none; border-radius: 5px;"></iframe>
+        `;
+            document.body.appendChild(popup);
+
+            // Escuchar el mensaje del iframe
+            window.addEventListener('message', function onMessage(event) {
+                if (event.data.OD !== undefined && event.data.OI !== undefined) {
+                    document.body.removeChild(popup);
+                    window.removeEventListener('message', onMessage); // Remover el listener después de recibir el mensaje
+                    resolve(event.data);
+                }
+                if (event.data.close) { // Manejar el cierre
+                    document.body.removeChild(popup);
+                    window.removeEventListener('message', onMessage);
+                }
+            });
+        });
+    }
+
     function ejecutarTecnicos(item) {
         if (!Array.isArray(item.tecnicos)) return Promise.resolve();
 
@@ -268,7 +305,32 @@ SE SUGIERE CORRELACIONAR CON CUADRO CLINICO`;
                 .then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
-    } else if (item.id === 'campo') {
+    } else if (item.id === 'eco') {
+        mostrarPopupEco().then(({OD, OI}) => {
+            const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');
+            recomendaciones.value = ''; // Inicializa las recomendaciones
+
+            // Recomendaciones para OD
+            if (OD) {
+                recomendaciones.value += `SE REALIZA ESTUDIO CON EQUIPO EYE CUBED ELLEX DE ECOGRAFIA MODO B POR CONTACTO TRANSPALPEBRAL EN:
+
+OD: ${OD}`;
+            }
+
+            // Recomendaciones para OI
+            if (OI) {
+                recomendaciones.value += `
+
+SE REALIZA ESTUDIO CON EQUIPO EYE CUBED ELLEX DE ECOGRAFIA MODO B POR CONTACTO TRANSPALPEBRAL EN:
+
+OI: ${OI}`;
+            }
+
+            ejecutarTecnicos(item)
+                //.then(() => hacerClickEnBotonTerminar())
+                .catch(error => console.log('Error en la ejecución de examen:', error));
+        });
+    } else if (item.id === 'cv') {
         mostrarPopupCV().then(({OD, OI, DLN_OD, DLN_OI}) => {
             const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');
             recomendaciones.value = ''; // Inicializa las recomendaciones
@@ -318,7 +380,7 @@ CONCLUSIONES: CAMPO VISUAL FUERA DE LIMITES NORMALES`;
             }
 
             ejecutarTecnicos(item)
-                //.then(() => hacerClickEnBotonTerminar())
+                .then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
     } else {

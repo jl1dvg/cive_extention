@@ -6,22 +6,72 @@
   },
   {
     "id": "sin",
-    "label": "Sin Patron",
-    "text": "SE APRECIAN PUNTOS DE DISMINUCIÓN DE LA SENSIBILIDAD RETINIANA DE BAJA, MEDIA Y ALTA SIGNIFICANCIA DISPERSOS SIN PATRON ESPECIFICO"
+    "label": "Sin Patrón",
+    "text": "NO ESPECIFICADO"
   },
   {
     "id": "isla",
     "label": "Isla",
-    "text": "SE APRECIAN PUNTOS DE DISMINUCIÓN DE LA SENSIBILIDAD RETINIANA DE BAJA, MEDIA Y ALTA SIGNIFICANCIA QUE CONFORMAN CONTRACCION DEL CAMPO VISUAL PERIFERICO CON ISLA REMANENTE CENTRAL"
+    "text": "DE CONTRACCIÓN DEL CAMPO VISUAL PERIFÉRICO CON ISLA REMANENTE CENTRAL"
+  },
+  {
+    "id": "arcuato_sup",
+    "label": "Arcuato Sup",
+    "text": "ARCUATO SUPERIOR"
+  },
+  {
+    "id": "arcuato_inf",
+    "label": "Arcuato Inf",
+    "text": "ARCUATO INFERIOR"
   },
   {
     "id": "arcuato_doble",
     "label": "Arcuato Sup Inf",
-    "text": "SE APRECIAN PUNTOS DE DISMINUCIÓN DE LA SENSIBILIDAD RETINIANA DE BAJA, INTERMEDIA Y ALTA SIGNIFICANCIA QUE CONFORMAN UN ESCOTOMA ARCUATO SUPERIOR  E INFERIOR QUE INVOLUCRA LOS 10° CENTRALES."
+    "text": "ARCUATO SUPERIOR E INFERIOR"
+  },
+  {
+    "id": "escalon_sup",
+    "label": "Escalón Sup",
+    "text": "ESCALÓN NASAL SUPERIOR"
+  },
+  {
+    "id": "escalon_inf",
+    "label": "Escalón Inf",
+    "text": "ESCALÓN NASAL INFERIOR"
+  },
+  {
+    "id": "seidel_sup",
+    "label": "Seidel Sup",
+    "text": "SEIDEL SUPERIOR"
+  },
+  {
+    "id": "seidel_inf",
+    "label": "Seidel Inf",
+    "text": "SEIDEL INFERIOR"
+  },
+  {
+    "id": "paracentral_sup",
+    "label": "Paracentral Sup",
+    "text": "PARACENTRAL SUPERIOR"
+  },
+  {
+    "id": "paracentral_inf",
+    "label": "Paracentral Inf",
+    "text": "PARACENTRAL INFERIOR"
   },
   {
     "id": "altitudinal_sup",
     "label": "Altitudinal Sup",
-    "text": "SE APRECIAN PUNTOS DE DISMINUCIÓN DE LA SENSIBILIDAD RETINIANA DE BAJA, MEDIA Y ALTA SIGNIFICANCIA QUE CONFORMAN ESCOTOMA ALTITUDINAL SUPERIOR"
+    "text": "ALTITUDINAL SUPERIOR"
+  },
+  {
+    "id": "altitudinal_inf",
+    "label": "Altitudinal Inf",
+    "text": "ALTITUDINAL INFERIOR"
+  },
+  {
+    "id": "central",
+    "label": "10 grados",
+    "text": "QUE INVOLUCRA LOS 10 GRADOS CENTRALES"
   }
 ]

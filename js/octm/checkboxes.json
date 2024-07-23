@@ -1,27 +1,52 @@
 [
   {
-    "id": "dln",
-    "label": "DLN",
-    "text": ""
+    "id": "edema_macular",
+    "label": "Edema Macular",
+    "text": "PRESENCIA DE LIQUIDO EN LA MACULA"
   },
   {
-    "id": "sin",
-    "label": "Sin Patron",
-    "text": "SE APRECIAN PUNTOS DE DISMINUCIÓN DE LA SENSIBILIDAD RETINIANA DE BAJA, MEDIA Y ALTA SIGNIFICANCIA DISPERSOS SIN PATRON ESPECIFICO"
+    "id": "dme",
+    "label": "DME",
+    "text": "DEGENERACION MACULAR EXUDATIVA"
   },
   {
-    "id": "isla",
-    "label": "Isla",
-    "text": "SE APRECIAN PUNTOS DE DISMINUCIÓN DE LA SENSIBILIDAD RETINIANA DE BAJA, MEDIA Y ALTA SIGNIFICANCIA QUE CONFORMAN CONTRACCION DEL CAMPO VISUAL PERIFERICO CON ISLA REMANENTE CENTRAL"
+    "id": "drusen",
+    "label": "Drusen",
+    "text": "DEPOSITOS DE MATERIA EXTRACELULAR"
   },
   {
-    "id": "arcuato_doble",
-    "label": "Arcuato Sup Inf",
-    "text": "SE APRECIAN PUNTOS DE DISMINUCIÓN DE LA SENSIBILIDAD RETINIANA DE BAJA, INTERMEDIA Y ALTA SIGNIFICANCIA QUE CONFORMAN UN ESCOTOMA ARCUATO SUPERIOR  E INFERIOR QUE INVOLUCRA LOS 10° CENTRALES."
+    "id": "atrofia",
+    "label": "Atrofia",
+    "text": "ATROFIA GEOGRAFICA"
   },
   {
-    "id": "altitudinal_sup",
-    "label": "Altitudinal Sup",
-    "text": "SE APRECIAN PUNTOS DE DISMINUCIÓN DE LA SENSIBILIDAD RETINIANA DE BAJA, MEDIA Y ALTA SIGNIFICANCIA QUE CONFORMAN ESCOTOMA ALTITUDINAL SUPERIOR"
+    "id": "membrana_epirretiniana",
+    "label": "Membrana Epirretiniana",
+    "text": "PRESENCIA DE MEMBRANA SOBRE LA RETINA"
+  },
+  {
+    "id": "agujero_macular",
+    "label": "Agujero Macular",
+    "text": "PERDIDA DE TEJIDO RETINIANO EN LA MACULA"
+  },
+  {
+    "id": "pseudohole",
+    "label": "Pseudohole",
+    "text": "AGUJERO PSEUDOMACULAR"
+  },
+  {
+    "id": "csc",
+    "label": "CSC",
+    "text": "COROIDOPATIA SEROSA CENTRAL"
+  },
+  {
+    "id": "erm",
+    "label": "ERM",
+    "text": "MEMBRANA EPIRRETINIANA"
+  },
+  {
+    "id": "vmt",
+    "label": "VMT",
+    "text": "TRACCION VITREOMACULAR"
   }
 ]
