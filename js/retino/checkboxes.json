@@ -45,8 +45,8 @@
   },
   {
     "id": "atrofia_geografica",
-    "label": "Atrofia Geográfica",
-    "text": "ÁREAS DE PÉRDIDA DE TEJIDO RETINIANO"
+    "label": "DMAE seca",
+    "text": "nervio óptico con bordes definidos y coloración normal, presencia de drusas y adelgazamiento del epitelio pigmentario en la mácula, disrupción de la arquitectura retiniana sin neovascularización y vasos retinianos de calibre y trayecto normales."
   },
   {
     "id": "retinopatia_diabetica",
@@ -64,9 +64,9 @@
     "text": "SEPARACIÓN DE LA RETINA DE LA PARTE POSTERIOR DEL OJO"
   },
   {
-    "id": "anomalias_vasculares",
-    "label": "Anomalías Vasculares",
-    "text": "ANORMALIDADES EN LOS VASOS SANGUÍNEOS DE LA RETINA"
+    "id": "edema_papila",
+    "label": "Papiledema",
+    "text": "La evaluación de la papila óptica revela elevación y bordes difusos con hiperemia, pequeñas hemorragias peripapilares, vasos retinianos tortuosos y dilatados, exudados algodonosos, y moteado retiniano debido a la acumulación de fluido."
   },
   {
     "id": "cambios_pigmentarios",
