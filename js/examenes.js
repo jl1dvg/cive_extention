@@ -197,38 +197,6 @@ function ejecutarEnPagina(item) {
         });
     }
 
-    function esperarElemento(selector) {
-        return new Promise((resolve, reject) => {
-            const elemento = document.querySelector(selector);
-            if (elemento) {
-                resolve(elemento);
-                return;
-            }
-
-            const observer = new MutationObserver((mutations, observerInstance) => {
-                mutations.forEach((mutation) => {
-                    const nodes = Array.from(mutation.addedNodes);
-                    for (const node of nodes) {
-                        if (node.matches && node.matches(selector)) {
-                            observerInstance.disconnect();
-                            resolve(node);
-                            return;
-                        }
-                    }
-                });
-            });
-
-            observer.observe(document.body, {
-                childList: true, subtree: true
-            });
-
-            setTimeout(() => {
-                observer.disconnect();
-                reject(`El elemento "${selector}" no se encontró dentro del tiempo esperado.`);
-            }, 10000); // Timeout de 10 segundos, ajusta según sea necesario
-        });
-    }
-
     function establecerBusqueda(valor) {
         return new Promise((resolve, reject) => {
             const searchField = document.querySelector('input.select2-search__field');
@@ -328,6 +296,25 @@ OI: ${OI}`;
 
             ejecutarTecnicos(item)
                 //.then(() => hacerClickEnBotonTerminar())
+                .catch(error => console.log('Error en la ejecución de examen:', error));
+        });
+    } else if (item.id === 'angulo') {
+        mostrarPopup('js/angulo/angulo.html').then(({OD, OI}) => {
+            const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');
+            recomendaciones.value = 'SE REALIZA ESTUDIO DE TOMOGRAFIA CON PRUEBAS PROVOCATIVAS DE ANGULO IRIDOCORNEAL CON EQUIPO HEIDELBERG ENGINEERING MODELO SPECTRALIS CON SOFTWARE 6.7, VISUALIZANDO LA ESTRUCTURA ANGULAR.\n' + '\n' + 'APERTURA EN GRADOS DEL ANGULO IRIDOCORNEAL:'; // Inicializa las recomendaciones
+
+            // Recomendaciones para OD
+            if (OD) {
+                recomendaciones.value += `\n${OD}\n`;
+            }
+
+            // Recomendaciones para OI
+            if (OI) {
+                recomendaciones.value += `\n${OI}`;
+            }
+
+            ejecutarTecnicos(item)
+                .then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
     } else if (item.id === 'retino') {
