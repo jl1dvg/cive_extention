@@ -21,8 +21,8 @@
   },
   {
     "id": "microaneurismas",
-    "label": "Microaneurismas",
-    "text": "PEQUEÑOS SACOS VASCULARES"
+    "label": "MA",
+    "text": "La angiografía fluoresceínica muestra nervio óptico es normal, con un borde bien definido y la mácula sin signos de edema. Microaneurismas dispersos como pequeñas áreas de hiperfluorescencia en la retina, especialmente en la periferia, que se ven como focos de fuga de fluoresceína en las fases tardías del estudio. La trama vascular es normal, sin signos de isquemia o alteraciones significativas en los vasos retinianos. "
   },
   {
     "id": "ovri",
@@ -56,7 +56,7 @@
   },
   {
     "id": "rpe",
-    "label": "A-EPR",
-    "text": "ALTERACIONES EN EL EPITELIO PIGMENTARIO DE LA RETINA"
+    "label": "EPR",
+    "text": "El examen de angiografía fluoresceínica muestra atrofia del epitelio pigmentario de la retina con defecto en ventana yuxtafoveal, manifestado como área de hiperfluorescencia bien delimitada. Retina circundante presenta perfusión normal, sin neovascularización o edema. Trama vascular es regular y el nervio óptico está normal, sin alteraciones adicionales."
   }
 ]
