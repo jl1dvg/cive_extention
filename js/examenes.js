@@ -317,6 +317,25 @@ OI: ${OI}`;
                 .then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
+    } else if (item.id === 'octm') {
+        mostrarPopup('js/octm/octm.html').then(({OD, OI}) => {
+            const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');
+            recomendaciones.value = 'SE REALIZA ESTUDIO DE TOMOGRAFIA CON PRUEBAS PROVOCATIVAS MACULAR CON EQUIPO HEIDELBERG ENGINEERING MODELO SPECTRALIS CON SOFTWARE 6.7, VISUALIZANDO LAS DIFERENTES CAPAS DE LA RETINA NEUROSENSORIAL, EPITELIO PIGMENTADO DE LA RETINA, MEMBRANA DE BRUCH Y COROIDES ANTERIOR DE ÁREA MACULAR. \n'; // Inicializa las recomendaciones
+
+            // Recomendaciones para OD
+            if (OD) {
+                recomendaciones.value += `\n${OD}\n`;
+            }
+
+            // Recomendaciones para OI
+            if (OI) {
+                recomendaciones.value += `\n${OI}`;
+            }
+
+            ejecutarTecnicos(item)
+                .then(() => hacerClickEnBotonTerminar())
+                .catch(error => console.log('Error en la ejecución de examen:', error));
+        });
     } else if (item.id === 'retino') {
         mostrarPopup('js/retino/retino.html').then(({OD, OI}) => {
             const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');

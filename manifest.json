@@ -28,7 +28,9 @@
         "js/retino/retino.html",
         "js/retino/retino.css",
         "js/angulo/angulo.html",
-        "js/angulo/angulo.css"
+        "js/angulo/angulo.css",
+        "js/octm/octm.html",
+        "js/octm/octm.css"
       ],
       "matches": [
         "<all_urls>"

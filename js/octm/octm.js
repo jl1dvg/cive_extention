@@ -18,16 +18,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
     document.getElementById('btnAceptar').addEventListener('click', () => {
-        const OD = document.getElementById('inputOD').value;
-        const OI = document.getElementById('inputOI').value;
-        const DLN_OD = document.getElementById('checkboxOD_dln').checked;
-        const DLN_OI = document.getElementById('checkboxOI_dln').checked;
+        const CTMOD = document.getElementById('inputOD').value;
+        const CTMOI = document.getElementById('inputOI').value;
+        const textOD = document.getElementById('textOD').value;
+        const textOI = document.getElementById('textOI').value;
 
-        window.parent.postMessage({OD, OI, DLN_OD, DLN_OI}, '*');
+        let OD = '';
+        let OI = '';
+
+        if (CTMOD || textOD) {
+            OD = `GROSOR FOVEAL PROMEDIO OD: ${CTMOD}um\nLAS IMÁGENES SON SUGESTIVAS DE:\nOD: ${textOD}`;
+        }
+
+        if (CTMOI || textOI) {
+            OI = `GROSOR FOVEAL PROMEDIO OI: ${CTMOI}um\nLAS IMÁGENES SON SUGESTIVAS DE:\nOI: ${textOI}`;
+        }
+
+        window.parent.postMessage({OD, OI}, '*');
     });
 
     document.getElementById('btnClose').addEventListener('click', () => {
-        window.parent.postMessage({OD: '', OI: '', DLN_OD: false, DLN_OI: false}, '*');
+        window.parent.postMessage({close: true}, '*'); // Mensaje para cerrar el popup
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            document.getElementById('btnAceptar').click(); // Simular clic en "Aceptar"
+        }
     });
 });
 
@@ -36,10 +53,10 @@ function createCheckbox(item, eye) {
     checkbox.type = 'checkbox';
     checkbox.id = `checkbox${eye}_${item.id}`;
     checkbox.value = item.text;
-    checkbox.checked = false; // Checkbox seleccionado por defecto
+    checkbox.checked = false; // Checkbox no seleccionado por defecto
 
     checkbox.addEventListener('change', function () {
-        updateTextarea(`input${eye}`, this);
+        updateTextarea(`text${eye}`, this);
     });
 
     const label = document.createElement('label');
@@ -55,16 +72,22 @@ function createCheckbox(item, eye) {
 
 function updateTextarea(textareaId, checkbox) {
     const textarea = document.getElementById(textareaId);
-    const currentValues = textarea.value.split(',').map(item => item.trim()).filter(Boolean);
+
+    const cursorPosition = textarea.selectionStart;
+    const currentValue = textarea.value;
+    const beforeCursor = currentValue.substring(0, cursorPosition);
+    const afterCursor = currentValue.substring(cursorPosition);
+
+    let newText;
 
     if (checkbox.checked) {
-        currentValues.push(checkbox.value);
+        newText = `${beforeCursor}${beforeCursor.trim().length > 0 ? ', ' : ''}${checkbox.value}${afterCursor}`;
     } else {
-        const index = currentValues.indexOf(checkbox.value);
-        if (index > -1) {
-            currentValues.splice(index, 1);
+        const textToRemove = checkbox.value;
+        newText = currentValue.replace(new RegExp(`,? ?${textToRemove}`, 'g'), '');
     }
+
+    textarea.value = newText;
+    textarea.setSelectionRange(cursorPosition, cursorPosition);
 }
 
-    textarea.value = currentValues.join(', ');
-}
