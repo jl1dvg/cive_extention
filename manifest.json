@@ -30,7 +30,11 @@
         "js/angulo/angulo.html",
         "js/angulo/angulo.css",
         "js/octm/octm.html",
-        "js/octm/octm.css"
+        "js/octm/octm.css",
+        "js/auto/auto.html",
+        "js/auto/auto.css",
+        "js/angio/angio.html",
+        "js/angio/angio.css"
       ],
       "matches": [
         "<all_urls>"

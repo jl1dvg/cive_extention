@@ -24,19 +24,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
     document.getElementById('btnAceptar').addEventListener('click', () => {
-        const textOD = document.getElementById('inputOD').value;
-        const textOI = document.getElementById('inputOI').value;
-
-        let OD = '';
-        let OI = '';
-
-        if (textOD) {
-            OD = `\nOD: ${textOD}`;
-        }
-
-        if (CTMOI && textOI) {
-            OI = `\nOI: ${textOI}`;
-        }
+        const OD = document.getElementById('inputOD').value;
+        const OI = document.getElementById('inputOI').value;
 
         window.parent.postMessage({OD, OI}, '*');
     });

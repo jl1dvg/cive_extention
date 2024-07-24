@@ -124,6 +124,18 @@ function ejecutarEnPagina(item) {
         `;
             document.body.appendChild(popup);
 
+            const iframe = document.getElementById('placeholder-dialog');
+
+            iframe.onload = function () {
+                setTimeout(() => {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const inputOD = iframeDoc.getElementById('inputOD');
+                    if (inputOD) {
+                        inputOD.focus();
+                    }
+                }, 100); // Ajusta el tiempo de espera si es necesario
+            };
+
             // Escuchar el mensaje del iframe
             window.addEventListener('message', function onMessage(event) {
                 if (event.data.OD !== undefined && event.data.OI !== undefined) {
@@ -359,6 +371,25 @@ OI: ${OI}`;
 
             ejecutarTecnicos(item)
                 .then(() => hacerClickEnBotonTerminar())
+                .catch(error => console.log('Error en la ejecución de examen:', error));
+        });
+    } else if (item.id === 'auto') {
+        mostrarPopup('js/auto/auto.html').then(({OD, OI}) => {
+            const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');
+            recomendaciones.value = 'SE REALIZA ESTUDIO DE AUTOFLOURESCENCIA CON EQUIPO HEIDELBERG ENGINEERING MODELO SPECTRALIS CON SOFTWARE 6.7, VISUALIZANDO: \n'; // Inicializa las recomendaciones
+
+            // Recomendaciones para OD
+            if (OD) {
+                recomendaciones.value += `\nOD: ${OD}\n`;
+            }
+
+            // Recomendaciones para OI
+            if (OI) {
+                recomendaciones.value += `\nOI: ${OI}`;
+            }
+
+            ejecutarTecnicos(item)
+                //.then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
     } else if (item.id === 'cv') {

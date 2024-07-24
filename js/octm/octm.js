@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Focar en el primer input directamente
+    document.getElementById('inputOD').focus();
+
     // Asumiendo que tu JSON se llama 'checkboxes.json' y está en la misma carpeta
     fetch(chrome.runtime.getURL('js/octm/checkboxes.json'))
         .then(response => response.json())
@@ -15,6 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const checkboxOI = createCheckbox(item, 'OI');
                 checkboxContainerOI.appendChild(checkboxOI);
             });
+
+            // Focar en el primer input directamente después de cargar los checkbox
+            document.getElementById('inputOD').focus();
         });
 
     document.getElementById('btnAceptar').addEventListener('click', () => {
@@ -26,12 +32,20 @@ document.addEventListener('DOMContentLoaded', function () {
         let OD = '';
         let OI = '';
 
-        if (CTMOD || textOD) {
+        if (CTMOD && textOD) {
             OD = `GROSOR FOVEAL PROMEDIO OD: ${CTMOD}um\nLAS IMÁGENES SON SUGESTIVAS DE:\nOD: ${textOD}`;
+        } else if (CTMOD && !textOD) {
+            OD = `GROSOR FOVEAL PROMEDIO OD: ${CTMOD}um\nLAS IMÁGENES SON SUGESTIVAS DE:\nOD: Arquitectura retiniana bien definida, fóvea con depresión central bien delineada, epitelio pigmentario continuo y uniforme, membrana limitante interna es hiporreflectiva y continua, células de Müller están bien alineadas sin signos de edema o tracción.`;
+        } else if (!CTMOD && textOD) {
+            OD = `LAS IMÁGENES SON SUGESTIVAS DE:\nOD: ${textOD}`;
         }
 
-        if (CTMOI || textOI) {
+        if (CTMOI && textOI) {
             OI = `GROSOR FOVEAL PROMEDIO OI: ${CTMOI}um\nLAS IMÁGENES SON SUGESTIVAS DE:\nOI: ${textOI}`;
+        } else if (CTMOI && !textOI) {
+            OI = `GROSOR FOVEAL PROMEDIO OI: ${CTMOI}um\nLAS IMÁGENES SON SUGESTIVAS DE:\nOI: Arquitectura retiniana bien definida, fóvea con depresión central bien delineada, epitelio pigmentario continuo y uniforme, membrana limitante interna es hiporreflectiva y continua, células de Müller están bien alineadas sin signos de edema o tracción.`;
+        } else if (!CTMOI && textOI) {
+            OI = `LAS IMÁGENES SON SUGESTIVAS DE:\nOI: ${textOI}`;
         }
 
         window.parent.postMessage({OD, OI}, '*');
