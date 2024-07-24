@@ -392,6 +392,25 @@ OI: ${OI}`;
                 //.then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
+    } else if (item.id === 'angio') {
+        mostrarPopup('js/angio/angio.html').then(({OD, OI}) => {
+            const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');
+            recomendaciones.value = 'SE REALIZA ESTUDIO DE ANGIOGRAFIA RETINAL CON FLUORESCEINA SÓDICA CON EQUIPO HEIDELBERG ENGINEERING MODELO SPECTRALIS CON SOFTWARE 6.7, PREVIO A INYECCION DE 5ML DE FLUORESCEINA SODICA AL 10% EN LA VENA DEL CODO VISUALIZANDO LAS DIFERENTES FASES DE LA CIRCULACION COROIDO RETINAL.  SE DOCUMENTA LAS FASES COROIDEA, ARTERIAL TEMPRANA, ARTERIOVENOSA, FASE VENOSA Y DE RECIRCULACION. \n'; // Inicializa las recomendaciones
+
+            // Recomendaciones para OD
+            if (OD) {
+                recomendaciones.value += `\nOD: ${OD}\n`;
+            }
+
+            // Recomendaciones para OI
+            if (OI) {
+                recomendaciones.value += `\nOI: ${OI}`;
+            }
+
+            ejecutarTecnicos(item)
+                //.then(() => hacerClickEnBotonTerminar())
+                .catch(error => console.log('Error en la ejecución de examen:', error));
+        });
     } else if (item.id === 'cv') {
         mostrarPopupCV().then(({OD, OI, DLN_OD, DLN_OI}) => {
             const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');
