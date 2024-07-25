@@ -26,44 +26,6 @@ function ejecutarExamenes(id) {
 }
 
 function ejecutarEnPagina(item) {
-    // Función para mostrar el popup OD_OI
-    function mostrarPopupOD_OI() {
-        return new Promise((resolve) => {
-            const popup = document.createElement('div');
-            popup.style.position = 'fixed';
-            popup.style.top = '0';
-            popup.style.left = '0';
-            popup.style.width = '100%';
-            popup.style.height = '100%';
-            popup.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-            popup.style.display = 'flex';
-            popup.style.justifyContent = 'center';
-            popup.style.alignItems = 'center';
-            popup.style.zIndex = '9999';
-
-            const popupURL = chrome.runtime.getURL('js/popup/popup.html');
-
-            popup.innerHTML = `
-            <button id="btnClose" style="position: absolute; top: 10px; right: 10px; font-size: 24px; border: none; background: transparent; cursor: pointer;">&times;</button>
-            <iframe class="content-panel-frame placeholder-frame" id="placeholder-dialog" src="${popupURL}" style="height: 300px; width: 300px; border: none; border-radius: 5px;"></iframe>
-        `;
-            document.body.appendChild(popup);
-
-            // Escuchar el mensaje del iframe
-            window.addEventListener('message', function onMessage(event) {
-                if (event.data.OD !== undefined && event.data.OI !== undefined && event.data.mensajeOD !== undefined && event.data.mensajeOI !== undefined) {
-                    document.body.removeChild(popup);
-                    window.removeEventListener('message', onMessage); // Remover el listener después de recibir el mensaje
-                    resolve(event.data);
-                }
-                if (event.data.close) { // Manejar el cierre
-                    document.body.removeChild(popup);
-                    window.removeEventListener('message', onMessage);
-                }
-            });
-        });
-    }
-
     // Función para mostrar el popup de Campo Visual (cv)
     function mostrarPopupCV() {
         return new Promise((resolve) => {
@@ -172,32 +134,6 @@ function ejecutarEnPagina(item) {
                     .catch(error => console.error(`Error procesando técnico ${tecnico.nombre}:`, error));
             });
         }, Promise.resolve());
-    }
-
-    function hacerClicsEnTD(trSelector, tdIndex, numClicks) {
-        return new Promise((resolve, reject) => {
-            const trElement = document.querySelector(trSelector);
-            if (trElement) {
-                const tdElement = trElement.querySelectorAll('td')[tdIndex];
-                if (tdElement) {
-                    console.log(`Haciendo ${numClicks} clics en el td: ${tdIndex} del tr: ${trSelector}`);
-
-                    const clickEvent = new MouseEvent('click', {
-                        view: window, bubbles: true, cancelable: true
-                    });
-
-                    for (let i = 0; i < numClicks; i++) {
-                        tdElement.dispatchEvent(clickEvent);
-                    }
-
-                    setTimeout(resolve, 200); // Espera un momento antes de resolver
-                } else {
-                    reject(`El td en la posición "${tdIndex}" no se encontró.`);
-                }
-            } else {
-                reject(`El tr "${trSelector}" no se encontró.`);
-            }
-        });
     }
 
     function hacerClickEnSelect2(selector) {
