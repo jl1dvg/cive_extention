@@ -1,28 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Popup</title>
-    <style>
-        .section {
-            display: none;
-        }
-        .section.active {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/popup.css">
 </head>
 <body>
 <div id="inicio" class="section active">
-    <button id="btnExamenes">Examenes</button>
-    <button id="btnProtocolos">Protocolos</button>
+    <div class="grid-container">
+        <div id="btnExamenes" class="grid-item">
+            <i class="fas fa-notes-medical"></i>
+            Exámenes
+        </div>
+        <div id="btnProtocolos" class="grid-item">
+            <i class="fas fa-file-alt"></i>
+            Protocolos
+        </div>
+        <!-- Añade más botones si es necesario -->
+    </div>
 </div>
 <div id="examenes" class="section">
-    <button id="btnBackExamenes">Back</button>
-    <div id="contenedorExamenes"></div>
+    <div class="card">
+        <div class="card-header bg-primary text-white">Exámenes</div>
+        <div class="card-body">
+            <div class="grid-container" id="contenedorExamenes"></div>
+        </div>
+        <div class="card-footer bg-secondary text-white">
+            <button id="btnBackExamenes" class="btn btn-danger">
+                <i class="fas fa-arrow-alt-circle-left"></i> Atras
+            </button>
+        </div>
+    </div>
 </div>
 <div id="protocolos" class="section">
-    <button id="btnBackProtocolos">Back</button>
-    <div id="contenedorProtocolos"></div>
+    <div class="card">
+        <div class="card-header bg-primary text-white">Protocolos</div>
+        <div class="card-body">
+            <div class="grid-container" id="contenedorProtocolos"></div>
+        </div>
+        <div class="card-footer bg-secondary text-white">
+            <button id="btnBackProtocolos" class="btn btn-danger">
+                <i class="fas fa-arrow-alt-circle-left"></i> Atras
+            </button>
+        </div>
+    </div>
+</div>
 </div>
 <div id="od-oi-inputs" class="section">
     <label>OD: <input type="text" id="inputOD" maxlength="3"></label>

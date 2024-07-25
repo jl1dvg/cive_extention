@@ -119,9 +119,11 @@ function ejecutarEnPagina(item) {
             const popupURL = chrome.runtime.getURL(url);
 
             popup.innerHTML = `
-            <button id="btnClose" style="position: absolute; top: 10px; right: 10px; font-size: 24px; border: none; background: transparent; cursor: pointer;">&times;</button>
-            <iframe class="content-panel-frame placeholder-frame" id="placeholder-dialog" src="${popupURL}" style="height: 600px; width: 600px; border: none; border-radius: 5px;"></iframe>
-        `;
+                <div style="position: relative;">
+                <button id="btnClose" style="position: absolute; top: 10px; right: 10px; font-size: 24px; border: none; background: transparent; cursor: pointer;">&times;</button>
+                    <iframe class="content-panel-frame placeholder-frame" id="placeholder-dialog" src="${popupURL}" style="height: 600px; width: 600px; border: none; border-radius: 10px; overflow: auto;"></iframe>
+                </div>
+            `;
             document.body.appendChild(popup);
 
             const iframe = document.getElementById('placeholder-dialog');
@@ -147,6 +149,11 @@ function ejecutarEnPagina(item) {
                     document.body.removeChild(popup);
                     window.removeEventListener('message', onMessage);
                 }
+            });
+
+            // Añadir evento al botón de cierre
+            popup.querySelector('#btnClose').addEventListener('click', () => {
+                document.body.removeChild(popup);
             });
         });
     }
@@ -252,7 +259,7 @@ function ejecutarEnPagina(item) {
     }
 
     if (item.id === 'octno') {
-        mostrarPopupOD_OI().then(({OD, OI, mensajeOD, mensajeOI}) => {
+        mostrarPopup('js/popup/popup.html').then(({OD, OI, mensajeOD, mensajeOI}) => {
             const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');
 
             let clasificacionOD = 'FUERA DE LIMITES NORMALES';
@@ -408,7 +415,7 @@ OI: ${OI}`;
             }
 
             ejecutarTecnicos(item)
-                .then(() => hacerClickEnBotonTerminar())
+                //.then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
     } else if (item.id === 'cv') {
@@ -464,11 +471,6 @@ CONCLUSIONES: CAMPO VISUAL FUERA DE LIMITES NORMALES`;
                 .then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
-    } else {
-        ejecutarTecnicos(item)
-            .then(() => hacerClickEnBotonTerminar())
-            .then(() => hacerClicsEnTD('tr[data-key="0"]', 0, 2))
-            .catch(error => console.log('Error en la ejecución de examen:', error));
     }
 }
 
@@ -476,8 +478,11 @@ function crearBotonesProcedimientos(procedimientos, contenedorId, clickHandler) 
     const contenedorBotones = document.getElementById(contenedorId);
     contenedorBotones.innerHTML = ''; // Limpiar el contenedor
     procedimientos.forEach(procedimiento => {
+        const col = document.createElement('div');
+        col.className = 'col-sm-4'; // Cada botón ocupará un tercio del ancho de la fila
         const boton = document.createElement('button');
         boton.id = `${procedimiento.id}`;
+        boton.className = 'btn btn-outline-primary btn-sm'; // Estilo de botón y ancho completo
         boton.textContent = `${procedimiento.cirugia}`;
         boton.addEventListener('click', () => {
             console.log(`Botón clickeado: ${procedimiento.cirugia}`);

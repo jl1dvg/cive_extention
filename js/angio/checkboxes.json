@@ -35,9 +35,9 @@
     "text": "El examen de angiografía fluoresceínica revela una oclusión venosa superior con hipofluorescencia marcada, llenado tardío y deficiente de fluoresceína, congestión y dilatación venosa en la retina superior, y manchas de hipofluorescencia periféricas indicativas de isquemia. La perfusión arterial aparente normal."
   },
   {
-    "id": "hemorragias",
-    "label": "Hemorragias",
-    "text": "PRESENCIA DE SANGRADO INTRARRETINIANO"
+    "id": "mnv",
+    "label": "MNV",
+    "text": "El examen de angiografía fluoresceínica revela una membrana neovascular exudativa con hiperfluorescencia irregular en la región yuxtafoveal y un defecto en ventana bien delimitado, indicando actividad exudativa y permeabilidad vascular anormal. La membrana muestra fuga de fluoresceína en fases tardías, reflejando fluido subretinal. La trama vascular general y el nervio óptico no presentan alteraciones significativas adicionales."
   },
   {
     "id": "isquemia",

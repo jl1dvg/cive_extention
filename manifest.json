@@ -19,6 +19,7 @@
     {
       "resources": [
         "faco.png",
+        "popup.css",
         "js/popup/popup.html",
         "js/popup/popup.css",
         "js/cv/cv.html",
