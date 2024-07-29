@@ -231,22 +231,16 @@ SE SUGIERE CORRELACIONAR CON CUADRO CLINICO`;
     } else if (item.id === 'eco') {
         mostrarPopup('js/eco/eco.html').then(({OD, OI}) => {
             const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');
-            recomendaciones.value = ''; // Inicializa las recomendaciones
+            recomendaciones.value = 'SE REALIZA ESTUDIO CON EQUIPO EYE CUBED ELLEX DE ECOGRAFIA MODO B POR CONTACTO TRANSPALPEBRAL EN:\n    '; // Inicializa las recomendaciones
 
             // Recomendaciones para OD
             if (OD) {
-                recomendaciones.value += `SE REALIZA ESTUDIO CON EQUIPO EYE CUBED ELLEX DE ECOGRAFIA MODO B POR CONTACTO TRANSPALPEBRAL EN:
-
-OD: ${OD}`;
+                recomendaciones.value += `\nOD: ${OD}\n`;
             }
 
             // Recomendaciones para OI
             if (OI) {
-                recomendaciones.value += `
-
-SE REALIZA ESTUDIO CON EQUIPO EYE CUBED ELLEX DE ECOGRAFIA MODO B POR CONTACTO TRANSPALPEBRAL EN:
-
-OI: ${OI}`;
+                recomendaciones.value += `\nOI: ${OI}`;
             }
 
             ejecutarTecnicos(item)
@@ -355,56 +349,22 @@ OI: ${OI}`;
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
     } else if (item.id === 'cv') {
-        mostrarPopupCV().then(({OD, OI, DLN_OD, DLN_OI}) => {
+        mostrarPopup('js/cv/cv.html').then(({OD, OI}) => {
             const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');
             recomendaciones.value = ''; // Inicializa las recomendaciones
 
             // Recomendaciones para OD
-            if (DLN_OD && !OD) {
-                recomendaciones.value += `OJO: DERECHO
-SE REALIZA CAMPO VISUAL OCTOPUS 600 IMPRESIÓN HFA.
-ESTRATEGIA: 24.2 DINÁMICO
-CONFIABILIDAD: BUENA
-SENSIBILIDAD FOVEAL: ACTIVA
-CONCLUSIONES: CAMPO VISUAL DENTRO DE LIMITES NORMALES
-
-SE RECOMIENDA CORRELACIONAR CON CLÍNICA.`;
-            } else if (OD) {
-                recomendaciones.value += `OJO: DERECHO
-SE REALIZA CAMPO VISUAL OCTOPUS 600 IMPRESIÓN HFA.
-ESTRATEGIA: 24.2 DINÁMICO
-CONFIABILIDAD: BUENA
-SENSIBILIDAD FOVEAL: ACTIVA
-LECTURA: ${OD}
-CONCLUSIONES: CAMPO VISUAL FUERA DE LIMITES NORMALES`;
+            if (OD) {
+                recomendaciones.value += `${OD}\n\n`;
             }
 
             // Recomendaciones para OI
-            if (DLN_OI && !OI) {
-                recomendaciones.value += `
-
-OJO: IZQUIERDO
-SE REALIZA CAMPO VISUAL OCTOPUS 600 IMPRESIÓN HFA.
-ESTRATEGIA: 24.2 DINÁMICO
-CONFIABILIDAD: BUENA
-SENSIBILIDAD FOVEAL: ACTIVA
-CONCLUSIONES: CAMPO VISUAL DENTRO DE LIMITES NORMALES
-
-SE RECOMIENDA CORRELACIONAR CON CLÍNICA.`;
-            } else if (OI) {
-                recomendaciones.value += `
-
-OJO: IZQUIERDO
-SE REALIZA CAMPO VISUAL OCTOPUS 600 IMPRESIÓN HFA.
-ESTRATEGIA: 24.2 DINÁMICO
-CONFIABILIDAD: BUENA
-SENSIBILIDAD FOVEAL: ACTIVA
-LECTURA: ${OI}
-CONCLUSIONES: CAMPO VISUAL FUERA DE LIMITES NORMALES`;
+            if (OI) {
+                recomendaciones.value += `${OI}`;
             }
 
             ejecutarTecnicos(item)
-                .then(() => hacerClickEnBotonTerminar())
+                //.then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
     }

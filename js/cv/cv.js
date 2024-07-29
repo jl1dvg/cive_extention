@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Focar en el primer input directamente
+    document.getElementById('inputOD').focus();
+
     // Asumiendo que tu JSON se llama 'checkboxes.json' y está en la misma carpeta
     fetch(chrome.runtime.getURL('js/cv/checkboxes.json'))
         .then(response => response.json())
@@ -15,15 +18,33 @@ document.addEventListener('DOMContentLoaded', function () {
                 const checkboxOI = createCheckbox(item, 'OI');
                 checkboxContainerOI.appendChild(checkboxOI);
             });
+
+            // Focar en el primer input directamente después de cargar los checkbox
+            document.getElementById('inputOD').focus();
         });
 
     document.getElementById('btnAceptar').addEventListener('click', () => {
-        const OD = document.getElementById('inputOD').value;
-        const OI = document.getElementById('inputOI').value;
+        const textOD = document.getElementById('inputOD').value;
+        const textOI = document.getElementById('inputOI').value;
         const DLN_OD = document.getElementById('checkboxOD_dln').checked;
         const DLN_OI = document.getElementById('checkboxOI_dln').checked;
 
-        window.parent.postMessage({OD, OI, DLN_OD, DLN_OI}, '*');
+        let OD = '';
+        let OI = '';
+
+        if (DLN_OD) {
+            OD = `OJO: DERECHO\nSE REALIZA CAMPO VISUAL OCTOPUS 600 IMPRESIÓN HFA.\nESTRATEGIA: 24.2 DINÁMICO\nCONFIABILIDAD: BUENA\nSENSIBILIDAD FOVEAL: ACTIVA\nCONCLUSIONES: CAMPO VISUAL DENTRO DE LIMITES NORMALES\n\nSE RECOMIENDA CORRELACIONAR CON CLÍNICA.`;
+        } else if (textOD) {
+            OD = `OJO: DERECHO\nSE REALIZA CAMPO VISUAL OCTOPUS 600 IMPRESIÓN HFA.\nESTRATEGIA: 24.2 DINÁMICO\nCONFIABILIDAD: BUENA\nSENSIBILIDAD FOVEAL: ACTIVA\nLECTURA: ${textOD}\nCONCLUSIONES: CAMPO VISUAL FUERA DE LIMITES NORMALES`;
+        }
+
+        if (DLN_OI) {
+            OI = `OJO: IZQUIERDO\nSE REALIZA CAMPO VISUAL OCTOPUS 600 IMPRESIÓN HFA.\nESTRATEGIA: 24.2 DINÁMICO\nCONFIABILIDAD: BUENA\nSENSIBILIDAD FOVEAL: ACTIVA\nCONCLUSIONES: CAMPO VISUAL DENTRO DE LIMITES NORMALES\n\nSE RECOMIENDA CORRELACIONAR CON CLÍNICA.`;
+        } else if (textOI) {
+            OI = `OJO: IZQUIERDO\nSE REALIZA CAMPO VISUAL OCTOPUS 600 IMPRESIÓN HFA.\nESTRATEGIA: 24.2 DINÁMICO\nCONFIABILIDAD: BUENA\nSENSIBILIDAD FOVEAL: ACTIVA\nLECTURA: ${textOI}\nCONCLUSIONES: CAMPO VISUAL FUERA DE LIMITES NORMALES`;
+        }
+
+        window.parent.postMessage({OD, OI}, '*');
     });
 
     document.getElementById('btnClose').addEventListener('click', () => {
