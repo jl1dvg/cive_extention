@@ -26,44 +26,6 @@ function ejecutarExamenes(id) {
 }
 
 function ejecutarEnPagina(item) {
-    // Función para mostrar el popup de Campo Visual (cv)
-    function mostrarPopupCV() {
-        return new Promise((resolve) => {
-            const popup = document.createElement('div');
-            popup.style.position = 'fixed';
-            popup.style.top = '0';
-            popup.style.left = '0';
-            popup.style.width = '100%';
-            popup.style.height = '100%';
-            popup.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-            popup.style.display = 'flex';
-            popup.style.justifyContent = 'center';
-            popup.style.alignItems = 'center';
-            popup.style.zIndex = '9999';
-
-            const popupURL = chrome.runtime.getURL('js/cv/cv.html');
-
-            popup.innerHTML = `
-            <button id="btnClose" style="position: absolute; top: 10px; right: 10px; font-size: 24px; border: none; background: transparent; cursor: pointer;">&times;</button>
-            <iframe class="content-panel-frame placeholder-frame" id="placeholder-dialog" src="${popupURL}" style="height: 600px; width: 600px; border: none; border-radius: 5px;"></iframe>
-        `;
-            document.body.appendChild(popup);
-
-            // Escuchar el mensaje del iframe
-            window.addEventListener('message', function onMessage(event) {
-                if (event.data.OD !== undefined && event.data.OI !== undefined && event.data.DLN_OD !== undefined && event.data.DLN_OI !== undefined) {
-                    document.body.removeChild(popup);
-                    window.removeEventListener('message', onMessage); // Remover el listener después de recibir el mensaje
-                    resolve(event.data);
-                }
-                if (event.data.close) { // Manejar el cierre
-                    document.body.removeChild(popup);
-                    window.removeEventListener('message', onMessage);
-                }
-            });
-        });
-    }
-
     function mostrarPopup(url) {
         return new Promise((resolve) => {
             const popup = document.createElement('div');
