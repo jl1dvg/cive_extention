@@ -88,10 +88,10 @@ function ejecutarEnPagina(item) {
         return item.tecnicos.reduce((promise, tecnico) => {
             return promise.then(() => {
                 return hacerClickEnSelect2(tecnico.selector)
-                    .then(() => establecerBusqueda(tecnico.funcion))
+                    .then(() => establecerBusqueda(tecnico.selector, tecnico.funcion))
                     .then(() => seleccionarOpcion())
                     .then(() => hacerClickEnSelect2(tecnico.trabajador))
-                    .then(() => establecerBusqueda(tecnico.nombre))
+                    .then(() => establecerBusqueda(tecnico.trabajador, tecnico.nombre))
                     .then(() => seleccionarOpcion())
                     .catch(error => console.error(`Error procesando técnico ${tecnico.nombre}:`, error));
             });
@@ -107,39 +107,58 @@ function ejecutarEnPagina(item) {
                     view: window, bubbles: true, cancelable: true
                 });
                 tecnicoContainer.dispatchEvent(event);
-                setTimeout(resolve, 200);
+                setTimeout(resolve, 100); // Añadir un retraso para asegurar que el menú se despliegue
             } else {
                 reject(`El contenedor "${selector}" no se encontró.`);
             }
         });
     }
 
-    function establecerBusqueda(valor) {
+    function establecerBusqueda(selector, valor) {
         return new Promise((resolve, reject) => {
-            const searchField = document.querySelector('input.select2-search__field');
-            if (searchField) {
-                console.log('Estableciendo búsqueda:', valor);
-                searchField.value = valor;
-                const inputEvent = new Event('input', {
-                    bubbles: true, cancelable: true
-                });
-                searchField.dispatchEvent(inputEvent);
-                setTimeout(resolve, 200);
-            } else {
-                reject('El campo de búsqueda del Select2 no se encontró.');
-            }
+            let attempts = 0;
+            const maxAttempts = 20;
+
+            const searchForField = () => {
+                const searchField = document.querySelector('input.select2-search__field');
+                if (searchField) {
+                    console.log('Estableciendo búsqueda:', valor);
+                    searchField.value = valor;
+                    const inputEvent = new Event('input', {
+                        bubbles: true, cancelable: true
+                    });
+                    searchField.dispatchEvent(inputEvent);
+                    setTimeout(() => resolve(searchField), 300); // Añadir un retraso para asegurar que los resultados se carguen
+                } else if (attempts < maxAttempts) {
+                    console.log(`Esperando campo de búsqueda del Select2... intento ${attempts + 1}`);
+                    attempts++;
+                    hacerClickEnSelect2(selector)
+                        .then(() => {
+                            setTimeout(searchForField, 300); // Espera y reintenta
+                        })
+                        .catch(error => reject(error));
+                } else {
+                    reject('El campo de búsqueda del Select2 no se encontró.');
+                }
+            };
+
+            searchForField();
         });
     }
 
     function seleccionarOpcion() {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             const searchField = document.querySelector('input.select2-search__field');
-            console.log('Seleccionando opción');
-            const enterEvent = new KeyboardEvent('keydown', {
-                key: 'Enter', keyCode: 13, bubbles: true, cancelable: true
-            });
-            searchField.dispatchEvent(enterEvent);
-            setTimeout(resolve, 200);
+            if (searchField) {
+                console.log('Seleccionando opción');
+                const enterEvent = new KeyboardEvent('keydown', {
+                    key: 'Enter', keyCode: 13, bubbles: true, cancelable: true
+                });
+                searchField.dispatchEvent(enterEvent);
+                setTimeout(resolve, 200); // Añadir un retraso para asegurar que la opción se seleccione
+            } else {
+                reject('El campo de búsqueda del Select2 no se encontró para seleccionar la opción.');
+            }
         });
     }
 
