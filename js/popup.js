@@ -1,9 +1,8 @@
 import {cargarExamenes} from './examenes.js';
-import {cargarProtocolos} from './procedimientos.js';
-import { ejecutarProtocolos } from './procedimientos.js'; // Ensure this import is correct
+import {cargarProtocolos, ejecutarProtocolos} from './procedimientos.js';
+import {ejecutarEnPagina} from './consulta.js'; // Importa la función desde consulta.js
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Asignar eventos de click a los botones independientemente
     document.getElementById('btnExamenes').addEventListener('click', () => {
         console.log('Botón Exámenes clickeado');
         mostrarSeccion('examenes');
@@ -14,6 +13,16 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log('Botón Protocolos clickeado');
         mostrarSeccion('protocolos');
         cargarProtocolos();
+    });
+
+    document.getElementById('btnConsulta').addEventListener('click', () => {
+        console.log('Botón Consulta clickeado');
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            chrome.scripting.executeScript({
+                target: {tabId: tabs[0].id},
+                function: ejecutarEnPagina
+            });
+        });
     });
 
     document.getElementById('btnBackExamenes').addEventListener('click', () => {
