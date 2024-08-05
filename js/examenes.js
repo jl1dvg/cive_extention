@@ -176,37 +176,21 @@ function ejecutarEnPagina(item) {
     }
 
     if (item.id === 'octno') {
-        mostrarPopup('js/popup/popup.html').then(({OD, OI, mensajeOD, mensajeOI}) => {
+        mostrarPopup('js/popup/popup.html').then(({OD, OI}) => {
             const recomendaciones = document.getElementById('ordenexamen-0-recomendaciones');
+            recomendaciones.value = 'SE REALIZA TOMOGRAFIA CON PRUEBAS PROVOCATIVAS DE CAPA DE FIBRAS NERVIOSAS RETINALES CON TOMOGRAFO SPECTRALIS (HEIDELBERG ENGINEERING)'; // Inicializa las recomendaciones
 
-            let clasificacionOD = 'FUERA DE LIMITES NORMALES';
-            if (mensajeOD === '') {
-                clasificacionOD = (OD < 85) ? 'AL BORDE DE LIMITES NORMALES' : 'DENTRO DE LIMITES NORMALES';
+            // Recomendaciones para OD
+            if (OD) {
+                recomendaciones.value += `\n${OD}\n`;
             }
-
-            let clasificacionOI = 'FUERA DE LIMITES NORMALES';
-            if (mensajeOI === '') {
-                clasificacionOI = (OI < 85) ? 'AL BORDE DE LIMITES NORMALES' : 'DENTRO DE LIMITES NORMALES';
+            // Recomendaciones para OI
+            if (OI) {
+                recomendaciones.value += `\n${OI}`;
             }
-
-            recomendaciones.value = `SE REALIZA TOMOGRAFIA CON PRUEBAS PROVOCATIVAS DE CAPA DE FIBRAS NERVIOSAS RETINALES CON TOMOGRAFO SPECTRALIS (HEIDELBERG ENGINEERING)
-
-OJO DERECHO
-CONFIABILIDAD: BUENA
-SE APRECIA DISMINUCIÓN DEL ESPESOR DE CAPA DE FIBRAS NERVIOSAS RETINALES EN CUADRANTES ${mensajeOD || 'N/A'}.
-PROMEDIO ESPESOR CFNR OD: ${OD}UM
-CLASIFICACIÓN: ${clasificacionOD}
-
-OJO IZQUIERDO
-CONFIABILIDAD: BUENA
-SE APRECIA DISMINUCIÓN DEL ESPESOR DE CAPA DE FIBRAS NERVIOSAS RETINALES EN CUADRANTES ${mensajeOI || 'N/A'}.
-PROMEDIO ESPESOR CFNR OI: ${OI}UM
-CLASIFICACIÓN: ${clasificacionOI}
-
-SE SUGIERE CORRELACIONAR CON CUADRO CLINICO`;
 
             ejecutarTecnicos(item)
-                .then(() => hacerClickEnBotonTerminar())
+                //.then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
     } else if (item.id === 'eco') {
@@ -345,7 +329,7 @@ OI: ${OI}`;
             }
 
             ejecutarTecnicos(item)
-                //.then(() => hacerClickEnBotonTerminar())
+                .then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
     }

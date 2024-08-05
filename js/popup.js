@@ -1,6 +1,6 @@
 import {cargarExamenes} from './examenes.js';
 import {cargarProtocolos, ejecutarProtocolos} from './procedimientos.js';
-import {ejecutarEnPagina} from './consulta.js'; // Importa la función desde consulta.js
+import {ejecutarEnPagina, ejecutarProtocoloEnPagina} from './consulta.js'; // Importa la función desde consulta.js
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('btnExamenes').addEventListener('click', () => {
@@ -17,10 +17,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('btnConsulta').addEventListener('click', () => {
         console.log('Botón Consulta clickeado');
+        mostrarSeccion('consulta');
+    });
+
+    document.getElementById('btnConsultaAnterior').addEventListener('click', () => {
+        console.log('Botón Consulta Anterior clickeado');
         chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id},
                 function: ejecutarEnPagina
+            });
+        });
+    });
+
+    document.getElementById('btnPOP').addEventListener('click', () => {
+        console.log('Botón Protocolo clickeado');
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            chrome.scripting.executeScript({
+                target: {tabId: tabs[0].id},
+                function: ejecutarProtocoloEnPagina
             });
         });
     });
@@ -38,6 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('btnBackProcedimientos').addEventListener('click', () => {
         console.log('Botón Back Procedimientos clickeado');
         mostrarSeccion('protocolos');
+    });
+
+    document.getElementById('btnBackConsulta').addEventListener('click', () => {
+        console.log('Botón Back Consulta clickeado');
+        mostrarSeccion('inicio');
     });
 });
 

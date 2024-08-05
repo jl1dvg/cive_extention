@@ -1,16 +1,10 @@
 document.getElementById('btnAceptar').addEventListener('click', () => {
-    window.addEventListener('load', () => {
         const inputOD = document.getElementById('inputOD');
-        console.log(inputOD); // Verifica si el elemento se encuentra
-        if (inputOD) {
-            setTimeout(() => {
-                inputOD.focus();
-            }, 100);
-        }
-    });
+    const inputOI = document.getElementById('inputOI');
 
-    const OD = document.getElementById('inputOD').value;
-    const OI = document.getElementById('inputOI').value;
+    if (inputOD && inputOI) {
+        const ODvalue = inputOD.value;
+        const OIvalue = inputOI.value;
 
     // Obtener el estado de los checkboxes para OD
     const ODI = document.getElementById('checkboxI').checked ? 'inferior' : '';
@@ -28,8 +22,46 @@ document.getElementById('btnAceptar').addEventListener('click', () => {
     const mensajeOD = [ODI, ODS, ODN, ODT].filter(Boolean).join(', ');
     const mensajeOI = [OII, OIS, OIN, OIT].filter(Boolean).join(', ');
 
+    let clasificacionOD = '';
+    let clasificacionOI = '';
+
+    // Clasificación para OD
+        if (mensajeOD) {
+            clasificacionOD = 'FUERA DE LIMITES NORMALES';
+        } else if (ODvalue >= 85) {
+        clasificacionOD = 'DENTRO DE LIMITES NORMALES';
+        } else if (ODvalue < 85 && ODvalue !== '') {
+        clasificacionOD = 'AL BORDE DE LIMITES NORMALES';
+    }
+
+    // Clasificación para OI
+        if (mensajeOI) {
+            clasificacionOI = 'FUERA DE LIMITES NORMALES';
+        } else if (OIvalue >= 85) {
+        clasificacionOI = 'DENTRO DE LIMITES NORMALES';
+        } else if (OIvalue < 85 && OIvalue !== '') {
+        clasificacionOI = 'AL BORDE DE LIMITES NORMALES';
+    }
+
+    // Crear un mensaje para OD
+        let ODMessage = `OJO DERECHO\nCONFIABILIDAD: BUENA\n`;
+        let ODdefect = '';
+        if (mensajeOD) {
+            ODdefect = `SE APRECIA DISMINUCIÓN DEL ESPESOR DE CAPA DE FIBRAS NERVIOSAS RETINALES EN CUADRANTES ${mensajeOD}.\n`;
+        }
+        ODMessage += `${ODdefect}PROMEDIO ESPESOR CFNR OD: ${ODvalue}UM\nCLASIFICACIÓN: ${clasificacionOD}`;
+
+    // Crear un mensaje para OI
+        let OIMessage = `OJO IZQUIERDO\nCONFIABILIDAD: BUENA\n`;
+        let OIdefect = '';
+        if (mensajeOI) {
+            OIdefect = `SE APRECIA DISMINUCIÓN DEL ESPESOR DE CAPA DE FIBRAS NERVIOSAS RETINALES EN CUADRANTES ${mensajeOI}.\n`;
+        }
+        OIMessage += `${OIdefect}PROMEDIO ESPESOR CFNR OI: ${OIvalue}UM\nCLASIFICACIÓN: ${clasificacionOI}`;
+
     // Enviar los valores al padre
-    window.parent.postMessage({OD, OI, mensajeOD, mensajeOI}, '*');
+    window.parent.postMessage({OD: ODMessage, OI: OIMessage}, '*');
+    }
 });
 
 document.getElementById('btnClose').addEventListener('click', () => {
