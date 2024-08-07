@@ -7,6 +7,9 @@
     "activeTab",
     "scripting"
   ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon.png"
@@ -16,6 +19,7 @@
       "resources": [
         "faco.png",
         "popup.css",
+        "css/fab.css",
         "js/popup/popup.html",
         "js/popup/popup.css",
         "js/cv/cv.html",
@@ -36,6 +40,20 @@
       "matches": [
         "<all_urls>"
       ]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "css/fab.css"
+      ],
+      "run_at": "document_end"
     }
   ]
 }

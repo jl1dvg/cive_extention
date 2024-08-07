@@ -42,7 +42,7 @@ function ejecutarEnPagina() {
 
         // Puedes agregar más asignaciones de valores a otros textareas aquí
         // Asigna el valor de enfermedadActual al textarea correspondiente
-        const enfermedadActualTextarea = document.getElementById('consultas-enfermedad-actual');
+        const enfermedadActualTextarea = document.getElementById('consultas-enfermedadactual');
         if (enfermedadActualTextarea) {
             enfermedadActualTextarea.value = enfermedadActual;
         } else {

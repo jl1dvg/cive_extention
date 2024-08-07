@@ -263,7 +263,7 @@ function ejecutarEnPagina(item) {
                 return hacerClickEnSelect2(diagnostico.selector)
                     .then(() => establecerBusqueda(diagnostico.selector, diagnostico.nombre))
                     .then(() => seleccionarOpcion())
-                    .then(() => hacerClickEnPresuntivo(diagnostico.definitivo))
+                    //.then(() => hacerClickEnPresuntivo(diagnostico.definitivo))
                     .then(() => hacerClickEnSelect2(diagnostico.lateralidad))
                     .then(() => establecerBusqueda(diagnostico.lateralidad, ojo))
                     .then(() => seleccionarOpcion())
