@@ -25,7 +25,30 @@
     // Añadir el botón al body
     document.body.appendChild(button);
 
-    // Añadir la funcionalidad draggable
+    // Crear el contenedor del popup flotante
+    const popup = document.createElement('div');
+    popup.id = 'floatingPopup';
+    popup.innerHTML = `
+        <div class="popup-content">
+          <div class="grid-container">
+            <div id="inicio" class="section active">
+                <div class="popup-item" id="btnExamenes">
+                    <i class="fas fa-notes-medical"></i> Exámenes
+                </div>
+                <div class="popup-item" id="btnProtocolos">
+                    <i class="fas fa-file-alt"></i> Protocolos
+                </div>
+                <div class="popup-item" id="btnConsulta">
+                    <i class="fas fa-user-md"></i> Consulta
+                </div>
+                <!-- Añade más opciones si es necesario -->
+            </div>
+          </div>
+        </div>
+    `;
+    document.body.appendChild(popup);
+
+    // Añadir la funcionalidad draggable al botón
     button.addEventListener('mousedown', function (e) {
         let shiftY = e.clientY - button.getBoundingClientRect().top;
 
@@ -51,9 +74,29 @@
         return false;
     };
 
+    // Función para mostrar y ocultar el popup
+    function togglePopup() {
+        popup.classList.toggle('active');
+    }
+
+    // Añadir el evento click al botón flotante para mostrar/ocultar el popup
+    button.addEventListener('click', togglePopup);
+
     // Añadir la hoja de estilos al documento
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = chrome.runtime.getURL('css/floating_button.css');
     document.head.appendChild(link);
+
+    // Añadir la hoja de estilos del popup al documento
+    const popupLink = document.createElement('link');
+    popupLink.rel = 'stylesheet';
+    popupLink.href = chrome.runtime.getURL('css/floating_popup.css');
+    document.head.appendChild(popupLink);
+
+    // Añadir la hoja de estilos de Font Awesome al documento
+    const fontAwesomeLink = document.createElement('link');
+    fontAwesomeLink.rel = 'stylesheet';
+    fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+    document.head.appendChild(fontAwesomeLink);
 })();

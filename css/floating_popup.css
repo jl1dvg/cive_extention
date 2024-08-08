@@ -1,0 +1,79 @@
+/* css/floating_popup.css */
+
+/* Estilos generales del contenedor del popup flotante */
+#floatingPopup {
+    position: fixed;
+    top: calc(50% - 25%); /* Centrar verticalmente */
+    right: -300px; /* Oculto fuera de la pantalla */
+    width: 300px;
+    height: 50%; /* Ajuste de altura */
+    background-color: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    transition: right 0.3s ease;
+    z-index: 1001;
+    overflow-y: auto;
+}
+
+#floatingPopup.active {
+    right: 0; /* Mostrar el popup */
+}
+
+/* Estilos del contenido del popup */
+.popup-content {
+    padding: 20px;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.popup-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.popup-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.popup-item i {
+    margin-right: 10px;
+}
+
+/* Estilos adicionales necesarios para el contenido */
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.grid-item {
+    cursor: pointer;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+.card-header {
+    font-weight: bold;
+}
