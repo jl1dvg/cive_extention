@@ -1,0 +1,50 @@
+/* css/floating_button.css */
+
+/* Estilos generales del botón */
+:is(button, a):focus {
+    outline: none;
+}
+
+:is(button, a).actionable-icon {
+    appearance: none;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+:is(button, a).actionable-icon:is(:focus, :hover:not(:disabled)) {
+    background: rgb(0 102 255 / 15%);
+}
+
+:is(button, a).actionable-icon:hover:active {
+    background: var(--magical-primary-20);
+}
+
+/* Botones primarios */
+:is(button, a).primary {
+    background: var(--magical-primary-60);
+    color: white;
+    border-color: transparent;
+}
+
+:is(button, a).primary:is(:focus, :hover:not(:disabled)) {
+    background: var(--magical-primary-70);
+}
+
+:is(button, a).primary:hover:active {
+    background: var(--magical-primary-80);
+}
+
+/* Tamaño del botón flotante */
+#floatingButton {
+    border-radius: 50%;
+    padding: 10px;
+}
+
+/* Estilo del icono del botón flotante */
+#floatingButton img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%; /* Hacer que la imagen sea redonda */
+}
