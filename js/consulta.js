@@ -116,11 +116,23 @@ function ejecutarProtocoloEnPagina() {
             const procedimientoElement = procedimientoHeader.nextElementSibling;
             console.log("Elemento siguiente del encabezado Realizado:", procedimientoElement); // Añadido para depurar
             if (procedimientoElement) {
-                const procedimientoText = procedimientoElement.textContent.trim();
+                let procedimientoText = procedimientoElement.textContent.trim();
                 const primeraLinea = procedimientoText.split('\n')[0]; // Obtener solo la primera línea
                 procedimiento = primeraLinea.trim();
-                const ojoMatch = procedimiento.match(/\((.*?)\)/); // Buscar el texto entre paréntesis
-                ojoRealizado = ojoMatch ? ojoMatch[1] : '';
+
+                // Elimina el código de 5 dígitos seguido de un guion al inicio
+                procedimiento = procedimiento.replace(/^\d{5}-\s*/, '');
+
+                // Reemplaza (OD) y (OI) con ojo derecho y ojo izquierdo respectivamente
+                procedimiento = procedimiento.replace(/\(OD\)/g, 'ojo derecho').replace(/\(OI\)/g, 'ojo izquierdo');
+                const ojoMatch = primeraLinea.match(/\((OD|OI)\)/); // Buscar el texto (OD) o (OI)
+                if (ojoMatch) {
+                    if (ojoMatch[1] === 'OD') {
+                        ojoRealizado = 'ojo derecho';
+                    } else if (ojoMatch[1] === 'OI') {
+                        ojoRealizado = 'ojo izquierdo';
+                    }
+                }
             }
         }
         console.log("Procedimiento Realizado:", procedimiento); // Añadido para depurar
@@ -148,8 +160,8 @@ function ejecutarProtocoloEnPagina() {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Diferencia en días
 
         // Construye la nota de evolución médica
-        const notaEvolucion = `Paciente acude a control post quirúrgico de ${diffDays} días tras haber sido sometido a ${procedimiento} en ${ojoRealizado}. Sin complicaciones.`;
-        const examenFisico = `Biomicroscopia\n ${ojoRealizado}: CORNEA CLARA, CAMARA FORMADA CON PRESENCIA DE BURBUJA DE AIRE, PUPILA MIOTICA REACTIVA, PSEUDOFAQUIA CORRECTA.`
+        const notaEvolucion = `Paciente acude a control post quirúrgico de ${diffDays} días tras haber sido sometido a ${procedimiento}. Sin complicaciones.`;
+        const examenFisico = `Biomicroscopia\n${ojoRealizado}: CORNEA CLARA, CAMARA FORMADA CON PRESENCIA DE BURBUJA DE AIRE, PUPILA MIOTICA REACTIVA, PSEUDOFAQUIA CORRECTA.`;
 
         // Asigna la nota de evolución médica al textarea con id "consultas-motivoconsulta"
         const consultaTextarea = document.getElementById('consultas-motivoconsulta');
@@ -157,7 +169,11 @@ function ejecutarProtocoloEnPagina() {
 
         if (consultaTextarea) {
             consultaTextarea.value = notaEvolucion;
+            if (observacionTextarea) {
             observacionTextarea.value = examenFisico;
+            } else {
+                console.log('Textarea con id "consultas-fisico-0-observacion" no encontrado.');
+            }
         } else {
             console.log('Textarea con id "consultas-motivoconsulta" no encontrado.');
         }
