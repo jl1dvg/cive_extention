@@ -31,6 +31,7 @@
         "js/floatingButton.js",
         "js/popup.js",
         "js/examenes.js",
+        "js/procedimientos.js",
         "js/consulta.js",
         "js/popup/popup.html",
         "js/popup/popup.css",

@@ -1,5 +1,6 @@
 // js/content_script.js
 
+
 (function () {
     // Crear el botón flotante
     const button = document.createElement('button');
@@ -288,4 +289,76 @@
             })
             .catch(error => console.error('Error en la ejecución de examen:', error));
     }
+
+    function cargarProtocolos() {
+        console.log('Intentando cargar procedimientos...');
+        cargarJSON(chrome.runtime.getURL('data/procedimientos.json'))
+            .then(data => {
+                console.log('Datos de procedimientos cargados:', data);
+                const procedimientosData = data.procedimientos;
+                crearBotonesCategorias(procedimientosData, 'contenedorProtocolos', ejecutarProtocolos);
+            })
+            .catch(error => console.error('Error cargando JSON de examenes:', error));
+    }
+
+    function mostrarProcedimientosPorCategoria(procedimientos) {
+        const contenedorProcedimientos = document.getElementById('contenedorProcedimientos');
+        contenedorProcedimientos.innerHTML = ''; // Limpiar el contenedor
+        procedimientos.forEach(procedimiento => {
+            const col = document.createElement('div');
+            col.className = 'col-sm-4'; // Cada botón ocupará un tercio del ancho de la fila
+            const boton = document.createElement('button');
+            boton.id = `${procedimiento.id}`;
+            boton.className = 'btn btn-outline-success btn-sm'; // Estilo de botón y ancho completo
+            boton.textContent = `${procedimiento.cirugia}`;
+            boton.addEventListener('click', () => {
+                console.log(`Botón clickeado: ${procedimiento.cirugia}`);
+                ejecutarProtocolos(procedimiento.id); // Ensure this function is called correctly
+            });
+            col.appendChild(boton);
+            contenedorProcedimientos.appendChild(col);
+        });
+        mostrarSeccion('procedimientos');
+    }
+
+    function crearBotonesCategorias(procedimientos, contenedorId) {
+        const categorias = [...new Set(procedimientos.map(procedimiento => procedimiento.categoria))];
+        const contenedorBotones = document.getElementById(contenedorId);
+        contenedorBotones.innerHTML = ''; // Limpiar el contenedor
+        categorias.forEach(categoria => {
+            const col = document.createElement('div');
+            col.className = 'col-sm-4';
+            const boton = document.createElement('button');
+            boton.className = 'btn btn-outline-primary btn-sm';
+            boton.textContent = categoria;
+            boton.addEventListener('click', () => {
+                console.log(`Categoría clickeada: ${categoria}`);
+                const procedimientosCategoria = procedimientos.filter(procedimiento => procedimiento.categoria === categoria);
+                mostrarProcedimientosPorCategoria(procedimientosCategoria);
+            });
+            col.appendChild(boton);
+            contenedorBotones.appendChild(col);
+        });
+    }
+
+    function ejecutarProtocolos(id) {
+        cargarJSON(chrome.runtime.getURL('data/procedimientos.json'))
+            .then(data => {
+                const item = data.procedimientos.find(d => d.id === id);
+                if (!item) throw new Error('ID no encontrado en el JSON');
+
+                console.log("Item cargado:", item);
+
+                // Verificar que el item tenga todas las propiedades necesarias
+                if (!item || typeof item !== 'object') {
+                    throw new Error('El item cargado no tiene la estructura esperada.');
+                }
+
+            // Enviar un mensaje al background script para ejecutar el protocolo
+            chrome.runtime.sendMessage({action: "ejecutarProtocolo", item: item});
+            })
+        .catch(error => console.error('Error en la ejecución de protocolo:', error));
+    }
+
+
 })();

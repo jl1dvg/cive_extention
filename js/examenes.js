@@ -1,31 +1,6 @@
-import {cargarJSON} from './utils.js';
-
-export function cargarExamenes() {
-    cargarJSON('data/examenes.json')
-        .then(data => {
-            console.log('Datos de exámenes cargados:', data);
-            const procedimientosData = data.examenes;
-            crearBotonesProcedimientos(procedimientosData, 'contenedorExamenes', ejecutarExamenes);
-        })
-        .catch(error => console.error('Error cargando JSON de examenes:', error));
-}
-
-function ejecutarExamenes(id) {
-    cargarJSON('data/examenes.json')
-        .then(data => {
-            const item = data.examenes.find(d => d.id === id);
-            if (!item) throw new Error('ID no encontrado en el JSON');
-
-            chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-                chrome.scripting.executeScript({
-                    target: {tabId: tabs[0].id}, func: ejecutarEnPagina, args: [item]
-                });
-            });
-        })
-        .catch(error => console.error('Error en la ejecución de examen:', error));
-}
-
 function ejecutarEnPagina(item) {
+    console.log("Datos recibidos en ejecutarEnPagina:", item);
+
     function mostrarPopup(url) {
         return new Promise((resolve) => {
             const popup = document.createElement('div');
@@ -333,22 +308,4 @@ OI: ${OI}`;
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
     }
-}
-
-function crearBotonesProcedimientos(procedimientos, contenedorId, clickHandler) {
-    const contenedorBotones = document.getElementById(contenedorId);
-    contenedorBotones.innerHTML = ''; // Limpiar el contenedor
-    procedimientos.forEach(procedimiento => {
-        const col = document.createElement('div');
-        col.className = 'col-sm-4'; // Cada botón ocupará un tercio del ancho de la fila
-        const boton = document.createElement('button');
-        boton.id = `${procedimiento.id}`;
-        boton.className = 'btn btn-outline-primary btn-sm'; // Estilo de botón y ancho completo
-        boton.textContent = `${procedimiento.cirugia}`;
-        boton.addEventListener('click', () => {
-            console.log(`Botón clickeado: ${procedimiento.cirugia}`);
-            clickHandler(procedimiento.id);
-        });
-        contenedorBotones.appendChild(boton);
-    });
 }

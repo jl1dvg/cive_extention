@@ -1,33 +1,13 @@
-import {cargarJSON} from './utils.js';
-import {mostrarProcedimientosPorCategoria} from './popup.js';
+function ejecutarProtocoloEnPagina(item) {
+// Verificar que el item tenga la estructura esperada
+    console.log('Item recibido en ejecutarProtocoloEnPagina:', item);
 
+    if (!item || typeof item !== 'object' || !item.codigos || !Array.isArray(item.codigos)) {
+        console.error('El item recibido no tiene la estructura esperada.', item);
+        return;
+    }
 
-export function cargarProtocolos() {
-    cargarJSON('data/procedimientos.json')
-        .then(data => {
-            console.log('Datos de protocolos cargados:', data);
-            const procedimientosData = data.procedimientos;
-            crearBotonesCategorias(procedimientosData, 'contenedorProtocolos');
-        })
-        .catch(error => console.error('Error cargando JSON de protocolos:', error));
-}
-
-export function ejecutarProtocolos(id) {
-    cargarJSON('data/procedimientos.json')
-        .then(data => {
-            const item = data.procedimientos.find(d => d.id === id);
-            if (!item) throw new Error('ID no encontrado en el JSON');
-
-            chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-                chrome.scripting.executeScript({
-                    target: {tabId: tabs[0].id}, func: ejecutarEnPagina, args: [item]
-                });
-            });
-        })
-        .catch(error => console.error('Error en la ejecución de protocolo:', error));
-}
-
-function ejecutarEnPagina(item) {
+    // Asegúrate de que el DOM esté listo antes de hacer cualquier operación
     function llenarCampoTexto(selector, valor) {
         return new Promise((resolve, reject) => {
             const textArea = document.querySelector(selector);
@@ -36,6 +16,7 @@ function ejecutarEnPagina(item) {
                 textArea.value = valor;
                 setTimeout(resolve, 100); // Añadir un retraso para asegurar que el valor se establezca
             } else {
+                console.error(`El campo de texto "${selector}" no se encontró.`);
                 reject(`El campo de texto "${selector}" no se encontró.`);
             }
         });
@@ -60,6 +41,7 @@ function ejecutarEnPagina(item) {
 
                 clickBoton();
             } else {
+                console.error(`El botón "${selector}" no se encontró.`);
                 reject(`El botón "${selector}" no se encontró.`);
             }
         });
@@ -76,6 +58,7 @@ function ejecutarEnPagina(item) {
                 tecnicoContainer.dispatchEvent(event);
                 setTimeout(resolve, 100); // Añadir un retraso para asegurar que el menú se despliegue
             } else {
+                console.error(`El contenedor "${selector}" no se encontró.`);
                 reject(`El contenedor "${selector}" no se encontró.`);
             }
         });
@@ -88,24 +71,21 @@ function ejecutarEnPagina(item) {
 
             const searchForField = () => {
                 const searchField = document.querySelector('input.select2-search__field');
-                if (searchField) {
+                if (!searchField) {
+                    console.log(`Intento ${attempts + 1}: no se encontró el campo de búsqueda. Retentando...`);
+                    attempts++;
+                    if (attempts < maxAttempts) {
+                        hacerClickEnSelect2(selector).then(() => setTimeout(searchForField, 500)).catch(error => reject(error));
+                    } else {
+                        console.error('El campo de búsqueda del Select2 no se encontró.');
+                        reject('El campo de búsqueda del Select2 no se encontró.');
+                    }
+                } else {
                     console.log('Estableciendo búsqueda:', valor);
                     searchField.value = valor;
-                    const inputEvent = new Event('input', {
-                        bubbles: true, cancelable: true
-                    });
+                    const inputEvent = new Event('input', {bubbles: true, cancelable: true});
                     searchField.dispatchEvent(inputEvent);
-                    setTimeout(() => resolve(searchField), 500); // Añadir un retraso para asegurar que los resultados se carguen
-                } else if (attempts < maxAttempts) {
-                    console.log(`Esperando campo de búsqueda del Select2... intento ${attempts + 1}`);
-                    attempts++;
-                    hacerClickEnSelect2(selector)
-                        .then(() => {
-                            setTimeout(searchForField, 500); // Espera y reintenta
-                        })
-                        .catch(error => reject(error));
-                } else {
-                    reject('El campo de búsqueda del Select2 no se encontró.');
+                    setTimeout(() => resolve(searchField), 500);
                 }
             };
 
@@ -115,6 +95,11 @@ function ejecutarEnPagina(item) {
 
     function seleccionarOpcion() {
         return new Promise((resolve, reject) => {
+            // Verificar que el selector existe y es accesible antes de intentar realizar operaciones
+            if (document.querySelector('input.select2-search__field') === null) {
+                console.error('El campo de búsqueda select2-search__field no existe en el DOM.');
+                return;
+            }
             const searchField = document.querySelector('input.select2-search__field');
             if (searchField) {
                 console.log('Seleccionando opción');
@@ -124,6 +109,7 @@ function ejecutarEnPagina(item) {
                 searchField.dispatchEvent(enterEvent);
                 setTimeout(resolve, 200); // Añadir un retraso para asegurar que la opción se seleccione
             } else {
+                console.error('El campo de búsqueda del Select2 no se encontró para seleccionar la opción.');
                 reject('El campo de búsqueda del Select2 no se encontró para seleccionar la opción.');
             }
         });
@@ -137,6 +123,7 @@ function ejecutarEnPagina(item) {
                 radioNo.checked = true;
                 resolve();
             } else {
+                console.error('El radio botón "NO" no se encontró.');
                 reject('El radio botón "NO" no se encontró.');
             }
         });
@@ -149,7 +136,7 @@ function ejecutarEnPagina(item) {
         const year = fecha.getFullYear();
         return `${dia}/${mes}/${year}`;
     }
-
+/*
     function hacerClickEnPresuntivo(selector) {
         return new Promise((resolve, reject) => {
             const botonPresuntivo = document.querySelector(selector);
@@ -159,11 +146,12 @@ function ejecutarEnPagina(item) {
                 botonPresuntivo.click();
                 resolve();
             } else {
+                console.error('El checkbox "PRESUNTIVO" no se encontró.');
                 reject('El checkbox "PRESUNTIVO" no se encontró.');
             }
         });
     }
-
+*/
     function llenarCampoCantidad(selector, cantidad, tabCount = 0) {
         return new Promise((resolve, reject) => {
             const campoCantidad = document.querySelector(selector);
@@ -179,17 +167,32 @@ function ejecutarEnPagina(item) {
                 const pressTab = () => {
                     if (tabsPressed < tabCount) {
                         const tabEvent = new KeyboardEvent('keydown', {
-                            key: 'Tab', keyCode: 9, code: 'Tab', which: 9, bubbles: true, cancelable: true
+                            key: 'Tab',
+                            keyCode: 9,
+                            code: 'Tab',
+                            which: 9,
+                            bubbles: true,
+                            cancelable: true
                         });
                         document.activeElement.dispatchEvent(tabEvent);
 
                         const tabEventPress = new KeyboardEvent('keypress', {
-                            key: 'Tab', keyCode: 9, code: 'Tab', which: 9, bubbles: true, cancelable: true
+                            key: 'Tab',
+                            keyCode: 9,
+                            code: 'Tab',
+                            which: 9,
+                            bubbles: true,
+                            cancelable: true
                         });
                         document.activeElement.dispatchEvent(tabEventPress);
 
                         const tabEventUp = new KeyboardEvent('keyup', {
-                            key: 'Tab', keyCode: 9, code: 'Tab', which: 9, bubbles: true, cancelable: true
+                            key: 'Tab',
+                            keyCode: 9,
+                            code: 'Tab',
+                            which: 9,
+                            bubbles: true,
+                            cancelable: true
                         });
                         document.activeElement.dispatchEvent(tabEventUp);
 
@@ -202,6 +205,7 @@ function ejecutarEnPagina(item) {
                 };
                 pressTab();
             } else {
+                console.error('El campo cantidad no se encontró.');
                 reject('El campo cantidad no se encontró.');
             }
         });
@@ -209,8 +213,23 @@ function ejecutarEnPagina(item) {
 
 
     const ejecutarAcciones = (item) => {
+        if (!item || !item.membrete || !item.dieresis) {
+            console.error('El objeto item o alguna de sus propiedades necesarias están indefinidos:', item);
+            return Promise.reject('Item inválido');
+        }
         // Llenar campos de texto
-        return Promise.all([llenarCampoTexto('#consultasubsecuente-membrete', item.membrete), llenarCampoTexto('#consultasubsecuente-dieresis', item.dieresis), llenarCampoTexto('#consultasubsecuente-exposicion', item.exposicion), llenarCampoTexto('#consultasubsecuente-hallazgo', item.hallazgo), llenarCampoTexto('#consultasubsecuente-operatorio', item.operatorio), llenarCampoTexto('#consultasubsecuente-complicacionesoperatorio', item.complicacionesoperatorio), llenarCampoTexto('#consultasubsecuente-perdidasanguineat', item.perdidasanguineat), hacerClickEnBoton('#trabajadorprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus', item.staffCount), hacerClickEnBoton('#procedimientoprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus', item.codigoCount), hacerClickEnBoton('#diagnosticossub11111 .list-cell__button .js-input-plus', item.diagnosticoCount)]);
+        return Promise.all([
+            llenarCampoTexto('#consultasubsecuente-membrete', item.membrete),
+            llenarCampoTexto('#consultasubsecuente-dieresis', item.dieresis),
+            llenarCampoTexto('#consultasubsecuente-exposicion', item.exposicion),
+            llenarCampoTexto('#consultasubsecuente-hallazgo', item.hallazgo),
+            llenarCampoTexto('#consultasubsecuente-operatorio', item.operatorio),
+            llenarCampoTexto('#consultasubsecuente-complicacionesoperatorio', item.complicacionesoperatorio),
+            llenarCampoTexto('#consultasubsecuente-perdidasanguineat', item.perdidasanguineat),
+            hacerClickEnBoton('#trabajadorprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus', item.staffCount),
+            hacerClickEnBoton('#procedimientoprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus', item.codigoCount),
+            hacerClickEnBoton('#diagnosticossub11111 .list-cell__button .js-input-plus', item.diagnosticoCount)
+        ]);
     };
 
     function obtenerOjoATratar() {
@@ -236,7 +255,6 @@ function ejecutarEnPagina(item) {
         }
     }
 
-// Ejemplo de uso
     const ojoATratar = obtenerOjoATratar();
     console.log(ojoATratar);
 
@@ -521,27 +539,6 @@ Se indica al paciente que debe acudir a una consulta de control en las próximas
         .then(() => console.log('Clic simulado correctamente.'))
         .catch(error => console.error('Error en la ejecución de acciones:', error));
 }
-
-function crearBotonesCategorias(procedimientos, contenedorId) {
-    const categorias = [...new Set(procedimientos.map(procedimiento => procedimiento.categoria))];
-    const contenedorBotones = document.getElementById(contenedorId);
-    contenedorBotones.innerHTML = ''; // Limpiar el contenedor
-    categorias.forEach(categoria => {
-        const col = document.createElement('div');
-        col.className = 'col-sm-4';
-        const boton = document.createElement('button');
-        boton.className = 'btn btn-outline-primary btn-sm';
-        boton.textContent = categoria;
-        boton.addEventListener('click', () => {
-            console.log(`Categoría clickeada: ${categoria}`);
-            const procedimientosCategoria = procedimientos.filter(procedimiento => procedimiento.categoria === categoria);
-            mostrarProcedimientosPorCategoria(procedimientosCategoria);
-        });
-        col.appendChild(boton);
-        contenedorBotones.appendChild(col);
-    });
-}
-
 
 
 
