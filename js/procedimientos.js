@@ -250,7 +250,7 @@ function ejecutarProtocoloEnPagina(item) {
                 return {sigla: "", descripcion: "Ojo no especificado"};
             }
         } else {
-            console.error('No se encontró el elemento con las notas del doctor.');
+            //console.error('No se encontró el elemento con las notas del doctor.');
             return {sigla: "", descripcion: "Ojo no especificado"};
         }
     }

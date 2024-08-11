@@ -25,20 +25,13 @@ function ejecutarEnPagina(item) {
             `;
             document.body.appendChild(popup);
 
-            const iframe = document.getElementById('placeholder-dialog');
-
-            iframe.onload = function () {
-                setTimeout(() => {
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    const inputOD = iframeDoc.getElementById('inputOD');
-                    if (inputOD) {
-                        inputOD.focus();
-                    }
-                }, 100); // Ajusta el tiempo de espera si es necesario
-            };
-
             // Escuchar el mensaje del iframe
-            window.addEventListener('message', function onMessage(event) {
+        window.addEventListener('message', function onMessage(event) {
+            // Asegúrate de que el mensaje proviene del iframe de la extensión
+            if (event.origin !== chrome.runtime.getURL('/').slice(0, -1)) {
+                return;
+            }
+
                 if (event.data.OD !== undefined && event.data.OI !== undefined) {
                     document.body.removeChild(popup);
                     window.removeEventListener('message', onMessage); // Remover el listener después de recibir el mensaje
@@ -48,7 +41,7 @@ function ejecutarEnPagina(item) {
                     document.body.removeChild(popup);
                     window.removeEventListener('message', onMessage);
                 }
-            });
+        });
 
             // Añadir evento al botón de cierre
             popup.querySelector('#btnClose').addEventListener('click', () => {

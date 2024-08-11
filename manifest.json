@@ -17,7 +17,6 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_popup": "popup.html",
     "default_icon": "icon.png"
   },
   "web_accessible_resources": [
@@ -29,7 +28,6 @@
         "css/floating_popup.css",
         "css/floating_button.css",
         "js/floatingButton.js",
-        "js/popup.js",
         "js/examenes.js",
         "js/procedimientos.js",
         "js/consulta.js",
