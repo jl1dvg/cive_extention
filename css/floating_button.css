@@ -40,6 +40,10 @@
 #floatingButton {
     border-radius: 50%;
     padding: 10px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1051; /* Asegurar que esté por encima del modal */
 }
 
 /* Estilo del icono del botón flotante */

@@ -1,5 +1,5 @@
 // Función que se ejecutará en la página actual
-function ejecutarEnPagina() {
+function consultaAnterior() {
     // Función para obtener el contenido después del elemento <b> con el texto específico
     function getContentAfterBold(parent, text) {
         const boldElement = Array.from(parent.querySelectorAll('b')).find(b => b.textContent.includes(text));
@@ -69,11 +69,8 @@ function ejecutarEnPagina() {
     }
 }
 
-// Exporta la función para que pueda ser usada por popup.js
-export {ejecutarEnPagina};
-
 // Función que se ejecutará en la página actual para protocolos de cirugía
-function ejecutarProtocoloEnPagina() {
+function ejecutarPopEnPagina() {
     // Función para obtener el contenido después del elemento <th> con el texto específico
     function getContentAfterTh(parent, thText) {
         const thElement = Array.from(parent.querySelectorAll('th')).find(th => th.textContent.includes(thText));
@@ -170,7 +167,7 @@ function ejecutarProtocoloEnPagina() {
         if (consultaTextarea) {
             consultaTextarea.value = notaEvolucion;
             if (observacionTextarea) {
-            observacionTextarea.value = examenFisico;
+                observacionTextarea.value = examenFisico;
             } else {
                 console.log('Textarea con id "consultas-fisico-0-observacion" no encontrado.');
             }
@@ -182,5 +179,3 @@ function ejecutarProtocoloEnPagina() {
     }
 }
 
-// Exporta la función para que pueda ser usada por popup.js
-export {ejecutarProtocoloEnPagina};

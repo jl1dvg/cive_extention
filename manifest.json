@@ -5,8 +5,17 @@
   "description": "Descripción de mi extensión",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
+  "host_permissions": [
+    "http://cive.ddns.net/*",
+    "https://cive.ddns.net/*",
+    "file:///*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon.png"
@@ -17,8 +26,12 @@
         "faco.png",
         "icon.png",
         "css/popup.css",
-        "css/fab.css",
+        "css/floating_popup.css",
         "css/floating_button.css",
+        "js/floatingButton.js",
+        "js/popup.js",
+        "js/examenes.js",
+        "js/consulta.js",
         "js/popup/popup.html",
         "js/popup/popup.css",
         "js/cv/cv.html",
@@ -34,7 +47,9 @@
         "js/auto/auto.html",
         "js/auto/auto.css",
         "js/angio/angio.html",
-        "js/angio/angio.css"
+        "js/angio/angio.css",
+        "data/examenes.json",
+        "data/procedimientos.json"
       ],
       "matches": [
         "<all_urls>"
@@ -47,6 +62,8 @@
         "<all_urls>"
       ],
       "js": [
+        "js/examenes.js",
+        "js/consulta.js",
         "js/content_script.js"
       ]
     }
