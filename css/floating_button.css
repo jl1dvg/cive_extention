@@ -1,54 +1,70 @@
-/* css/floating_button.css */
-
-/* Estilos generales del botón */
-:is(button, a):focus {
-    outline: none;
-}
-
-:is(button, a).actionable-icon {
-    appearance: none;
-    background: transparent;
+/* Estilos para el botón flotante */
+#floatingButton {
+    border-radius: 24px 24px 24px 24px / 50% 50% 50% 50%; /* Bordes superiores e inferiores rectos, laterales semicirculares */
+    padding: 10px 10px; /* Ajusta el padding para un mejor aspecto */
+    position: fixed;
+    bottom: 20px;
+    right: 5px;
+    z-index: 1051;
+    background: var(--magical-primary-60);
+    color: white;
     border: none;
-    border-radius: 12px;
+    box-shadow: var(--box-shadow-elevation-1);
+    transition: background 100ms ease-out, box-shadow 100ms ease-out;
+    display: flex;
+    align-items: center;
     cursor: pointer;
 }
 
-:is(button, a).actionable-icon:is(:focus, :hover:not(:disabled)) {
-    background: rgb(0 102 255 / 15%);
-}
-
-:is(button, a).actionable-icon:hover:active {
-    background: var(--magical-primary-20);
-}
-
-/* Botones primarios */
-:is(button, a).primary {
-    background: var(--magical-primary-60);
-    color: white;
-    border-color: transparent;
-}
-
-:is(button, a).primary:is(:focus, :hover:not(:disabled)) {
-    background: var(--magical-primary-70);
-}
-
-:is(button, a).primary:hover:active {
-    background: var(--magical-primary-80);
-}
-
-/* Tamaño del botón flotante */
-#floatingButton {
-    border-radius: 50%;
-    padding: 10px;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1051; /* Asegurar que esté por encima del modal */
-}
-
-/* Estilo del icono del botón flotante */
+/* Estilos para el icono de la imagen dentro del botón */
 #floatingButton img {
     width: 24px;
     height: 24px;
-    border-radius: 50%; /* Hacer que la imagen sea redonda */
+    border-radius: 50%; /* Hacer el ícono redondo */
+    margin-right: 8px; /* Espacio entre el icono principal y el ícono de tres puntos */
+}
+
+/* Estilos para el ícono de tres puntos */
+#floatingButton .drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 24px;
+    background: transparent;
+    cursor: grab;
+}
+
+#floatingButton .drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Tres puntos verticales */
+.drag-handle::before {
+    content: "\2022 \2022 \2022"; /* Tres puntos verticales */
+    font-size: 16px;
+    color: white;
+}
+
+/* Hover y active states */
+#floatingButton:hover {
+    background: var(--magical-primary-70);
+}
+
+#floatingButton:active {
+    background: var(--magical-primary-80);
+}
+
+#floatingButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+/* Variables CSS */
+:root {
+    --magical-primary-60: #0066FF;
+    --magical-primary-70: #0055CC;
+    --magical-primary-80: #0044AA;
+    --magical-gray-60: #999999;
+    --box-shadow-elevation-1: 0px 1px 3px rgba(0, 0, 0, 0.2);
 }

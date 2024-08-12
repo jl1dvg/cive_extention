@@ -6,26 +6,62 @@
     const button = document.createElement('button');
     button.id = 'floatingButton';
     button.className = 'actionable-icon';
-    button.style.position = 'fixed';
-    button.style.bottom = '20px';
-    button.style.right = '20px';
-    button.style.zIndex = '1051';
-    button.style.cursor = 'pointer';
 
     // Añadir la imagen del botón
     const img = document.createElement('img');
     img.src = chrome.runtime.getURL('icon.png'); // Asegúrate de que la ruta de la imagen es correcta
     img.alt = 'Icono Flotante';
-    img.onload = function () {
-        button.appendChild(img);
-    };
-    img.onerror = function () {
-        console.error('No se pudo cargar la imagen: ' + img.src);
-        button.textContent = 'F'; // Texto alternativo en caso de error
-    };
+
+// Crear el elemento de manejo para arrastrar (tres puntos)
+    const dragHandle = document.createElement('div');
+    dragHandle.className = 'drag-handle';
+
+// Añadir la imagen y el ícono de manejo al botón
+    button.appendChild(img);
+    button.appendChild(dragHandle);
 
     // Añadir el botón al body
     document.body.appendChild(button);
+
+// Variables para el manejo del arrastre
+    let isDragging = false;
+    let initialY;
+    let currentY = button.getBoundingClientRect().top; // Posición inicial del botón
+    let offsetY = 0; // Desplazamiento acumulado
+
+// Función para iniciar el arrastre
+    dragHandle.addEventListener('mousedown', function (e) {
+        isDragging = true;
+        initialY = e.clientY; // Guardar la posición del cursor
+        button.style.transition = 'none';
+    });
+
+// Función para mover el botón
+    document.addEventListener('mousemove', function (e) {
+        if (isDragging) {
+            offsetY = e.clientY - initialY;
+            let newTranslateY = currentY + offsetY; // Nueva posición basada en la original más el desplazamiento
+
+            const maxY = window.innerHeight - button.offsetHeight;
+            const minY = 0;
+
+            // Asegurarse de que el botón se mantenga dentro de los límites de la pantalla
+            newTranslateY = Math.max(minY, Math.min(maxY, newTranslateY));
+
+            button.style.transform = `translateY(${newTranslateY - currentY}px)`;
+        }
+    });
+
+// Función para terminar el arrastre
+    document.addEventListener('mouseup', function () {
+        if (isDragging) {
+            isDragging = false;
+            currentY += offsetY; // Actualizar la posición actual del botón
+            offsetY = 0; // Reiniciar el desplazamiento
+            button.style.transition = 'background 100ms ease-out, box-shadow 100ms ease-out'; // Reactiva la transición
+        }
+    });
+
 
     // Crear el contenedor del popup flotante
     const popup = document.createElement('div');
@@ -259,6 +295,10 @@
     function crearBotonesProcedimientos(procedimientos, contenedorId, clickHandler) {
         const contenedorBotones = document.getElementById(contenedorId);
         contenedorBotones.innerHTML = ''; // Limpiar el contenedor
+
+        // Ordenar procedimientos alfabéticamente por la propiedad 'cirugia'
+        procedimientos.sort((a, b) => a.cirugia.localeCompare(b.cirugia));
+
         procedimientos.forEach(procedimiento => {
             const col = document.createElement('div');
             col.className = 'col-sm-4'; // Cada botón ocupará un tercio del ancho de la fila
@@ -354,10 +394,10 @@
                     throw new Error('El item cargado no tiene la estructura esperada.');
                 }
 
-            // Enviar un mensaje al background script para ejecutar el protocolo
-            chrome.runtime.sendMessage({action: "ejecutarProtocolo", item: item});
+                // Enviar un mensaje al background script para ejecutar el protocolo
+                chrome.runtime.sendMessage({action: "ejecutarProtocolo", item: item});
             })
-        .catch(error => console.error('Error en la ejecución de protocolo:', error));
+            .catch(error => console.error('Error en la ejecución de protocolo:', error));
     }
 
 
