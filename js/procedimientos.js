@@ -136,22 +136,29 @@ function ejecutarProtocoloEnPagina(item) {
         const year = fecha.getFullYear();
         return `${dia}/${mes}/${year}`;
     }
-/*
-    function hacerClickEnPresuntivo(selector) {
+
+    function hacerClickEnPresuntivo(selector, numeroDeClicks = 1) {
         return new Promise((resolve, reject) => {
             const botonPresuntivo = document.querySelector(selector);
 
             if (botonPresuntivo) {
-                console.log('Haciendo clic en el checkbox "PRESUNTIVO"');
-                botonPresuntivo.click();
-                resolve();
+                console.log(`Haciendo clic en el checkbox "PRESUNTIVO" ${numeroDeClicks} veces`);
+                let contador = 0;
+                const intervalo = setInterval(() => {
+                    botonPresuntivo.click();
+                    contador++;
+                    if (contador >= numeroDeClicks) {
+                        clearInterval(intervalo);
+                        resolve();
+                    }
+                }, 100); // Intervalo entre clics, ajustable según necesidad
             } else {
                 console.error('El checkbox "PRESUNTIVO" no se encontró.');
                 reject('El checkbox "PRESUNTIVO" no se encontró.');
             }
         });
     }
-*/
+
     function llenarCampoCantidad(selector, cantidad, tabCount = 0) {
         return new Promise((resolve, reject) => {
             const campoCantidad = document.querySelector(selector);
@@ -224,6 +231,11 @@ function ejecutarProtocoloEnPagina(item) {
             llenarCampoTexto('#consultasubsecuente-exposicion', item.exposicion),
             llenarCampoTexto('#consultasubsecuente-hallazgo', item.hallazgo),
             llenarCampoTexto('#consultasubsecuente-operatorio', item.operatorio),
+            llenarCampoTexto('#consultasubsecuente-hallazgopostquirurgico', 'Paciente orientado en las tres esferas y presenta un parche oclusivo en el ojo operado, conforme a las indicaciones postoperatorias. Constantes vitales dentro de los parámetros normales. No se observan complicaciones inmediatas.'),
+            llenarCampoTexto('#consultasubsecuente-drenajes', 'No'),
+            llenarCampoTexto('#consultasubsecuente-sangrado', 'No'),
+            llenarCampoTexto('#consultasubsecuente-complicaciones', 'No'),
+            llenarCampoTexto('#consultasubsecuente-heridas', 'No'),
             llenarCampoTexto('#consultasubsecuente-complicacionesoperatorio', item.complicacionesoperatorio),
             llenarCampoTexto('#consultasubsecuente-perdidasanguineat', item.perdidasanguineat),
             hacerClickEnBoton('#trabajadorprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus', item.staffCount),
@@ -531,6 +543,8 @@ Se indica al paciente que debe acudir a una consulta de control en las próximas
         .then(() => establecerBusqueda('#select2-consultasubsecuente-anestesia_id-container', "REGIONAL"))
         .then(() => seleccionarOpcion())
         .then(() => ejecutarDiagnosticos(item, ojoATratar.sigla))
+        .then(() => hacerClickEnPresuntivo('.form-group.field-proyectada .cbx-container .cbx', 2))
+        .then(() => hacerClickEnPresuntivo('.form-group.field-termsChkbx .cbx-container .cbx', 1))
         .then(() => ejecutarRecetas(item))
         .then(() => esperarElemento('#docsolicitudprocedimientos-observacion_consulta'))
         .then(() => llenarCampoTexto('#docsolicitudprocedimientos-observacion_consulta', observaciones))
