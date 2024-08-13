@@ -6,8 +6,16 @@ function consultaAnterior() {
         return boldElement ? boldElement.nextSibling.textContent.trim() : null;
     }
 
+    // Función para obtener el contenido dentro de la clase "timeline-body"
+    function getContentFromTimelineBody(parent) {
+        const timelineBody = parent.querySelector('.timeline-body span.mostrar-todo');
+        return timelineBody ? timelineBody.textContent.trim() : null;
+    }
+
     // Encuentra el primer <li> que contiene "SERVICIOS OFTALMOLOGICOS GENERALES"
     const liElement = Array.from(document.querySelectorAll('li')).find(li => li.textContent.includes("SERVICIOS OFTALMOLOGICOS GENERALES"));
+    // Encuentra el primer <li> que contiene "TRATAMIENTO / OBSERVACIONES FINALES DE LA CONSULTA"
+    const liElementPlan = Array.from(document.querySelectorAll('li')).find(li => li.textContent.includes("TRATAMIENTO / OBSERVACIONES FINALES DE LA CONSULTA"));
 
     if (liElement) {
         const motivoConsulta = getContentAfterBold(liElement, "MOTIVO CONSULTA:");
@@ -24,7 +32,7 @@ function consultaAnterior() {
         console.log('ENFERMEDAD PRESUNTIVO:', enfermedadPresuntivo);
         console.log('ENFERMEDAD DEFINITIVO:', enfermedadDefinitivo);
 
-        // Asigna el valor de motivoConsulta al textarea correspondiente
+        // Asigna los valores extraídos a los textareas correspondientes
         const motivoConsultaTextarea = document.getElementById('consultas-motivoconsulta');
         if (motivoConsultaTextarea) {
             motivoConsultaTextarea.value = motivoConsulta;
@@ -32,7 +40,6 @@ function consultaAnterior() {
             console.log('Textarea para motivoConsulta no encontrado.');
         }
 
-        // Asigna el valor de observacion al textarea correspondiente
         const observacionTextarea = document.getElementById('consultas-fisico-0-observacion');
         if (observacionTextarea) {
             observacionTextarea.value = observacion;
@@ -40,8 +47,6 @@ function consultaAnterior() {
             console.log('Textarea para observacion no encontrado.');
         }
 
-        // Puedes agregar más asignaciones de valores a otros textareas aquí
-        // Asigna el valor de enfermedadActual al textarea correspondiente
         const enfermedadActualTextarea = document.getElementById('consultas-enfermedadactual');
         if (enfermedadActualTextarea) {
             enfermedadActualTextarea.value = enfermedadActual;
@@ -49,7 +54,6 @@ function consultaAnterior() {
             console.log('Textarea para enfermedadActual no encontrado.');
         }
 
-        // Asigna el valor de medicacion al textarea correspondiente
         const medicacionTextarea = document.getElementById('consultas-medicacion');
         if (medicacionTextarea) {
             medicacionTextarea.value = medicacion;
@@ -57,7 +61,6 @@ function consultaAnterior() {
             console.log('Textarea para medicacion no encontrado.');
         }
 
-        // Asigna el valor de enfermedadDefinitivo al textarea correspondiente
         const enfermedadDefinitivoTextarea = document.getElementById('consultas-enfermedad-definitivo');
         if (enfermedadDefinitivoTextarea) {
             enfermedadDefinitivoTextarea.value = enfermedadDefinitivo;
@@ -66,6 +69,21 @@ function consultaAnterior() {
         }
     } else {
         console.log('No se encontró un <li> con "SERVICIOS OFTALMOLOGICOS GENERALES".');
+    }
+    if (liElementPlan) {
+        const plan = getContentFromTimelineBody(liElementPlan);
+
+        console.log('PLAN:', plan);
+
+        // Asigna el valor del plan al textarea correspondiente
+        const planTextarea = document.getElementById('docsolicitudprocedimientos-observacion_consulta');
+        if (planTextarea) {
+            planTextarea.value = plan;
+        } else {
+            console.log('Textarea para plan no encontrado.');
+        }
+    } else {
+        console.log('No se encontró un <li> con "TRATAMIENTO / OBSERVACIONES FINALES DE LA CONSULTA".');
     }
 }
 
