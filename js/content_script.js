@@ -398,8 +398,12 @@
                     throw new Error('El item cargado no tiene la estructura esperada.');
                 }
 
-                // Enviar un mensaje al background script para ejecutar el protocolo
+            if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
                 chrome.runtime.sendMessage({action: "ejecutarProtocolo", item: item});
+            } else {
+                console.error("El contexto de la extensión no es válido. Intentando nuevamente en 1 segundo...");
+                setTimeout(() => ejecutarProtocolos(id), 1000);
+            }
             })
             .catch(error => console.error('Error en la ejecución de protocolo:', error));
     }
