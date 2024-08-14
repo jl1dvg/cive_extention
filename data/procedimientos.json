@@ -548,19 +548,6 @@
       ]
     },
     {
-      "id": "vppp",
-      "cirugia": "Procedimiento 3",
-      "categoria": "Retina",
-      "motivo": "Motivo 2",
-      "membrete": "Vitrectomia via pars plana",
-      "exploracion": "Exploración 2",
-      "diagnostico": "Diagnóstico 2",
-      "staffCount": 1,
-      "codigoCount": 1,
-      "tecnicos": [],
-      "codigos": []
-    },
-    {
       "id": "pterigion",
       "cirugia": "Pterigion",
       "categoria": "Conjuntiva",

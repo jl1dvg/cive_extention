@@ -332,13 +332,15 @@
 
     function cargarProtocolos() {
         console.log('Intentando cargar procedimientos...');
-        cargarJSON(chrome.runtime.getURL('data/procedimientos.json'))
+        const jsonUrl = 'https://raw.githubusercontent.com/jl1dvg/cive_extention/main/data/procedimientos.json';
+
+        cargarJSON(jsonUrl)
             .then(data => {
                 console.log('Datos de procedimientos cargados:', data);
                 const procedimientosData = data.procedimientos;
                 crearBotonesCategorias(procedimientosData, 'contenedorProtocolos', ejecutarProtocolos);
             })
-            .catch(error => console.error('Error cargando JSON de examenes:', error));
+            .catch(error => console.error('Error cargando JSON de procedimientos:', error));
     }
 
     function mostrarProcedimientosPorCategoria(procedimientos) {
@@ -382,7 +384,9 @@
     }
 
     function ejecutarProtocolos(id) {
-        cargarJSON(chrome.runtime.getURL('data/procedimientos.json'))
+        const jsonUrl = 'https://raw.githubusercontent.com/jl1dvg/cive_extention/main/data/procedimientos.json';
+
+        cargarJSON(jsonUrl)
             .then(data => {
                 const item = data.procedimientos.find(d => d.id === id);
                 if (!item) throw new Error('ID no encontrado en el JSON');
