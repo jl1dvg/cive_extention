@@ -5,8 +5,7 @@
   "description": "Descripción de mi extensión",
   "permissions": [
     "activeTab",
-    "scripting",
-    "tabs"
+    "scripting"
   ],
   "host_permissions": [
     "http://cive.ddns.net/*",
