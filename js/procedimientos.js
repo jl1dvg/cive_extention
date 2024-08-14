@@ -226,7 +226,7 @@ function ejecutarProtocoloEnPagina(item) {
         }
         // Llenar campos de texto
         return Promise.all([
-            llenarCampoTexto('#consultasubsecuente-membrete', item.membrete),
+            llenarCampoTexto('#consultasubsecuente-membrete', `${item.membrete} en ${ojoATratar.descripcion}`),
             llenarCampoTexto('#consultasubsecuente-dieresis', item.dieresis),
             llenarCampoTexto('#consultasubsecuente-exposicion', item.exposicion),
             llenarCampoTexto('#consultasubsecuente-hallazgo', item.hallazgo),
@@ -245,28 +245,46 @@ function ejecutarProtocoloEnPagina(item) {
     };
 
     function obtenerOjoATratar() {
-        const notasDoctorElement = document.querySelector("div[style*='text-align:justify;'] div[style*='margin-right:30px;margin-left:30px;']");
-        if (notasDoctorElement) {
-            const texto = notasDoctorElement.textContent.trim().toUpperCase();
-            if (texto.includes("OJO DERECHO")) {
-                console.log("OJO DERECHO (OD)");
+        // Función auxiliar para buscar texto en un contenedor y retornar las siglas y descripción del ojo
+        function buscarOjoEnTexto(texto) {
+            const textoUpper = texto.toUpperCase();
+            if (textoUpper.includes("OJO DERECHO")) {
                 return {sigla: "OD", descripcion: "OJO DERECHO"};
-            } else if (texto.includes("OJO IZQUIERDO")) {
-                console.log("OJO IZQUIERDO (OI)");
+            } else if (textoUpper.includes("OJO IZQUIERDO")) {
                 return {sigla: "OI", descripcion: "OJO IZQUIERDO"};
-            } else if (texto.includes("AMBOS OJOS")) {
-                console.log("AMBOS OJOS (AO)");
+            } else if (textoUpper.includes("AMBOS OJOS")) {
                 return {sigla: "AO", descripcion: "AMBOS OJOS"};
             } else {
-                console.log("Ojo no especificado");
-                return {sigla: "", descripcion: "Ojo no especificado"};
+                return null; // Retorna null si no encuentra nada
             }
-        } else {
-            //console.error('No se encontró el elemento con las notas del doctor.');
-            return {sigla: "", descripcion: "Ojo no especificado"};
         }
+
+        // Buscar en las notas del doctor primero
+        const notasDoctorElement = document.querySelector("div[style*='text-align:justify;'] div[style*='margin-right:30px;margin-left:30px;']");
+        if (notasDoctorElement) {
+            const resultado = buscarOjoEnTexto(notasDoctorElement.textContent);
+            if (resultado) {
+                return resultado;
+            }
+        }
+
+        // Si no se encuentra en las notas del doctor, buscar en el pedido de cirugía
+        const liElement = Array.from(document.querySelectorAll('li')).find(li => li.textContent.includes("PEDIDO DE CIRUGÍA"));
+        if (liElement) {
+            const seccionQuirurgica = Array.from(liElement.querySelectorAll('b')).find(b => b.textContent.includes("SECCIÓN:"));
+            if (seccionQuirurgica) {
+                const resultado = buscarOjoEnTexto(seccionQuirurgica.nextSibling.textContent);
+                if (resultado) {
+                    return resultado;
+                }
+            }
+        }
+
+        // Si no se encuentra en ninguno de los dos lugares, retornar ojo no especificado
+        return {sigla: "", descripcion: "Ojo no especificado"};
     }
 
+// Ejecutar y mostrar el resultado
     const ojoATratar = obtenerOjoATratar();
     console.log(ojoATratar);
 

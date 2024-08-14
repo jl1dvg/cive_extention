@@ -73,5 +73,10 @@
     "id": "central",
     "label": "10 grados",
     "text": "QUE INVOLUCRA LOS 10 GRADOS CENTRALES"
+  },
+  {
+    "id": "amaurosis",
+    "label": "Amaurosis",
+    "text": "PÉRDIDA TOTAL DE VISIÓN EN ÁREAS AFECTADAS Y UNA DISMINUCIÓN GENERALIZADA DE LA SENSIBILIDAD RETINIANA, SUGIRIENDO UNA AFECTACIÓN SEVERA DEL NERVIO ÓPTICO."
   }
 ]

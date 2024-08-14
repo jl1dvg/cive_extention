@@ -118,6 +118,123 @@
       ]
     },
     {
+      "id": "facosinlio",
+      "cirugia": "Faco sin LIO",
+      "categoria": "Catarata",
+      "membrete": "Facoemulsificacion mas implante de lente intraocular",
+      "dieresis": "INCISION CORNEAL",
+      "exposicion": "CAMARA ANTERIOR",
+      "hallazgo": "CRISTALINO CATARATOSO",
+      "operatorio": "MEDIANTE ANESTESIA REGIONAL, PREVIA ASEPSIA Y ANTISEPSIA\nCOLOCACION DE CAMPOS DE EXPOSICION, CAMPO DE OJO ESTERIL\nSE COLOCA TEGADERM 10X12 PARA FIJAR LAS PESTAÑAS Y REDUCCION DE RIESGO DE INFECCION\nEXPOSICION DEL AREA QUIRURGICA CON BLEFAROSTATO\nANTISEPSIA CONJUNTIVAL CON YODOPOVIDONA AL 0,5% DE PERMANENCIA  DURANTE 1 MINUTO\nSE IRRIGA  CON SOLUCION SALINA FISIOLOGICA AL 0,9% (50ML) IRRIGACION CONTINUA CON JERINGUILLA DE 1OML\nBAJO SISTEMA DE VISUALIZACION CON MICROSCOPIO QUIRURGICO DE OFTALMOLOGIA, ENFOCAMOS EL  GLOBO OCULAR\nSE REALIZA INCISION  CORNEAL CON CUCHILLETE DE 2.75MM\nSE INYECTA AIRE EN CAMARA ANTERIOR CON JERINGUILLA DE INSULINA CON MICRO-CANULA\nSE INYECTA AZUL DE TRIPANO 0,50ML  EN CAMARA ANTERIOR CON JERINGUILLA DE INSULINA CON MICRO-CANULA\nSE INYECTA  SUSTANCIA VISCOELASTICA HIALURONATO DE SODIO (1.5CC)  EN CAMARA ANTERIOR\nPARACENTESIS EN CAMARA ANTERIOR  CON CUCHILLETE DE 15° COMO PUERTO DE INGRESO ACCESORIO PARA INTRODUCIR EL CHOPPER\nCON PINZA DE CAPSULORREXIS ANGULADA  SE REALIZA CAPSULORREXIS CIRCULAR CONTINUA\nSE REALIZA INYECCION DE SOLUCION SALINA 0,9%  PARA HIDRODISECCION\nFACOEMULSIFICACION CON TIP 0.9 DE PHACO DE CRISTALINO CON EQUIPO VITRECTOR CONSTELLATION VISION SYSTEM\nUSO DE BOMBA DE IRRIGACION CON SOLUCION SALINA BALANCEADA (BSS) 300ML Y ASPIRACION DE CORTEZA CON CANULA TRANSFORME ALCON\nUSO DE BOMBA DE IRRIGACION CON SOLUCION SALINA BALANCEADA (BSS) 300ML Y ASPIRACION DE  SUSTANCIA VISCOELASTICA CON CANULA TRANSFORME ALCON\nSE REALIZA LA HIDROSUTURA DE INCISIONES CORNEALES CON  INYECCION DE SOLUCION SALINA AL 0,9% Y MICRO-CANULA\nSE INYECTA CON JERINGUILLA DE INSULINA CON MICRO-CANULA CARGADA DE AIRE EN CAMARA ANTERIOR\nINYECCION SUBCONJUNTIVAL DE GENTAMICINA 80MG Y DEXAMETASONA 4MG\nCOLOCACION DE GOTAS DE DEXAMETASONA + TOBRAMICINA - LIQUIDO OFTALMICO 0,1%+0,3%\nAPOSITO DE GASAS ESTERILES Y TRANSPORE",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 5,
+      "codigoCount": 2,
+      "diagnosticoCount": 2,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO PRINCIPAL",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "JAIRO"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "66984",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-1-procinterno-container",
+          "nombre": "66020",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-1-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-2-procinterno-container",
+          "nombre": "68200",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-2-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-1-iddiagnostico-container",
+          "nombre": "Z961",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-1-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-1-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "OMEPRAZOL CAPSULA 20",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "dia",
+          "cantidad": 5,
+          "totalFarmacia": "5",
+          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+        },
+        {
+          "id": 1,
+          "nombre": "CEFADROXILO 500MG",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "12",
+          "cantidad": 5,
+          "totalFarmacia": "10",
+          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
       "id": "faco_ecc",
       "cirugia": "Faco + LIO (convertida)",
       "categoria": "Catarata",
@@ -536,6 +653,687 @@
           "cantidad": 5,
           "totalFarmacia": "10",
           "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "pterigionma",
+      "cirugia": "Pterigion + Membrana Amniotica",
+      "categoria": "Conjuntiva",
+      "membrete": "EXCERESIS DE PTERIGION + INJERTO DE MEMBRANA AMNIOTICA",
+      "dieresis": "PERITOMIA CONJUNTIVAL",
+      "exposicion": "CONJUNTIVA Y EPIESCLERA",
+      "hallazgo": "PTERIGION NASAL GRADO II",
+      "operatorio": "MEDIANTE ANESTESIA REGIONAL, PREVIA ASEPSIA Y ANTISEPSIA \nCAMPOS BLEFARO Y LAVADO\nSE COLOCA TEGADERM 10X12 Y STERI STRIP  PARA FIJAR LAS PESTAÑAS\nBAJO SISTEMA DE VISUALIZACION CON MICROSCOPIO QUIRURGICO SE REALIZA PERITOMIA CONJUNTIVAL\nCON AYUDA DE CUCHILLETE CRESCENT 2-0MM  SE DISECA LA PORCION CORNEAL DEL PTERIGION\nCON TIJERA DE WESCOTT SE DISECA CUERPO DEL PTERIGION NASAL Y RETIRA LA MAYOR CANTIDAD DE TENON\nHEMOSTASIA CON DIATERMIA  DE CAMPO HUMEDO DEL VASOS EPIESCLERALES\nSE REALIZA PLASTIA MEDIANTE LA TOMA DE MEMBRANA AMNIOTICA  PARA  CUBRIR LECHO EPIESCLERAL Y SUTURA CON NYLON 10-0\nCON AYUDA DE CUCHILLETE CRESCENT 2-0MM  SE DISECA LA PORCION CORNEAL DEL PTERIGION\nCON TIJERA DE WESCOTT SE DISECA CUERPO DEL PTERIGION TEMPORAL Y RETIRA LA MAYOR CANTIDAD DE TENON\nHEMOSTASIA CON DIATERMIA  DE CAMPO HUMEDO DEL VASOS EPIESCLERALES\nSE REALIZA PLASTIA MEDIANTE LA TOMA DE MEMBRANA AMNIOTICA  PARA  CUBRIR LECHO EPIESCLERAL Y SUTURA CON NYLON 10-0\nINYECCION SUBCONJUNTIVAL DE GENTAMICINA 80mg Y DEXAMETASONA 4mg\nSE COLOCA LENTE TERAPEUTICO \nCOLOCACION DE GOTAS DE  DEXAMETASONA + TOBRAMICINA  - LIQUIDO OFTALMICO 0,1% +0,3%(5ML)\nAPOSITO+ OCLUSOR TRANSPARENTE ",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 5,
+      "codigoCount": 2,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO PRINCIPAL",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "JAIRO"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "65426",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-1-procinterno-container",
+          "nombre": "65779",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-1-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-2-procinterno-container",
+          "nombre": "68200",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-2-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "OMEPRAZOL CAPSULA 20",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "dia",
+          "cantidad": 5,
+          "totalFarmacia": "5",
+          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+        },
+        {
+          "id": 1,
+          "nombre": "CEFADROXILO 500MG",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "12",
+          "cantidad": 5,
+          "totalFarmacia": "10",
+          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "ptkprk",
+      "cirugia": "PTK + PRK",
+      "categoria": "Refractiva",
+      "membrete": "REFRACTIVA PRK",
+      "dieresis": " ",
+      "exposicion": " ",
+      "hallazgo": "MIOPIA Y ASTIGMATISMO",
+      "operatorio": "MEDIANTE ANESTESIA TOPICA, PREVIA ASEPSIA Y ANTISEPSIA\nSE COLOCA CAMPOS DE OJOS ESTERILES, APOSITO TRANSPARENTE Y BLEFAROSTATO \nINSTILACION DE CLORHIDRATO DE PROXIMETACAINA AL 0,5%\nUSO DE MICROSCOPIO QUIRURGICO Y SISTEMA AEREO DE VISUALIZACION\nSE REALIZA LASER PTK EN OJO DERECHO \nSE REALIZA DESEPITELIZACION CON AYUDA DE VIBEX Y MICROESPONJAS DE WECK O\nSE SECA CORNEA CON MICROESPONJAS DE WECK \nSE APLICA LASER PRK CON EQUIPO EXCIMER LASER EN EL ESTROMA CORNEAL \nTERMINADA LA APLICACIÓN DEL LASER SE APLICA MITOMICINA AL 0,004% EN LA CORNEA CON MICROESPONJAS DE WECK POR 1MINUTO\nSE LAVA CON ABUNDANTE SOLUCION SALINA BALANCEADA (BSS) 20ML DURANTE 1 MINUTO \nSE COLOCA LENTE DE CONTACTO TERAPEUTICO Y SE RETIRA EL BLEFAROSTATO \nSE REALIZA LASER PTK EN OJO IZQUIERDO\nSE REALIZA DESEPITELIZACION CON AYUDA DE VIBEX Y MICROESPONJAS DE WECK OJO IZQUIERDO\nSE SECA CORNEA CON MICROESPONJAS DE WECK \nSE APLICA LASER PRK CON EQUIPO EXCIMER LASER  EN EL ESTROMA CORNEAL \nTERMINADA LA APLICACIÓN DEL LASER SE APLICA MITOMICINA AL 0,004% EN LA CORNEA CON MICROESPONJAS DE WECK POR 1MINUTO\nSE LAVA CON ABUNDANTE SOLUCION SALINA BALANCEADA (BSS) 20ML DURANTE 1 MINUTO \nSE COLOCA LENTE DE CONTACTO TERAPEUTICO Y SE RETIRA EL BLEFAROSTATO \nSE INSTILA LIQUIDO OFTALMICO DEXAMETASONA + TOBRAMICINA 0,1%+0,3% ",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 4,
+      "codigoCount": 0,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO PRINCIPAL",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "65760",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "SOPHIXIN DX OFTENO",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "8",
+          "cantidad": 8,
+          "totalFarmacia": "1",
+          "observaciones": "CIPROFLOXACINO 0.3% DEXAMETASONA 0.1% 1  GOTAS  GOTERO CADA 8 HORAS x  8 DÍAS EN OJOS TRATADOS"
+        },
+        {
+          "id": 1,
+          "nombre": "LOTESOFT",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "12",
+          "cantidad": 30,
+          "totalFarmacia": "1",
+          "observaciones": "LOTEPREDNOL ETABONATO 0.5% 1 GOTA CADA 12 HORAS x 30 DÍAS CUANDO SUSPENDA EL SOPHIXIN DX A PARTIR DE LA 2DA SEMANA"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "prk",
+      "cirugia": "PRK",
+      "categoria": "Refractiva",
+      "membrete": "REFRACTIVA PRK",
+      "dieresis": " ",
+      "exposicion": " ",
+      "hallazgo": "MIOPIA Y ASTIGMATISMO",
+      "operatorio": "MEDIANTE ANESTESIA TOPICA, PREVIA ASEPSIA Y ANTISEPSIA \nSE COLOCA CAMPOS DE OJOS ESTERILES, APOSITO TRANSPARENTE Y BLEFAROSTATO \nINSTILACION DE CLORHIDRATO DE PROXIMETACAINA AL 0,5%\nUSO DE MICROSCOPIO QUIRURGICO Y SISTEMA AEREO DE VISUALIZACION\nSE REALIZA DESEPITELIZACION CON AYUDA DE VIBEX Y MICROESPONJAS DE WECK OJO DERECHO \nSE SECA CORNEA CON MICROESPONJAS DE WECK \nSE APLICA LASER PRK CON EQUIPO EXCIMER LASER EN EL ESTROMA CORNEAL \nTERMINADA LA APLICACIÓN DEL LASER SE APLICA MITOMICINA AL 0,004% EN LA CORNEA CON MICROESPONJAS DE WECK POR 35 SEGUNDOS  \nSE LAVA CON ABUNDANTE SOLUCION SALINA BALANCEADA (BSS) 20ML DURANTE 1 MINUTO \nSE COLOCA LENTE DE CONTACTO TERAPEUTICO Y SE RETIRA EL BLEFAROSTATO \nSE REALIZA DESEPITELIZACION CON AYUDA DE VIBEX Y MICROESPONJAS DE WECK OJO IZQUIERDO\nSE SECA CORNEA CON MICROESPONJAS DE WECK \nSE APLICA LASER PRK CON EQUIPO EXCIMER LASER  EN EL ESTROMA CORNEAL \nTERMINADA LA APLICACIÓN DEL LASER SE APLICA MITOMICINA AL 0,004% EN LA CORNEA CON MICROESPONJAS DE WECK POR 35 SEGUNDOS  \nSE LAVA CON ABUNDANTE SOLUCION SALINA BALANCEADA (BSS) 20ML DURANTE 1 MINUTO \nSE COLOCA LENTE DE CONTACTO TERAPEUTICO Y SE RETIRA EL BLEFAROSTATO \nSE INSTILA LIQUIDO OFTALMICO DEXAMETASONA + TOBRAMICINA 0,1%+0,3% ",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 4,
+      "codigoCount": 0,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO PRINCIPAL",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "65760",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "SOPHIXIN DX OFTENO",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "8",
+          "cantidad": 8,
+          "totalFarmacia": "1",
+          "observaciones": "CIPROFLOXACINO 0.3% DEXAMETASONA 0.1% 1  GOTAS  GOTERO CADA 8 HORAS x  8 DÍAS EN OJOS TRATADOS"
+        },
+        {
+          "id": 1,
+          "nombre": "LOTESOFT",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "12",
+          "cantidad": 30,
+          "totalFarmacia": "1",
+          "observaciones": "LOTEPREDNOL ETABONATO 0.5% 1 GOTA CADA 12 HORAS x 30 DÍAS CUANDO SUSPENDA EL SOPHIXIN DX A PARTIR DE LA 2DA SEMANA"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "ptk",
+      "cirugia": "PTK",
+      "categoria": "Refractiva",
+      "membrete": "REFRACTIVA PTK",
+      "dieresis": " ",
+      "exposicion": " ",
+      "hallazgo": "MIOPIA Y ASTIGMATISMO",
+      "operatorio": "MEDIANTE ANESTESIA TOPICA, PREVIA ASEPSIA Y ANTISEPSIA \nSE COLOCA CAMPOS DE OJOS ESTERILES, APOSITO TRANSPARENTE Y BLEFAROSTATO \nINSTILACION DE CLORHIDRATO DE PROXIMETACAINA AL 0,5%\nUSO DE MICROSCOPIO QUIRURGICO Y SISTEMA AEREO DE VISUALIZACION \nSE COLOCA ALCOHOL ABSOLUTO DURANTE 45 SEGUNDO DE OJO DERECHO \nSE LAVA CON ABUNDANTE SOLUCION SALINA BALANCEADA (BSS) 20ML DURANTE 1 MINUTO \nSE REALIZA DESEPITELIZACION CON AYUDA DE VIBEX Y MICROESPONJAS DE WECK \nSE REALIZA PTK CON EQUIPO EXCIMER LASER (1 LICENCIA) \nTERMINADA LA APLICACIÓN DEL LASER SE APLICA MITOMICINA AL 0,004% EN LA CORNEA CON MICROESPONJAS DE WECK POR 35 SEGUNDOS  \nSE LAVA CON ABUNDANTE SOLUCION SALINA BALANCEADA (BSS) 20ML DURANTE 1 MINUTO \nSE SECA CORNEA CON MICROESPONJAS DE WECK \nSE COLOCA LENTE DE CONTACTO TERAPEUTICO Y SE RETIRA EL BLEFAROSTATO \nSE INSTILA LIQUIDO OFTALMICO DEXAMETASONA + TOBRAMICINA 0,1%+0,3% ",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 4,
+      "codigoCount": 0,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO PRINCIPAL",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "65760",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "SOPHIXIN DX OFTENO",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "8",
+          "cantidad": 8,
+          "totalFarmacia": "1",
+          "observaciones": "CIPROFLOXACINO 0.3% DEXAMETASONA 0.1% 1  GOTAS  GOTERO CADA 8 HORAS x  8 DÍAS EN OJOS TRATADOS"
+        },
+        {
+          "id": 1,
+          "nombre": "LOTESOFT",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "12",
+          "cantidad": 30,
+          "totalFarmacia": "1",
+          "observaciones": "LOTEPREDNOL ETABONATO 0.5% 1 GOTA CADA 12 HORAS x 30 DÍAS CUANDO SUSPENDA EL SOPHIXIN DX A PARTIR DE LA 2DA SEMANA"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "lasik",
+      "cirugia": "LASIK",
+      "categoria": "Refractiva",
+      "membrete": "REFRACTIVA LASIK (Queratomiulesis con laser) corrección AO",
+      "dieresis": "CORNEAL",
+      "exposicion": " ",
+      "hallazgo": "MIOPIA Y ASTIGMATISMO",
+      "operatorio": "MEDIANTE ANESTESIA TOPICA, PREVIA ASEPSIA Y ANTISEPSIA \nSE COLOCA CAMPOS DE OJOS ESTERILES, APOSITO TRANSPARENTE Y BLEFAROSTATO \nINSTILACION DE CLORHIDRATO DE PROXIMETACAINA AL 0,5%\nUSO DE MICROSOPIO QUIRURGICO BAJO SISTEMA DE VISUALIZACION \nSE MARCA LA INCISION CON MARCADOR DE CORNEA DE OJO DERECHO \nSE COLOCA ANILLO 9MM DE SUCCION DEL MICROQUERATOMO \nSE INICIA DEMARACCION DEL COLGAJO CORNEAL (FLAP)  CON CUCHILLA PLANO 0\nLIBERACION DE LA SUCCION \nCON ESPATULA SE LEVANTA EL FLAP\nSE SECA LA CORNEA CON MICROESPONJAS DE WECK \nSE APLICA LASER PRK CON EQUIPO EXCIMER LASER  EN EL ESTROMA CORNEAL \nSE IRRIGA CON ABUNDANTE SOLUCION SALINA POR 1 MINUTO \nSE SECAN BORDES DE LA CORNEA CON MICROESPONJAS DE WECK \nSE COLOCA LENTE TERAPEUTICO \nSE INSTILA LIQUIDO OFTALMICO DEXAMETASONA + TOBRAMICINA 0,1%+0,3% \nSE MARCA LA INCISION CON MARCADOR DE CORNEA DE OJO IZQUIERDO\nSE COLOCA ANILLO 9MM DE SUCCION DEL MICROQUERATOMO \nSE INICIA DEMARACCION DEL COLGAJO CORNEAL (FLAP)  CON CUCHILLA PLANO 0\nLIBERACION DE LA SUCCION \nCON ESPATULA SE LEVANTA EL FLAP\nSE SECA LA CORNEA CON MICROESPONJAS DE WECK ",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 4,
+      "codigoCount": 0,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO PRINCIPAL",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "65760",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "SOPHIXIN DX OFTENO",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "8",
+          "cantidad": 8,
+          "totalFarmacia": "1",
+          "observaciones": "CIPROFLOXACINO 0.3% DEXAMETASONA 0.1% 1  GOTAS  GOTERO CADA 8 HORAS x  8 DÍAS EN OJOS TRATADOS"
+        },
+        {
+          "id": 1,
+          "nombre": "LOTESOFT",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "12",
+          "cantidad": 30,
+          "totalFarmacia": "1",
+          "observaciones": "LOTEPREDNOL ETABONATO 0.5% 1 GOTA CADA 12 HORAS x 30 DÍAS CUANDO SUSPENDA EL SOPHIXIN DX A PARTIR DE LA 2DA SEMANA"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "anillos",
+      "cirugia": "Anillos Intraestromales",
+      "categoria": "Refractiva",
+      "membrete": "IMPLANTE DE SEGMENTO INTRAESTROMAL",
+      "dieresis": "CORNEAL",
+      "exposicion": " ",
+      "hallazgo": "QUERATOCONO",
+      "operatorio": "MEDIANTE ANESTESIA TOPICA, PREVIA ASEPSIA Y ANTISEPSIA \nSE COLOCA CAMPOS DE OJOS ESTERILES, APOSITO TRANSPARENTE Y BLEFAROSTATO \nINSTILACION DE CLORHIDRATO DE PROXIMETACAINA AL 0,5%\nUSO DE MICROSOPIO QUIRURGICO BAJO SISTEMA DE VISUALIZACION \nMARCAR EL EJE HORIZONTAL EN 0-180 GRADOS OJO DERECHO \nMARCADO DEL EJE VISUAL \nMARCADO DEL CANAL Y LUGR DE INCISION CON VIOLETA DE GENCIANA (MARCADOR) \nPARA ELLO ALINEA EL MARCADOR CON EL EJE MERIDIANO HORIZONTAL AUXILIANDOSE CON EL ANILLO DE MENDEZ \nPAQUIMETRIA EN EL PUNTO DE INCISION \nINCISION CON BISTURI DE DIAMANTE CALIBRADA AL 70 U 80% DEL ESPESOR ESTROMAL \nCREACION DEL BOLSILLO INTRAESTROMAL CON UNA PINZA DE SUAREZ \nCOLOCACION DE LAS ESPATULAS SEMICIRVULARES DE DERECHA O IZQUIERDA PARA GENERAR EL TUNEL INTRAESTROMAL \nCOLOCACION DE LOS  SEGMENTOS (SN 00G00151 022)  UTILIZANDO UNA ESPATULA MC PHERSON MODIFICADO POR ALBERTAZZI \nUBICACIÓN FINAL DEL SEGMENTO CON GANCHO DE SINSKY \nLAVADO DE LA HERIDA  \nCOLOCACION DE LENTE TERAPEUTICO \nUSO DE MICROSOPIO QUIRURGICO BAJO SISTEMA DE VISUALIZACION \nMARCAR EL EJE HORIZONTAL EN 0-180 GRADOS OJO IZQUIERDO\nMARCADO DEL EJE VISUAL \nMARCADO DEL CANAL Y LUGR DE INCISION CON VIOLETA DE GENCIANA (MARCADOR) \nPARA ELLO ALINEA EL MARCADOR CON EL EJE MERIDIANO HORIZONTAL AUXILIANDOSE CON EL ANILLO DE MENDEZ \nPAQUIMETRIA EN EL PUNTO DE INCISION \nINCISION CON BISTURI DE DIAMANTE CALIBRADA AL 70 U 80% DEL ESPESOR ESTROMAL \nCREACION DEL BOLSILLO INTRAESTROMAL CON UNA PINZA DE SUAREZ \nCOLOCACION DE LAS ESPATULAS SEMICIRVULARES DE DERECHA O IZQUIERDA PARA GENERAR EL TUNEL INTRAESTROMAL \nCOLOCACION DE LOS  SEGMENTOS (SN 00G01220 122)  UTILIZANDO UNA ESPATULA MC PHERSON MODIFICADO POR ALBERTAZZI \nUBICACIÓN FINAL DEL SEGMENTO CON GANCHO DE SINSKY \nLAVADO DE LA HERIDA  \nCOLOCACION DE LENTE TERAPEUTICO \nSE INSTILA LIQUIDO OFTALMICO DEXAMETASONA + TOBRAMICINA 0,1%+0,3% \nOCLUSION  ",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 4,
+      "codigoCount": 0,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO PRINCIPAL",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "65756",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "SOPHIXIN DX OFTENO",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "8",
+          "cantidad": 8,
+          "totalFarmacia": "1",
+          "observaciones": "CIPROFLOXACINO 0.3% DEXAMETASONA 0.1% 1  GOTAS  GOTERO CADA 8 HORAS x  8 DÍAS EN OJOS TRATADOS"
+        },
+        {
+          "id": 1,
+          "nombre": "LOTESOFT",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "12",
+          "cantidad": 30,
+          "totalFarmacia": "1",
+          "observaciones": "LOTEPREDNOL ETABONATO 0.5% 1 GOTA CADA 12 HORAS x 30 DÍAS CUANDO SUSPENDA EL SOPHIXIN DX A PARTIR DE LA 2DA SEMANA"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "quelacion",
+      "cirugia": "Quelación",
+      "categoria": "Refractiva",
+      "membrete": "QUELACION",
+      "dieresis": " ",
+      "exposicion": "SUPERFICIE OCULAR",
+      "hallazgo": "QUERATOPATIA EN BANDA+ OPACIDAD CORNEAL ESTROMAL Y VASCULARIZACION SUBEPITELIAL\n",
+      "operatorio": "MEDIANTE ANESTESIA TOPICA, PREVIA ASEPSIA Y ANTISEPSIA \nSE COLOCA CAMPOS DE OJOS ESTERILES, APOSITO TRANSPARENTE Y BLEFAROSTATO  EN OJO IZQUIERDO \nINSTILACION DE CLORHIDRATO DE PROXIMETACAINA AL 0,5%\nUSO DE MICROSCOPIO QUIRURGICO Y SISTEMA AEREO DE VISUALIZACION\nDEMARCACION DEL LIMITE DE TEJIDO CORNEAL AFECTO CON TREPANO 8,50\nNSTILACION DE EDTA AL 3%, DEJANDO ACTUAL EN TEJIDO DURANTE 3 MINUTOS\nSE REALIZA DESEPITELIZACION  CON CUCHILLETE CRESCENT 2-0MM \nHEMOSTASIA CON PUNTA DE DIATERMIA DE CAMPO HUMEDO DEL VASOS EPIESCLERALES\nSE COLOCA LENTE DE CONTACTO TERAPEUTICO Y SE RETIRA EL BLEFAROSTATO \nSE INSTILA LIQUIDO OFTALMICO DEXAMETASONA + TOBRAMICINA 0,1%+0,3% \nAPOSITO + OCLUSOR TRANSPARENTE ",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 4,
+      "codigoCount": 0,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO PRINCIPAL",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "65436",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "SOPHIXIN DX OFTENO",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "8",
+          "cantidad": 8,
+          "totalFarmacia": "1",
+          "observaciones": "CIPROFLOXACINO 0.3% DEXAMETASONA 0.1% 1  GOTAS  GOTERO CADA 8 HORAS x  8 DÍAS EN OJOS TRATADOS"
+        },
+        {
+          "id": 1,
+          "nombre": "LOTESOFT",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "12",
+          "cantidad": 30,
+          "totalFarmacia": "1",
+          "observaciones": "LOTEPREDNOL ETABONATO 0.5% 1 GOTA CADA 12 HORAS x 30 DÍAS CUANDO SUSPENDA EL SOPHIXIN DX A PARTIR DE LA 2DA SEMANA"
         },
         {
           "id": 2,
