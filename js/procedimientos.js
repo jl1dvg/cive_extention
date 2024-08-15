@@ -311,7 +311,7 @@ function ejecutarProtocoloEnPagina(item) {
                 return hacerClickEnSelect2(diagnostico.selector)
                     .then(() => establecerBusqueda(diagnostico.selector, diagnostico.nombre))
                     .then(() => seleccionarOpcion())
-                    .then(() => hacerClickEnPresuntivo(diagnostico.definitivo,1))
+                    .then(() => hacerClickEnPresuntivo(diagnostico.definitivo, 1))
                     .then(() => hacerClickEnSelect2(diagnostico.lateralidad))
                     .then(() => establecerBusqueda(diagnostico.lateralidad, ojo))
                     .then(() => seleccionarOpcion())
