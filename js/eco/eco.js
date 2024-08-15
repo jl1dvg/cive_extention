@@ -59,22 +59,22 @@ function createCheckbox(item, eye) {
 
 function updateTextarea(textareaId, checkbox) {
     const textarea = document.getElementById(textareaId);
-
-    const cursorPosition = textarea.selectionStart;
-    const currentValue = textarea.value;
-    const beforeCursor = currentValue.substring(0, cursorPosition);
-    const afterCursor = currentValue.substring(cursorPosition);
-
-    let newText;
+    const currentValues = textarea.value.split(',').map(item => item.trim()).filter(Boolean);
 
     if (checkbox.checked) {
-        newText = `${beforeCursor}${beforeCursor.trim().length > 0 ? ', ' : ''}${checkbox.value}${afterCursor}`;
+        if (currentValues.length === 0) {
+            textarea.value = `${checkbox.value}`;
     } else {
-        const textToRemove = checkbox.value;
-        newText = currentValue.replace(new RegExp(`,? ?${textToRemove}`, 'g'), '');
+            currentValues.push(checkbox.value);
+            textarea.value = currentValues.join(', ');
+        }
+    } else {
+        const index = currentValues.indexOf(checkbox.value);
+        if (index > -1) {
+            currentValues.splice(index, 1);
+            textarea.value = currentValues.join(', ');
+        }
+    }
     }
 
-    textarea.value = newText;
-    textarea.setSelectionRange(cursorPosition, cursorPosition);
-}
 
