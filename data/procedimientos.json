@@ -1823,6 +1823,112 @@
           "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
         }
       ]
+    },
+    {
+      "id": "blefaroplastia",
+      "cirugia": "Blefaroplastía",
+      "categoria": "Oculoplástica",
+      "membrete": "BLEFAROPLASTIA SUPERIOR",
+      "dieresis": "INSICION EN SURCO PALPEBRAL SUPERIOR OJO DERECHO, INSICION EN SURCO PALPEBRAL SUPERIOR OJO IZQUIERDO",
+      "exposicion": "LAMELA ANTERIOR DE PARPADO SUPERIOR DERECHO, LAMELA ANTERIOR DE PARPADO SUPERIOR IZQUIERDO+CARA ANTERIOR TARSAL, ORBICULAR",
+      "hallazgo": "RELAJACION PERIORBITARIA EN 2 PARPADOS+AUSENCIA DE FUNCION DEL MUSCULO ELEVADOR",
+      "operatorio": " MEDIANTE ANESTESIA REGIONAL, PREVIA ASEPSIA Y ANTISEPSIA \nUSO DE MICROSCOPIO QUIRURGICO Y SISTEMA DE VISUALIZACION \nPREVIA MEDICION Y DEMARCACION PARPADO SUPERIOR CON MARCADOR DE PIEL   \nCOLOCACION DE CAMPOS QUIRUGICOS \nCOLOCACION SUBDERMICA (4cc) DE UNA MEZCLA 2cc LIDOCAINA C/E 2% +2cc Bupibacaina S/E  0,75%  OD \nDEMARCACION  DEL AREA QUIRUGICA CON BISTURI HOJA N° 15 \nCON ELECTROCAUTERIO PUNTA CORTANTE RETIRO DE PIEL Y ORBICULAR DEMARCADO \nCAUTERIZACION DE VASOS SANGRANTES CON CAUTERIO BIPOLAR\nRETIRO DE HERNIAS GRASAS  PROLAPSADAS Y CAUTERIZACION CON BIPOLAR\nREFIJACION DE MUSCULO ELEVADOR DE LOS PARPADOS AL TARSO CON SEDA 6,0\nCIERRE ORBICULAR CON VICRYL 6-0\nFORMACION DEL PLIEGUE PALPEBRAL \nCIERRE DE PIEL CON PROLENE 6-0\nCOLOCACION SUBDERMICA (4cc) DE UNA MEZCLA 2cc LIDOCAINA C/E 2% +2cc Bupibacaina S/E  0,75%  OI \nDEMARCACION  DEL AREA QUIRUGICA CON BISTURI HOJA N° 15 \nCON ELECTROCAUTERIO PUNTA CORTANTE RETIRO DE PIEL Y ORBICULAR DEMARCADO \nCAUTERIZACION DE VASOS SANGRANTES CON CAUTERIO BIPOLAR\nRETIRO DE HERNIAS GRASAS  PROLAPSADAS Y CAUTERIZACION CON BIPOLAR\nREFIJACION DE MUSCULO ELEVADOR DE LOS PARPADOS AL TARSO CON SEDA  6-0\nCIERRE ORBICULAR CON VICRYL 6-0\nFORMACION DEL PLIEGUE PALPEBRAL \nCIERRE DE PIEL CON PROLENE 6-0\nCOLOCACION DE STERI STRIP EN AMBOS OJOS \nCOLOCACION SEMISOLIDO OFTALMICO  DEXAMETASONA + TOBRAMICINA 0,1% + 0,3%  SOBRE LA HERIDA",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 5,
+      "codigoCount": 1,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO PRINCIPAL",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "PATERNINA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "67917",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-1-procinterno-container",
+          "nombre": "67901",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-1-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "OMEPRAZOL CAPSULA 20",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "dia",
+          "cantidad": 5,
+          "totalFarmacia": "5",
+          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+        },
+        {
+          "id": 1,
+          "nombre": "CEFADROXILO 500MG",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "12",
+          "cantidad": 5,
+          "totalFarmacia": "10",
+          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
     }
   ]
 }
