@@ -2,32 +2,52 @@
   "receta": [
     {
       "id": "faco",
-      "cirugia": "Faco + LIO",
+      "cirugia": "Faco SNS",
       "categoria": "Dr. Andrés Pólit Hoyos",
-      "recetaCount": 2,
+      "recetaCount": 4,
       "recetas": [
         {
           "id": 0,
-          "nombre": "OMEPRAZOL CAPSULA 20",
-          "via": "VIA ORAL",
-          "unidad": "CAPSULAS",
-          "pauta": "dia",
-          "cantidad": 5,
-          "totalFarmacia": "5",
-          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+          "nombre": "LAMOFLOX",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "8",
+          "cantidad": 7,
+          "totalFarmacia": "1",
+          "observaciones": "MOXIFLOXACINO CLOHIDRATO 1 GOTAS GOTERO CADA 8 HORAS x  7 DÍAS EN OJO OPERADO (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
         },
         {
           "id": 1,
-          "nombre": "CEFADROXILO 500MG",
-          "via": "VIA ORAL",
-          "unidad": "CAPSULAS",
-          "pauta": "12",
-          "cantidad": 5,
-          "totalFarmacia": "10",
-          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+          "nombre": "SOPHIPREN",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "6",
+          "cantidad": 7,
+          "totalFarmacia": "1",
+          "observaciones": "SOPHIPREN OFTENO 1 % SUSP. OFT. X 5 ML 1 GOTAS GOTERO CADA 6 HORAS x 7 DÍAS, LUEGO 1 GOTA CADA 8 HORAS X 7 DÍAS, LUEGO 1 GOTA CADA 12 HORAS X 15 DÍAS OPERADO (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
         },
         {
           "id": 2,
+          "nombre": "SOPHIPREN",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "12",
+          "cantidad": 30,
+          "totalFarmacia": "1",
+          "observaciones": "HIALURONATO DE SODIO 0.4% 1  GOTAS  GOTERO CADA 12 HORAS x  30 DÍAS EN OJO OPERADO (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
+        },
+        {
+          "id": 3,
+          "nombre": "GLAUCOMED",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "12",
+          "cantidad": 1,
+          "totalFarmacia": "2",
+          "observaciones": "ACETAZOLAMIDA GLAUCOMED 250MG 1  TAB  VIA ORAL CADA 12 HORAS x  1 DÍAS"
+        },
+        {
+          "id": 4,
           "nombre": "PARACETAMOL 1G - ANALGAN",
           "via": "VIA ORAL",
           "unidad": "TAB",
