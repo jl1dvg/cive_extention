@@ -548,6 +548,122 @@
       ]
     },
     {
+      "id": "vpp_el_as",
+      "cirugia": "VPP + EL + GAS",
+      "categoria": "Retina",
+      "membrete": "VITRECTOMÍA POSTERIOR PARS PLANA + ENDOLASER + INUECCION DE ACEITE DE SILICON",
+      "dieresis": "ESCLEROTOMIAS TRANSCONJUNTIVALES A 4 MM DE LIMBO",
+      "exposicion": "CAVIDAD VITREA",
+      "hallazgo": "DESGARRO PERIFERICO DE RETINA",
+      "operatorio": "MEDIANTE ANESTESIA REGIONAL, PREVIA ASEPSIA Y ANTISEPSIA,\n    COLOCACIÓN DE CAMPOS, ESPÉCULO PALPEBRAL Y LAVADO,\n    SE COLOCA TEGADERM 10X12 Y STERI STRIP  PARA FIJAR LAS PESTAÑAS,\n    USO DE MICROSCOPIO QUIRÚRGICO Y SISTEMA AÉREO DE VISUALIZACIÓN VITREORETINAL PANORÁMICA MODELO RUV 800 Y PACK COMBINADO 25G,\n    INSERCIÓN DE TRÓCARES VALVULADOS DE 25 GAUGE  A 4 MM DEL LIMBO E INFUSIÓN DE SOLUCIÓN SALINA BALANCEADA BSS 300 ML,\n    VITRECTOMÍA POSTERIOR CON USO PUNTA DE VITRECTOMIA 25GA Y PUNTA DE ENDOLUZ 25+(SONDA ENDOLASER) DEL EQUIPO VITRECTOR CONSTELLATION VISION SYSTEM,\n    DESPRENDIMIENTO DE VITREO POSTERIOR,\n    SE VISUALIZA DESGARRO PERIFERICO,\n    ASPIRACION DE FLUIDO  VITREO RETINIANO CON PUNTA DE VITRECTOMIA 25GA,\n    REAPLICACION DE LA RETINA MEDIANTE INYECCION DE PERFLUOROCARBONO LIQUIDO (PFCL),\n    APLICACIÓN DE FOTOCOAGULACION  ENDOLASER CON LASER MODELO PUREPOINT Y CON PUNTA DE LASER FLEX ( LASER PROBE 25+ KIT ENDOLASER ),\n    INTERCAMBIO FLUIDO - AIRE,\n    ASPIRACION DE LIQUIDO Y PERFLUOROCARBONO  CON CANULA DE CHARLES (BACK-FLUSH),\n    INYECCIÓN DE VITREO ARTIFICIAL ( ACEITE DE SILICON 5000 ) CON PAK ACEITE SILICON ( VISCOUS FLUID CONTROL PAK Y BOMBA DE SILICON ),\n    RETIRO DE TRÓCARES,\n    CON ISOPO ESTERIL SE CONFIRMA HERMITICIDAD DE LA PUNCIÓN,\n    SE CONFIRMA QUE EL TONO ESTE POR DEBAJO DE 25 mmHg,\n    INSTILACIÓN DE LIQUIDO  OFTÁLMICO  DE DEXAMETASONA + TOBRAMICINA 0,1%+0,3%,\n    INYECCIÓN SUBCONJUNTIVAL DE ANTIBIÓTICOS Y CORTICOIDES  ( GENTAMICINA 80mg Y DEXAMETASONA 4mg ),\n    APÓSITO OCULAR",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 5,
+      "codigoCount": 3,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO PRINCIPAL",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "CIRUJANO SECUNDARIO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "JAIRO"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
+          "funcion": "AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "67036",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-1-procinterno-container",
+          "nombre": "67105",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-1-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-2-procinterno-container",
+          "nombre": "67025",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-2-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-3-procinterno-container",
+          "nombre": "68200",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-3-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "OMEPRAZOL CAPSULA 20",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "dia",
+          "cantidad": 5,
+          "totalFarmacia": "5",
+          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+        },
+        {
+          "id": 1,
+          "nombre": "CEFADROXILO 500MG",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "12",
+          "cantidad": 5,
+          "totalFarmacia": "10",
+          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
       "id": "extraccvppsilicon",
       "cirugia": "Recambio de aceite + VPP + EL + Pelaje",
       "categoria": "Retina",
