@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Protocolos CIVE",
-  "version": "2.0",
+  "name": "Asistente CIVE",
+  "version": "3.0",
   "description": "Descripción de mi extensión",
   "permissions": [
     "activeTab",
