@@ -1,8 +1,8 @@
-function ejecutarProtocoloEnPagina(item) {
+function ejecutarRecetaEnPagina(item) {
 // Verificar que el item tenga la estructura esperada
     console.log('Item recibido en ejecutarProtocoloEnPagina:', item);
 
-    if (!item || typeof item !== 'object' || !item.codigos || !Array.isArray(item.codigos)) {
+    if (!item || typeof item !== 'object') {
         console.error('El item recibido no tiene la estructura esperada.', item);
         return;
     }
@@ -115,51 +115,7 @@ function ejecutarProtocoloEnPagina(item) {
         });
     }
 
-    function seleccionarRadioNo() {
-        return new Promise((resolve, reject) => {
-            const radioNo = document.querySelector('input[name="ConsultaSubsecuente[examenHistopatologico]"][value="2"]');
-            if (radioNo) {
-                console.log('Seleccionando el radio botón "NO"');
-                radioNo.checked = true;
-                resolve();
-            } else {
-                console.error('El radio botón "NO" no se encontró.');
-                reject('El radio botón "NO" no se encontró.');
-            }
-        });
-    }
-
-    function obtenerFechaActual() {
-        const fecha = new Date();
-        const dia = String(fecha.getDate()).padStart(2, '0');
-        const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Los meses son de 0 a 11
-        const year = fecha.getFullYear();
-        return `${dia}/${mes}/${year}`;
-    }
-
-    function hacerClickEnPresuntivo(selector, numeroDeClicks = 1) {
-        return new Promise((resolve, reject) => {
-            const botonPresuntivo = document.querySelector(selector);
-
-            if (botonPresuntivo) {
-                console.log(`Haciendo clic en el checkbox "PRESUNTIVO" ${numeroDeClicks} veces`);
-                let contador = 0;
-                const intervalo = setInterval(() => {
-                    botonPresuntivo.click();
-                    contador++;
-                    if (contador >= numeroDeClicks) {
-                        clearInterval(intervalo);
-                        resolve();
-                    }
-                }, 100); // Intervalo entre clics, ajustable según necesidad
-            } else {
-                console.error('El checkbox "PRESUNTIVO" no se encontró.');
-                reject('El checkbox "PRESUNTIVO" no se encontró.');
-            }
-        });
-    }
-
-    /*function llenarCampoCantidad(selector, cantidad, tabCount = 0) {
+    function llenarCampoCantidad(selector, cantidad, tabCount = 0) {
         return new Promise((resolve, reject) => {
             const campoCantidad = document.querySelector(selector);
             if (campoCantidad) {
@@ -216,33 +172,8 @@ function ejecutarProtocoloEnPagina(item) {
                 reject('El campo cantidad no se encontró.');
             }
         });
-    }*/
+    }
 
-    const ejecutarAcciones = (item) => {
-        if (!item || !item.membrete || !item.dieresis) {
-            console.error('El objeto item o alguna de sus propiedades necesarias están indefinidos:', item);
-            return Promise.reject('Item inválido');
-        }
-        // Llenar campos de texto
-        return Promise.all([
-            llenarCampoTexto('#consultasubsecuente-membrete', `${item.membrete} en ${ojoATratar.descripcion}`),
-            llenarCampoTexto('#consultasubsecuente-piepagina', `${item.id}-${item.medicacion}-${item.cardex}`),
-            llenarCampoTexto('#consultasubsecuente-dieresis', item.dieresis),
-            llenarCampoTexto('#consultasubsecuente-exposicion', item.exposicion),
-            llenarCampoTexto('#consultasubsecuente-hallazgo', item.hallazgo),
-            llenarCampoTexto('#consultasubsecuente-operatorio', item.operatorio),
-            llenarCampoTexto('#consultasubsecuente-hallazgopostquirurgico', 'Paciente orientado en las tres esferas y presenta un parche oclusivo en el ojo operado, conforme a las indicaciones postoperatorias. Constantes vitales dentro de los parámetros normales. No se observan complicaciones inmediatas.'),
-            llenarCampoTexto('#consultasubsecuente-drenajes', 'No'),
-            llenarCampoTexto('#consultasubsecuente-sangrado', 'No'),
-            llenarCampoTexto('#consultasubsecuente-complicaciones', 'No'),
-            llenarCampoTexto('#consultasubsecuente-heridas', 'No'),
-            llenarCampoTexto('#consultasubsecuente-complicacionesoperatorio', item.complicacionesoperatorio),
-            llenarCampoTexto('#consultasubsecuente-perdidasanguineat', item.perdidasanguineat),
-            hacerClickEnBoton('#trabajadorprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus', item.staffCount),
-            hacerClickEnBoton('#procedimientoprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus', item.codigoCount),
-            hacerClickEnBoton('#diagnosticossub11111 .list-cell__button .js-input-plus', item.diagnosticoCount)
-        ]);
-    };
 
     function obtenerOjoATratar() {
         // Función auxiliar para buscar texto en un contenedor y retornar las siglas y descripción del ojo
@@ -288,39 +219,7 @@ function ejecutarProtocoloEnPagina(item) {
     const ojoATratar = obtenerOjoATratar();
     console.log(ojoATratar);
 
-    function ejecutarCodigos(item, ojo) {
-        console.log(ojoATratar);
-        return item.codigos.reduce((promise, codigo) => {
-            return promise.then(() => {
-                return hacerClickEnSelect2(codigo.selector)
-                    .then(() => establecerBusqueda(codigo.selector, codigo.nombre))
-                    .then(() => seleccionarOpcion())
-                    .then(() => hacerClickEnSelect2(codigo.lateralidad))
-                    .then(() => establecerBusqueda(codigo.lateralidad, ojo))
-                    .then(() => seleccionarOpcion())
-                    .catch(error => console.error(`Error procesando código ${codigo.nombre}:`, error));
-            });
-        }, Promise.resolve()); // Inicializa con una promesa resuelta
-    }
-
-    function ejecutarDiagnosticos(item, ojo) {
-        if (!Array.isArray(item.diagnosticos)) return Promise.resolve();
-
-        return item.diagnosticos.reduce((promise, diagnostico) => {
-            return promise.then(() => {
-                return hacerClickEnSelect2(diagnostico.selector)
-                    .then(() => establecerBusqueda(diagnostico.selector, diagnostico.nombre))
-                    .then(() => seleccionarOpcion())
-                    .then(() => hacerClickEnPresuntivo(diagnostico.definitivo, 1))
-                    .then(() => hacerClickEnSelect2(diagnostico.lateralidad))
-                    .then(() => establecerBusqueda(diagnostico.lateralidad, ojo))
-                    .then(() => seleccionarOpcion())
-                    .catch(error => console.error(`Error procesando código ${diagnostico.nombre}:`, error));
-            });
-        }, Promise.resolve()); // Inicializa con una promesa resuelta
-    }
-
-    /*function ejecutarRecetas(item) {
+    function ejecutarRecetas(item) {
         if (!Array.isArray(item.recetas)) return Promise.resolve();
 
         return hacerClickEnBoton('#prescripcion', 1)
@@ -392,46 +291,6 @@ function ejecutarProtocoloEnPagina(item) {
                 }, Promise.resolve()); // Inicializa con una promesa resuelta
             });
     }
-*/
-
-    function capturarNombreUsuario() {
-        const nombreUsuarioElement = document.querySelector('.dropdown.user.user-menu .hidden-xs');
-        if (nombreUsuarioElement) {
-            return nombreUsuarioElement.textContent.trim();
-        } else {
-            console.error('No se encontró el nombre del usuario.');
-            return 'Nombre no encontrado';
-        }
-    }
-
-    function obtenerNombreMedicoSeleccionado(opcion = 'completo') {
-        const nombreMedicoElement = document.getElementById('select2-consultasubsecuente-trabajadoragenda-container');
-        if (nombreMedicoElement) {
-            const nombreMedico = nombreMedicoElement.getAttribute('title');
-            if (nombreMedico) {
-                if (opcion === 'completo') {
-                    return nombreMedico;
-                } else if (opcion === 'apellidos') {
-                    const palabras = nombreMedico.split(' ');
-                    return palabras.slice(-2).join(' ');
-                } else {
-                    return 'Opción no válida';
-                }
-            } else {
-                return 'Nombre no encontrado';
-            }
-        } else {
-            console.error('No se encontró el nombre del médico.');
-            return 'Nombre no encontrado';
-        }
-    }
-
-// Ejemplo de uso:
-    const nombreCompleto = obtenerNombreMedicoSeleccionado('completo');
-    console.log('Nombre completo del médico:', nombreCompleto);
-
-    const apellidosMedico = obtenerNombreMedicoSeleccionado('apellidos');
-    console.log('Apellidos del médico:', apellidosMedico);
 
     function esperarElemento(selector) {
         return new Promise((resolve, reject) => {
@@ -465,110 +324,8 @@ function ejecutarProtocoloEnPagina(item) {
         });
     }
 
-    function sumarHoras(hora, horasASumar) {
-        const [horas, minutos] = hora.split(':').map(Number);
-        if (isNaN(horas) || isNaN(minutos)) {
-            return null; // Manejo de error si alguno de los valores no es un número
-        }
-        const fecha = new Date();
-        fecha.setHours(horas, minutos, 0); // Segundos se ponen a 0
 
-        // Sumar las horas
-        fecha.setHours(fecha.getHours() + horasASumar);
-
-        // Formatear la nueva hora
-        return [String(fecha.getHours()).padStart(2, '0'), String(fecha.getMinutes()).padStart(2, '0')].join(':');
-    }
-
-    function actualizarHoraFin() {
-        const campoHoraInicio = document.querySelector('#consultasubsecuente-horainicio');
-        const campoHoraFin = document.querySelector('#consultasubsecuente-horafin');
-
-        if (campoHoraInicio && campoHoraFin) {
-            const horaInicio = campoHoraInicio.value;
-
-            // Asegúrate de que la hora de inicio esté en el formato correcto
-            if (!/^\d{2}:\d{2}$/.test(horaInicio)) {
-                console.error('La hora de inicio no está en el formato correcto (hh:mm).');
-                return;
-            }
-
-            const nuevaHoraFin = sumarHoras(horaInicio, 2);
-
-            if (nuevaHoraFin) {
-                campoHoraFin.value = nuevaHoraFin; // Modificar directamente el value
-                console.log(`La nueva hora de fin es: ${nuevaHoraFin}`);
-            } else {
-                console.error('Error al sumar horas a la hora de inicio.');
-            }
-        } else {
-            console.error('No se encontraron los campos de hora de inicio o de fin.');
-        }
-    }
-
-// Llamar a la función para actualizar la hora de fin
-    actualizarHoraFin();
-
-    const nombreUsuario = capturarNombreUsuario();
-    const textoDictado = `DICTADO POR: ${nombreCompleto}\nFECHA DE DICTADO: ${obtenerFechaActual()}\nESCRITO POR: ${nombreUsuario}`;
-    const observaciones = `Se realiza ${item.membrete} en ${ojoATratar.descripcion} sin complicaciones.
-Se dan indicaciones médicas, cuidado de la herida y actividades permitidas y restringidas.
-Se prescribe medicación por vía oral
-Se indica al paciente que debe acudir a una consulta de control en las próximas 24 horas`
-
-    function ejecutarTecnicos(item, nombreCirujano) {
-        if (!Array.isArray(item.tecnicos)) return Promise.resolve();
-
-        return item.tecnicos.reduce((promise, tecnico) => {
-            return promise.then(() => {
-                return hacerClickEnSelect2(tecnico.selector)
-                    .then(() => establecerBusqueda(tecnico.selector, tecnico.funcion))
-                    .then(() => seleccionarOpcion())
-                    .then(() => hacerClickEnSelect2(tecnico.trabajador))
-                    .then(() => {
-                        if (tecnico.nombre === 'cirujano_principal') {
-                            return establecerBusqueda(tecnico.trabajador, nombreCirujano);
-                        } else {
-                            return establecerBusqueda(tecnico.trabajador, tecnico.nombre);
-                        }
-                    })
-                    .then(() => seleccionarOpcion())
-                    .catch(error => console.error(`Error procesando técnico ${tecnico.nombre}:`, error));
-            });
-        }, Promise.resolve()); // Inicializa con una promesa resuelta
-    }
-
-    function destacarBotonSubida() {
-        const botonSubida = document.querySelector('#consultasubsecuente-fotoupload');
-        if (botonSubida) {
-            botonSubida.style.backgroundColor = '#f88';  // Cambia el color de fondo para llamar la atención
-            botonSubida.style.transition = 'background-color 0.5s';  // Transición suave del color
-            console.log('Por favor, haga clic en el botón de subida de archivos para continuar y revisar el ojo y diagnósticos correctos.');
-            alert('Por favor, haga clic en el botón de subida de archivos para continuar.');  // Mensaje para el usuario
-        } else {
-            console.error('El botón de subida de archivos no se encontró.');
-        }
-    }
-
-
-    ejecutarAcciones(item)
-        .then(() => ejecutarTecnicos(item, apellidosMedico))
-        .then(() => ejecutarCodigos(item, ojoATratar.sigla))
-        .then(() => llenarCampoTexto('#consultasubsecuente-datoscirugia', textoDictado))
-        .then(() => seleccionarRadioNo())
-        .then(() => actualizarHoraFin())
-        .then(() => hacerClickEnSelect2('#select2-consultasubsecuente-anestesia_id-container'))
-        .then(() => establecerBusqueda('#select2-consultasubsecuente-anestesia_id-container', "REGIONAL"))
-        .then(() => seleccionarOpcion())
-        .then(() => ejecutarDiagnosticos(item, ojoATratar.sigla))
-        .then(() => hacerClickEnPresuntivo('.form-group.field-proyectada .cbx-container .cbx', 2))
-        .then(() => hacerClickEnPresuntivo('.form-group.field-termsChkbx .cbx-container .cbx', 1))
-        //.then(() => ejecutarRecetas(item))
-        .then(() => esperarElemento('#docsolicitudprocedimientos-observacion_consulta'))
-        .then(() => llenarCampoTexto('#docsolicitudprocedimientos-observacion_consulta', observaciones))
-        .then(() => hacerClickEnBoton('#consultaActual', 1))
-        .then(() => destacarBotonSubida())  // Asegúrate de que el selector sea correcto
-        .then(() => console.log('Clic simulado correctamente.'))
+    ejecutarRecetas(item)
         .catch(error => console.error('Error en la ejecución de acciones:', error));
 }
 
