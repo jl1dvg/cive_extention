@@ -110,9 +110,6 @@
     <div class="card">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <span>Protocolos</span>
-            <button id="btnGeneratePDF" class="btn btn-success btn-sm">
-                <i class="fas fa-file-pdf"></i> Descargar PDF
-            </button>
         </div>
         <div class="card-body">
             <div class="grid-container" id="contenedorProtocolos"></div>
@@ -133,6 +130,9 @@
         <div class="card-footer bg-secondary text-white">
             <button id="btnBackProcedimientos" class="btn btn-danger">
                 <i class="fas fa-arrow-alt-circle-left"></i> Atrás
+            </button>
+            <button id="btnGeneratePDF" class="btn btn-success btn-sm">
+                <i class="fas fa-file-pdf"></i> Descargar PDF
             </button>
         </div>
     </div>
