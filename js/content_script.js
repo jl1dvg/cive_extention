@@ -298,8 +298,8 @@
                     // Si la verificación es exitosa, continúa con la generación del PDF
                     generatePDF();
                 } else {
-                    // Mostrar un mensaje al usuario si no tiene acceso o si hubo un error
-                    alert(response.error || 'No tiene una suscripción activa o no está aprobado para usar esta función.');
+            // Redirigir al usuario a la página de inicio de sesión en una nueva pestaña si no tiene acceso
+            window.open('http://cive.consulmed.me/login.html', '_blank');
                 }
             });
         });
