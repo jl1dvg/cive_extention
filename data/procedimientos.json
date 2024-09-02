@@ -20,13 +20,13 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "PRIMER AYUDANTE",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
           "nombre": "JAIRO"
         },
@@ -50,7 +50,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -137,13 +137,13 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "PRIMER AYUDANTE",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
           "nombre": "JAIRO"
         },
@@ -167,7 +167,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -254,13 +254,13 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "PRIMER AYUDANTE",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
           "nombre": "JAIRO"
         },
@@ -284,7 +284,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -376,7 +376,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -400,7 +400,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
           "nombre": "KENYA"
         }
@@ -456,7 +456,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -486,7 +486,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -567,7 +567,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -597,7 +597,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -683,7 +683,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -713,7 +713,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -799,7 +799,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -829,7 +829,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -920,13 +920,13 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "PRIMER AYUDANTE",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
           "nombre": "JAIRO"
         },
@@ -950,7 +950,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -1052,13 +1052,13 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "PRIMER AYUDANTE",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
           "nombre": "JAIRO"
         },
@@ -1082,7 +1082,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -1158,13 +1158,13 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "PRIMER AYUDANTE",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
           "nombre": "JAIRO"
         },
@@ -1188,7 +1188,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -1269,7 +1269,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -1293,7 +1293,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
           "nombre": "KENYA"
         }
@@ -1364,7 +1364,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -1388,7 +1388,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
           "nombre": "KENYA"
         }
@@ -1459,7 +1459,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -1483,7 +1483,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
           "nombre": "KENYA"
         }
@@ -1554,7 +1554,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -1578,7 +1578,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
           "nombre": "KENYA"
         }
@@ -1649,7 +1649,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -1673,7 +1673,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
           "nombre": "KENYA"
         }
@@ -1744,7 +1744,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -1768,7 +1768,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
           "nombre": "KENYA"
         }
@@ -1839,7 +1839,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -1869,7 +1869,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -1960,7 +1960,7 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
@@ -1990,7 +1990,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -2076,13 +2076,13 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "PRIMER AYUDANTE",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
           "nombre": "PATERNINA"
         },
@@ -2106,7 +2106,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -2182,13 +2182,13 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "PRIMER AYUDANTE",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
           "nombre": "PATERNINA"
         },
@@ -2212,7 +2212,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
@@ -2288,13 +2288,13 @@
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO PRINCIPAL",
+          "funcion": "CIRUJANO 1",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
           "nombre": "cirujano_principal"
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "PRIMER AYUDANTE",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
           "nombre": "PATERNINA"
         },
@@ -2318,7 +2318,7 @@
         },
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
           "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
           "nombre": "KENYA"
         }
