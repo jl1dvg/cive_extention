@@ -59,6 +59,34 @@
       ]
     },
     {
+      "id": "icl",
+      "cirugia": "ICL",
+      "categoria": "Dr. Andrés Pólit Hoyos",
+      "recetaCount": 1,
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "ZYPRED",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "6",
+          "cantidad": 21,
+          "totalFarmacia": "1",
+          "observaciones": "GATIFLOXACINA 0.3%, PREDNISOLONA 1% - 1 GOTA CADA 6 HORAS x 21 DÍAS EN OJO OPREADO (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
+        },
+        {
+          "id": 1,
+          "nombre": "SOPHIPREN",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "6",
+          "cantidad": 7,
+          "totalFarmacia": "1",
+          "observaciones": "DORZOLAMIDA 2% TIMOLOL 0.5% 1 GOTA CADA 12 HORAS x 21 DÍAS EN OJO OPREADO (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
+        }
+      ]
+    },
+    {
       "id": "faco_general",
       "cirugia": "Faco + LIO",
       "categoria": "General",
