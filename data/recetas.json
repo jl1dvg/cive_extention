@@ -94,44 +94,6 @@
       "recetas": [
         {
           "id": 0,
-          "nombre": "POENBIOTIC",
-          "via": "GOTERO",
-          "unidad": "GOTAS",
-          "pauta": "6",
-          "cantidad": 31,
-          "totalFarmacia": "1",
-          "observaciones": "CIPROFLOXAINA 0.3% DEXAMETASONA 0.1% - 1 GOTA CADA 6 HORAS X  30 DÍAS EN OJO OPREADO (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
-        },
-        {
-          "id": 1,
-          "nombre": "TIMOX",
-          "via": "GOTERO",
-          "unidad": "GOTAS",
-          "pauta": "12",
-          "cantidad": 30,
-          "totalFarmacia": "1",
-          "observaciones": "TIMOLOL 0.5% 1 GOTA CADA 12 HORAS X  30 DÍAS EN OJO OPERADO"
-        },
-        {
-          "id": 2,
-          "nombre": "DOLORGESIC",
-          "via": "VIA ORAL",
-          "unidad": "TAB",
-          "pauta": "12",
-          "cantidad": 3,
-          "totalFarmacia": "6",
-          "observaciones": "IBUPROFENO 400MG 1  TAB  VIA ORAL CADA 12 HORAS X  3 DÍAS"
-        }
-      ]
-    },
-    {
-      "id": "faco_gaby",
-      "cirugia": "Faco + LIO",
-      "categoria": "Dra. Gabriela Heredia",
-      "recetaCount": 2,
-      "recetas": [
-        {
-          "id": 0,
           "nombre": "OMEPRAZOL CAPSULA 20",
           "via": "VIA ORAL",
           "unidad": "CAPSULAS",
@@ -159,6 +121,44 @@
           "cantidad": 3,
           "totalFarmacia": "9",
           "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "faco_gaby",
+      "cirugia": "Faco + LIO",
+      "categoria": "Dra. Gabriela Heredia",
+      "recetaCount": 2,
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "POENBIOTIC",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "6",
+          "cantidad": 31,
+          "totalFarmacia": "1",
+          "observaciones": "CIPROFLOXAINA 0.3% DEXAMETASONA 0.1% - 1 GOTA CADA 6 HORAS X  30 DÍAS EN OJO OPREADO (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
+        },
+        {
+          "id": 1,
+          "nombre": "TIMOX",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "12",
+          "cantidad": 30,
+          "totalFarmacia": "1",
+          "observaciones": "TIMOLOL 0.5% 1 GOTA CADA 12 HORAS X  30 DÍAS EN OJO OPERADO"
+        },
+        {
+          "id": 2,
+          "nombre": "DOLORGESIC",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "12",
+          "cantidad": 3,
+          "totalFarmacia": "6",
+          "observaciones": "IBUPROFENO 400MG 1  TAB  VIA ORAL CADA 12 HORAS X  3 DÍAS"
         }
       ]
     }
