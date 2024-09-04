@@ -359,6 +359,133 @@
       ]
     },
     {
+      "id": "facomulsificacion_lio_pterigion",
+      "cirugia": "Faco + LIO + Pterigion",
+      "categoria": "Catarata",
+      "membrete": "FACOEMULSIFICACION DE CATARATA + IMPLANTE DE LENTE INTRAOCULAR + EXCERESIS DE PTERIGION",
+      "dieresis": "INCISION CORNEAL + PERITOMIA CONJUNTIVAL",
+      "exposicion": "CAMARA ANTERIOR + CONJUNTIVA",
+      "hallazgo": "CATARATA + PTERIGION NASAL GRADO I-II",
+      "operatorio": "MEDIANTE ANESTESIA REGIONAL, PREVIA ASEPSIA Y ANTISEPSIA,\n    COLOCACIÓN DE CAMPOS, ESPÉCULO PALPEBRAL Y LAVADO,\n    SE COLOCA TEGADERM 10X12 Y STERI STRIP  PARA FIJAR LAS PESTAÑAS,\n    BAJO SISTEMA DE VISUALIZACION CON EL USO DEL MICROSCOPIO QUIRURGICO Y PAK ANTERIOR DE CONTELLATION,\n    PERITOMIA CONJUNTIVAL NASAL  PEROLESIONAL CON TIJERA DE WESCOTT,\n    TUNELIZACION DE TEJIDO FIBROVASCULAR A NIVEL DEL LIMBO,\n    DISECCION DEL CUERPO DEL PTERIGION CON TIJERA DE WESCOTT,\n    EXCERESIS DE LA MAYOR CANTIDAD DE TENON,\n    CON AYUDA DE CUCHILLETE CRESCENT 2-0MM  SE DISECA LA PORCION CORNEAL DEL PTERIGION,\n    HEMOSTASIA CON PUNTA DE DIATERMIA   DE CAMPO HUMEDO DEL VASOS EPIESCLERALES,\n    PARACENTESIS CON CUCHILLETE DE 1,2MM EN HORA III Y IX  PARA SEGUNDO INSTRUMENTO,\n    INYECCION DE AIRE Y AZUL TRIPANO 0,50ML,\n    INYECCION DE SUSTANCIA VISCOELASTICA HIALURONATO DE SODIO (1.5CC)  EN CAMARA ANTERIOR,\n    SE REALIZA INCISION  CORNEAL CON CUCHILLETE DE 2,75MM,\n    CAPSULORREXIS CIRCULAR CONTINUA,\n    HIDRODISECCION,\n    INYECCION DE SUSTANCIA VISCOELASTICA HIALURONATO DE SODIO(1,5CC)  EN CAMARA ANTERIOR,\n    FACOEMULSIFICACION CON TIP 0.9 DE PHACO DE CRISTALINO CON EQUIPO VITRECTOR CONSTELLATION VISION SYSTEM,\n    USO DE BOMBA DE IRRIGACION Y ASPIRACION DE CORTEZA CON SOLUCION SALINA BALANCEADA (BSS) 300ML,\n    INYECCION DE SUSTANCIA VISCOELASTICA METILCELULOSA(1.5CC) EN CAMARA ANTERIOR,\n    SE IMPLANTA LENTE INTRAOCULAR MONOFOCAL CON INYECTOR,\n    SE RETIRA CON USO DE  BOMBA DE IRRIGACION , ASPIRACION, Y LA SUSTANCIA VISCOELASTICA METILCELULOSA,\n    INYECCION DE MIOSTAT (CARBACOL ) 0,3ML EN CAMARA ANTERIOR PARA INDUCIR MIOSIS,\n    SE CONFIRMA QUE EL TONO ESTE POR DEBAJO DE 25 mmHg,\n    SE SUTURA INCISION PRINCIPAL  CON NYLON 10-0,\n    SE SUTURA POR DESPLAZAMIENTO NASAL DE CONJUNTIVA CON NYLON 10-0,\n    INSTILACIÓN DE GOTAS OFTÁLMICAS DE DEXAMETASONA + TOBRAMICINA 0,1%+0,3%,\n    INYECCIÓN SUBCONJUNTIVAL DE ANTIBIÓTICOS Y CORTICOIDES  ( GENTAMICINA 80mg Y DEXAMETASONA 4mg ),\n    APÓSITO OCULAR",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 5,
+      "codigoCount": 4,
+      "diagnosticoCount": 3,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO 1",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "PRIMER AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "JAIRO"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "65420",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-1-procinterno-container",
+          "nombre": "66984",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-1-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-2-procinterno-container",
+          "nombre": "66020",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-2-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-3-procinterno-container",
+          "nombre": "66030",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-3-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-4-procinterno-container",
+          "nombre": "68200",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-4-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-1-iddiagnostico-container",
+          "nombre": "Z961",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-1-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-1-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "OMEPRAZOL CAPSULA 20",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "dia",
+          "cantidad": 5,
+          "totalFarmacia": "5",
+          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+        },
+        {
+          "id": 1,
+          "nombre": "CEFADROXILO 500MG",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "12",
+          "cantidad": 5,
+          "totalFarmacia": "10",
+          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
       "id": "avastin",
       "cirugia": "Avastin",
       "categoria": "Inyecciones",
