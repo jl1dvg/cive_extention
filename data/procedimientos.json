@@ -362,6 +362,8 @@
       "id": "facomulsificacion_lio_pterigion",
       "cirugia": "Faco + LIO + Pterigion",
       "categoria": "Catarata",
+      "medicacion": 5,
+      "cardex": 5,
       "membrete": "FACOEMULSIFICACION DE CATARATA + IMPLANTE DE LENTE INTRAOCULAR + EXCERESIS DE PTERIGION",
       "dieresis": "INCISION CORNEAL + PERITOMIA CONJUNTIVAL",
       "exposicion": "CAMARA ANTERIOR + CONJUNTIVA",
@@ -1810,6 +1812,122 @@
           "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
           "nombre": "65756",
           "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "SOPHIXIN DX OFTENO",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "8",
+          "cantidad": 8,
+          "totalFarmacia": "1",
+          "observaciones": "CIPROFLOXACINO 0.3% DEXAMETASONA 0.1% 1  GOTAS  GOTERO CADA 8 HORAS x  8 DÍAS EN OJOS TRATADOS"
+        },
+        {
+          "id": 1,
+          "nombre": "LOTESOFT",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "12",
+          "cantidad": 30,
+          "totalFarmacia": "1",
+          "observaciones": "LOTEPREDNOL ETABONATO 0.5% 1 GOTA CADA 12 HORAS x 30 DÍAS CUANDO SUSPENDA EL SOPHIXIN DX A PARTIR DE LA 2DA SEMANA"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "icl",
+      "cirugia": "ICL",
+      "categoria": "Refractiva",
+      "membrete": "IMPLANTE DE LENTE FAQUICO OJO IZQUIERDO ",
+      "dieresis": "CORNEAL",
+      "exposicion": "CAMARA ANTERIOR",
+      "hallazgo": "MIOPIA",
+      "operatorio": "MEDIANTE ANESTESIA REGIONAL, PREVIA ASEPSIA Y ANTISEPSIA \nCAMPOS BLEFARO Y LAVADO\nSE COLOCA TEGADERM 10X12 Y ESTERI-STRIP PARA FIJAR LAS PESTAÑAS\nBAJO SISTEMA DE VISUALIZACION CON EL USO DEL MICROSCOPIO QUIRURGICO \nSE IRRIGA CORNEAY FONDOS DE SACO CON SOLUCION SALINA BALANCEADA 20ML \nSE REALIZA PARACENTESIS VETICALES A LAS 2 Y 8 HORAS CON CUCHILLETE 1,2MM \nINYECCION DE SUSTANCIA VISCOELASTICA 1% NATRIUMHYALURONAT PROVISC (1,5CC) EN CAMARA ANTERIOR\nSE REALIZA INCISION PRINCIPAL CON CUCHILLETE 3,2MM \nINYECCION DE SUSTANCIA VISCOELASTICA 1% NATRIUMHYALURONAT PROVISC (1,5CC) EN CAMARA ANTERIOR\nINTRODUCCION DE IMPLANTE DE LENTE INTRAOCULAR FAQUICO  TORICO  CON INYECTOR  \nSE RETIRA CON BOMBA DE IRRIGACION , ASPIRACION, Y LA SUSTANCIA 1% NATRIUMHYALURONAT PROVISC  \nSE SUTURA INCISION PRINCIPAL CON NYLON 10-0 \nSE INYECTA CARBACOL 1%  (MIOSTAT) 0,2 ML EN CAMARA ANTERIOR PARA INDUCIR MIOSIS \nINYECCION SUBCONJUNTIVAL DE GENTAMICINA 80mg Y DEXAMETASONA 4mg\nCOLOCACION DE GOTAS DEXAMETASONA + TOBRAMICINA 0,1% + 0,3%                      \nAPOSITO  ",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 5,
+      "codigoCount": 3,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO 1",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "PRIMER AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "JAIRO"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "66985",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-1-procinterno-container",
+          "nombre": "66020",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-1-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-2-procinterno-container",
+          "nombre": "66030",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-2-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-3-procinterno-container",
+          "nombre": "68200",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-3-lateralidadprocedimiento-container"
         }
       ],
       "diagnosticos": [
