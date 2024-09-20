@@ -179,6 +179,44 @@
           "observaciones": "MOXIFLOXACINO CLOHIDRATO 1  GOTAS  GOTERO CADA 6 HORAS X  5 DÍAS EN OJO INYECTADO (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
         }
       ]
+    },
+    {
+      "id": "pterigion_pame",
+      "cirugia": "Pterigion",
+      "categoria": "Dra. Pamela Guillen",
+      "recetaCount": 2,
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "TRAZIDEX",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "4",
+          "cantidad": 30,
+          "totalFarmacia": "1",
+          "observaciones": "TRAZIDEX OFTENO SUSP. OFT. X 5 ML - 1 GOTA CADA 6 HORAS EN OJO OPREADO HASTA NUEVO CONTROL (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
+        },
+        {
+          "id": 1,
+          "nombre": "HUMYLUB",
+          "via": "GOTERO",
+          "unidad": "GOTAS",
+          "pauta": "4",
+          "cantidad": 30,
+          "totalFarmacia": "1",
+          "observaciones": "SULFATO SODICO DE CONDROITINA 0.18% HIALURONATO DE SODIO 0.1% 1 GOTA CADA 3 HORAS EN OJO OPREADO HASTA NUEVO CONTROL (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
+        },
+        {
+          "id": 2,
+          "nombre": "DOLORGESIC",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "12",
+          "cantidad": 3,
+          "totalFarmacia": "6",
+          "observaciones": "IBUPROFENO 400MG 1  TAB  VIA ORAL CADA 12 HORAS X  3 DÍAS Y SUSPENDER"
+        }
+      ]
     }
   ]
 }
