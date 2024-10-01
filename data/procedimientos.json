@@ -2761,6 +2761,137 @@
           "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
         }
       ]
+    },
+    {
+      "id": "dcr",
+      "cirugia": "Dacricistorrinostomía",
+      "categoria": "Oculoplástica",
+      "membrete": "Dacricistorrinostomía",
+      "dieresis": "PIEL",
+      "exposicion": "SACO LACRIMONASAL",
+      "hallazgo": "SACO OBSTRUIDO",
+      "operatorio": " MEDIANTE ANESTESIA GENERAL, PREVIA ASEPSIA Y ANTISEPSIA \nCOLOCACIÓN DE CAMPOS, ESPÉCULO PALPEBRAL Y LAVADO\nBAJO SISTEMA DE VISUALIZACIÓN Y MICROSCOPIO QUIRÚRGICO (OFTALMOLOGIA) \nTAPONAMIENTO DE FOSA NASAL  CORRESPONDIENTE CON GASA IMPREGNADA EN VASO CONTRICTOR\n DEMARCACION DEL AREA QUIRURGICA \nINYECCION DE SOLUCION CON EPINEFRINA DILICION 1:100.000 EN AREA QUIRURGICA\nINCISIÓN  CON HOJILLA DE BISTURI N 15. Y DIVULSION HASTA HUESO \nCAUTERIZACION DE VASOS SANGRANTES ELEVACIÓN DEL PERIOSTO CON ELECTROCAUTERIO \nINCISIÓN Y DRENAJE DEL SACO LAGRIMAL (DACRIOCISTOTOMIA, DACRIOCISTOSTOMIA  CON VICRYL 6-0\nDILTACIÓN E INCISIÓN DEL PUNTO LAGRIMAL\nEXTIRPACIÓN DE  DE SACO LAGRIMAL  Y DACRIOCISTECTOMIA ) \nEXTIRPACIÓN DE CUERPO EXTRAÑO O DACRIOLITO DE LOS PASAJES LAGRIMALES \nEXTIRPACION DE FISTULA LAGRIMAL CON ELECTRO-BISTURI\nDACRIOCISTORINOSTOMIA. \nAPERTURA DE MUCOSA NASAL CON CUCHILLETE 15°\nDILATACIÓN DE PUNTO LAGRIMAL, CON O SIN IRRIGACIÓN \nEXPLORACIÓN DE CONDUCTO LAGRIMAL CON O SIN IRRIGACIÓN \nSONDAJE E CANALÍCULOS LAGRIMALES CON O SIN IRRIGACIÓN. \nCANALIZACION DE VIA LAGRIMAL CON SONDA DE GIBOR O JACKSON\nSUTURA DE MUCOSA DE SACO LAGRIMAL  A MUCOSA NASAL CON VICRYL 6-0\nANUDAR SONDA GAIBOR  EN FOSA NASAL ",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 5,
+      "codigoCount": 6,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO 1",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "PRIMER AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "PATERNINA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "68720",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-1-procinterno-container",
+          "nombre": "68520",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-1-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-2-procinterno-container",
+          "nombre": "68530",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-2-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-3-procinterno-container",
+          "nombre": "68810",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-3-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-4-procinterno-container",
+          "nombre": "68420",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-4-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-5-procinterno-container",
+          "nombre": "68440",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-5-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-6-procinterno-container",
+          "nombre": "68801",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-6-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "OMEPRAZOL CAPSULA 20",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "dia",
+          "cantidad": 5,
+          "totalFarmacia": "5",
+          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+        },
+        {
+          "id": 1,
+          "nombre": "CEFADROXILO 500MG",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "12",
+          "cantidad": 5,
+          "totalFarmacia": "10",
+          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
     }
   ]
 }
