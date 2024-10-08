@@ -1033,7 +1033,7 @@
       "membrete": "VITRECTOMÍA POSTERIOR PARS PLANA + PELAJE DE MEMBRANA + ENDOLASER + GAS",
       "dieresis": "ESCLEROTOMIAS TRANSCONJUNTIVALES A 4 MM DE LIMBO",
       "exposicion": "CAVIDAD VITREA",
-      "hallazgo": "DESPRENDIMIENTO DE RETINA REGMATÓGENO SUPERIOR",
+      "hallazgo": "PRESENCIA DE MEMBRANAS EPIRRETINALES",
       "operatorio": "MEDIANTE ANESTESIA REGIONAL, PREVIA ASEPSIA Y ANTISEPSIA \nCOLOCACIÓN DE CAMPOS, ESPÉCULO PALPEBRAL Y LAVADO\nSE COLOCA TEGADERM 10X12 Y STERI STRIP  PARA FIJAR LAS PESTAÑAS\nUSO DE MICROSCOPIO QUIRÚRGICO Y SISTEMA AÉREO DE VISUALIZACIÓN VITREORETINAL PANORÁMICA MODELO RUV 800 Y PACK COMBINADO 25G \nINSERCIÓN DE TRÓCARES VALVULADOS DE 25 GAUGE  A 4 MM DEL LIMBO E INFUSIÓN DE SOLUCIÓN SALINA BALANCEADA BSS 300 ML\nVITRECTOMÍA POSTERIOR CON USO PUNTA DE VITRECTOMIA 25GA Y PUNTA DE ENDOLUZ 25+(SONDA ENDOLASER) DEL EQUIPO VITRECTOR CONSTELLATION VISION SYSTEM\nDESPRENDIMIENTO DE VITREO POSTERIOR\nSEGMENTACIÓN DE MEMBRANAS/MEMBRANECTOMÍA CON PUNTA DE VITRECTOMIA 25+ Y PINZA MAX GRIP 25+\nTINCION DE LA MEMBRANA LIMINTANTE INTERNA CON AZUL BRILLANTE\nPELAJE DE MEMBRANA LIMITANTE INTERNA CON AYUDA DE PINZA ILM DE 25 GAUGE \nAPLICACIÓN DE FOTOCOAGULACION  ENDOLASER CON LASER MODELO PUREPOINT Y CON PUNTA DE LASER FLEX ( LASER PROBE 25+ KIT ENDOLASER )\nINTERCAMBIO FLUIDO - AIRE \nASPIRACION DE LIQUIDO CON CANULA DE CHARLES (BACK-FLUSH) \nINYECCIÓN DE VITREO ARTIFICIAL ( GAS HEXAFLUORO DE AZUFRE) SF6 AL 20%\nRETIRO DE TRÓCARES\nSE CONFIRMA QUE EL TONO ESTE POR DEBAJO DE 25 mmHg\nINSTILACIÓN DE GOTAS OFTÁLMICAS DE DEXAMETASONA + TOBRAMICINA 0,1%+0,3% \nINYECCIÓN SUBCONJUNTIVAL DE ANTIBIÓTICOS Y CORTICOIDES  ( GENTAMICINA 80mg Y DEXAMETASONA 4mg )\nAPÓSITO OCULAR",
       "complicacionesoperatorio": "NO",
       "perdidasanguineat": "NO",
@@ -3329,6 +3329,354 @@
           "selector": "#select2-consultasubsecuente-procedimientoprotocolo-6-procinterno-container",
           "nombre": "68801",
           "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-6-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "OMEPRAZOL CAPSULA 20",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "dia",
+          "cantidad": 5,
+          "totalFarmacia": "5",
+          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+        },
+        {
+          "id": 1,
+          "nombre": "CEFADROXILO 500MG",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "12",
+          "cantidad": 5,
+          "totalFarmacia": "10",
+          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "facotrabe",
+      "cirugia": "Faco LIO + TRABECULECTOMIA",
+      "categoria": "Glaucoma",
+      "membrete": "FACOEMULSIFICACION CON IMPLANTE DE LIO MAS TRABECULECTOMIA",
+      "dieresis": "INCISION CORNEAL Y PERITOMIA SUPERIOR BASE FORNIX",
+      "exposicion": "CAMARA ANTERIOR",
+      "hallazgo": "CATARATA",
+      "operatorio": "MEDIANTE ANESTESIA REGIONAL, PREVIA ASEPSIA Y ANTISEPSIA \nCAMPOS BLEFARO Y LAVADO\nSE COLOCA TEGADERM 10X12 Y ESTERI-STRIP PARA FIJAR LAS PESTAÑAS\nBAJO SISTEMA DE VISUALIZACION CON EL USO DEL MICROSCOPIO QUIRURGICO OFTALMOLOGIA  Y PAK ANTERIOR DE CONSTELLATION \nFIJACION DEL GLOBO OCULAR CON SUTURA VICRYL 7-0 HORA III Y IX \nSE REALIZA PERITOMIA CONJUNTIVAL BASE FORNIX CON TIJERA WESSCOTT\nHEMOSTASIA DE VASOS EPIESCLERALES CON PUNTA DE CAUTERIO DE CAMPO HUMEDO\nDISECCION DE FLAP ESCLEROCORNEAL BASE LIMBO CON CUCHILLETE MINICRESCENT 2-0MM\n PARA REDUCIR CICATRIZACION SUBCONJUNTIVAL SE COLOCA 1 ml de MITOMICINA  CON MICRO-ESPONJAS DE WECK  Y SE LAVA CON ABUNDANTE SOLUCION SALINA 250CC \nPARACENTESIS CON CUCHILLETE DE 15° PARA SEGUNDO INSTRUMENTO\nINYECCION DE AIRE Y  AZUL DE TRIPANO \nINYECCION DE SUSTANCIA VISCOELASTICA HIALURONATO DE SODIO(1,5CC)   EN CAMARA ANTERIOR\nSE REALIZA INCISION PRINCIPAL EN CAMARA ANTERIOR  CON CUCHILLETE DE 2.75MM\nCAPSULORREXIS CIRCULAR CONTINUA\nHIDRODISECCION\nFACOEMULSIFICACION CON TIP 0.9 DE PHACO DE CRISTALINO CON EQUIPO VITRECTOR CONSTELLATION VISION SYSTEM\nUSO DE BOMBA DE IRRIGACION Y ASPIRACION DE CORTEZA CON SOLUCION SALINA BALANCEADA (BSS) 300ML\nINYECCION DE SUSTANCIA VISCOELASTICA METILCELULOSA (1.5CC) EN CAMARA ANTERIOR\nINTRODUCCION DE LENTES INTRAOCULAR PLEGABLE MONOFOCAL   CON INYECTOR DE LENTE INTRAOCULAR PLEGABLE MONOFOCAL \nRESECCION DE UN BLOQUE ESCLERO-CORNEAL, SE REALIZA LA EXTRACCION DE UN FRAGMENTO DE ESPESOR TOTAL QUE, PARTIENDO DE LA CORNEA, SE EXTIENDA HASTA LA ESLCERA \nINCLUYENDO POR TANTO EL TRABECULUM, LA ESCLEROTOMIA SE REALIZA CON PUNCH KELLY \nSE REALIZA IRIDOTOMIA CON LA RESECCION IRIDIANA DE ESPESOR TOTAL EN SU PARTE MAS PERIFERICA CON TIJERA DE VANNAS \nSE RETIRA CON USO DE BOMBA DE IRRIGACION , ASPIRACION, Y LA SUSTANCIA VISCOELASTICA METILCELULOSA\nSUTURA DE FLAP ESCLEROCORNEAL CON NYLON 10-0\nSUTURA DE LA PERITOMIA CON NYLON  10-0\nINYECCION DE MIOSTAT CARBACOL (0,2ML)  EN CAMARA ANTERIOR PARA INDUCIR MIOSIS PUPILAR\nSE COLOCA EN AIRE EN CAMARA ANTERIOR \nINYECCION SUBCONJUNTIVAL DE GENTAMICINA 80mg Y DEXAMETASONA 4mg COMO MEDIDA DE PROFILAXIS \nCOLOCACION DE GOTAS DE DEXAMETASONA + TOBRAMICINA - LIQUIDO OFTALMICO 0,1%+0,3%         \nAPOSITO",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 5,
+      "codigoCount": 5,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO 1",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "CIRUJANO 2",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "JAIRO"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "66982",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-1-procinterno-container",
+          "nombre": "66170",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-1-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-2-procinterno-container",
+          "nombre": "66625",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-2-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-3-procinterno-container",
+          "nombre": "66020",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-3-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-4-procinterno-container",
+          "nombre": "66030",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-4-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-5-procinterno-container",
+          "nombre": "68200",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-5-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "OMEPRAZOL CAPSULA 20",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "dia",
+          "cantidad": 5,
+          "totalFarmacia": "5",
+          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+        },
+        {
+          "id": 1,
+          "nombre": "CEFADROXILO 500MG",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "12",
+          "cantidad": 5,
+          "totalFarmacia": "10",
+          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "trabe",
+      "cirugia": "TRABECULECTOMIA",
+      "categoria": "Glaucoma",
+      "membrete": "TRABECULECTOMIA",
+      "dieresis": "INCISION CORNEAL Y PERITOMIA SUPERIOR BASE FORNIX",
+      "exposicion": "CAMARA ANTERIOR",
+      "hallazgo": "HIPERTENSION OCULAR",
+      "operatorio": " MEDIANTE ANESTESIA REGIONAL, PREVIA ASEPSIA Y ANTISEPSIA \nCAMPOS BLEFARO Y LAVADO\nSE COLOCA TEGADERM 10X12 Y ESTERI-STRIP PARA FIJAR LAS PESTAÑAS\nBAJO SISTEMA DE VISUALIZACION CON EL USO DEL MICROSCOPIO QUIRURGICO \nPARACENTESIS CON CUCHILLETE DE 15° EN CAMRA ANTERIOR \nINYECCION DE MIOSTAT CARBACOL (0,2ML)  EN CAMARA ANTERIOR PARA INDUCIR MIOSIS PUPILAR\nINYECCION DE SUSTANCIA VISCOELASTICA HIALURONATO DE SODIO(1,5CC)   EN CAMARA ANTERIOR\nFIJACION DEL GLOBO OCULAR CON VICRYL 7-0 \nSE REALIZA PERITOMIA CONJUNTIVAL BASE FORNIX CON TIJERA WESSCOTT\nHEMOSTASIA DE VASOS EPIESCLERALES CON PUNTA DE CAUTERIO DE CAMPO HUMEDO\n  DISECCION DE FLAP ESCLEROCORNEAL BASE LIMBO CON CUCHILLETE MINICRESCENT 2-0MM \nSE COLOCA 1 ml de MITOMICINA  CON MICRO-ESPONJAS DE WECK  Y SE LAVA CON ABUNDANTE SOLUCION SALINA  \nSE INGRESA A CAMARA ANTERIOR CON CUCHILLETE 2.75MM \nSE REALIZA ESCLEROTOMIA CON PUNCH DE KELLY E , SE REALIZA TRABECULECTOMIA E IRIDOTOMIA PERIFERICA CON TIJERA DE VANNAS\nSUTURA DE FLAP ESCLEROCORNEAL CON NYLON 10-0\nINYECCION DE FLUIDO EN CAMARA ANTERIOR \nSUTURA DE LA CONJUNTIVA  CON NYLON  10-0\nINYECCION SUBCONJUNTIVAL DE GENTAMICINA 80mg Y DEXAMETASONA 4mg\nCOLOCACION DE GOTAS DE DEXAMETASONA + TOBRAMICINA - LIQUIDO OFTALMICO 0,1%+0,3%         \nAPOSITO",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 5,
+      "codigoCount": 4,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO 1",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "PRIMER AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "JAIRO"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "66030",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-1-procinterno-container",
+          "nombre": "66170",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-1-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-2-procinterno-container",
+          "nombre": "66625",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-2-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-3-procinterno-container",
+          "nombre": "66020",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-3-lateralidadprocedimiento-container"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-4-procinterno-container",
+          "nombre": "68200",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-4-lateralidadprocedimiento-container"
+        }
+      ],
+      "diagnosticos": [
+        {
+          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+          "nombre": "Z988",
+          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+        }
+      ],
+      "recetas": [
+        {
+          "id": 0,
+          "nombre": "OMEPRAZOL CAPSULA 20",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "dia",
+          "cantidad": 5,
+          "totalFarmacia": "5",
+          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+        },
+        {
+          "id": 1,
+          "nombre": "CEFADROXILO 500MG",
+          "via": "VIA ORAL",
+          "unidad": "CAPSULAS",
+          "pauta": "12",
+          "cantidad": 5,
+          "totalFarmacia": "10",
+          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+        },
+        {
+          "id": 2,
+          "nombre": "PARACETAMOL 1G - ANALGAN",
+          "via": "VIA ORAL",
+          "unidad": "TAB",
+          "pauta": "8",
+          "cantidad": 3,
+          "totalFarmacia": "9",
+          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+        }
+      ]
+    },
+    {
+      "id": "ciclofotodestruccion",
+      "cirugia": "CICLOFOTODESTRUCCION CON LASER",
+      "categoria": "Glaucoma",
+      "membrete": "CICLOFOTODESTRUCCION CON LASER",
+      "dieresis": "",
+      "exposicion": "SUPERFICIE LIMBAR OCULAR",
+      "hallazgo": "HIPERTENSION OCULAR",
+      "operatorio": "INSTILACION DE CLORHIDRATO DE PROXIMETACAINA AL 0,5%\n PREVIA ASEPSIA Y ANTISEPSIA \nSE COLOCA TEGADERM 10X12 PARA FIJAR LAS PESTAÑAS\nBAJO VISUALIZACION CON MICROSCOPIO QUIRURGICA Y SISTEMA DE VISUALIZACION SE COLOCACION DE CAMPOS, BLEFARO Y LAVADO\nINSTILACIÓN DE SOLUCION OFTALMICA DE TOBRAMICINA Y DEXAMETASONA AL 0.3%\nSE REALIZA LOCALIZACION DE CUERPO CILIAR POR MEDIO DE TRANSILUMINACION\nSE CONECTA SONDA EYEOP-PACKS Y SE APLICA LASER TRANSESCLERAL PODER 2500 A 1MM Y MEDIO DE LIMBO ESCLEROCORNEAL, A LA ALTURA DEL CUERPO \nCILIAR EN HEMISFERIO SUPERIOR 80 SEGUNDOS LUEGO EN HEMISFERIO INFERIOR 80 SEGUNDOS\nINSTALACIÓN DE DEXAMETASONA + TOBRAMICINA - LIQUIDO OFTALMICO 0,1%+0,3% \nRETIRO DE BLEFARO",
+      "complicacionesoperatorio": "NO",
+      "perdidasanguineat": "NO",
+      "staffCount": 5,
+      "codigoCount": 0,
+      "diagnosticoCount": 1,
+      "recetaCount": 2,
+      "tecnicos": [
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+          "funcion": "CIRUJANO 1",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+          "nombre": "cirujano_principal"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+          "funcion": "PRIMER AYUDANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+          "nombre": "JAIRO"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+          "funcion": "ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+          "nombre": "RORAYMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+          "funcion": "INSTRUMENTISTA",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+          "nombre": "FATIMA"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+          "funcion": "CIRCULANTE",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+          "nombre": "JAIME FER"
+        },
+        {
+          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
+          "funcion": "AYUDANTE ANESTESIOLOGO",
+          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
+          "nombre": "KENYA"
+        }
+      ],
+      "codigos": [
+        {
+          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+          "nombre": "66720",
+          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
         }
       ],
       "diagnosticos": [
