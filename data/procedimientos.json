@@ -573,6 +573,8 @@
       "cirugia": "VPP",
       "categoria": "Retina",
       "membrete": "VITRECTOMIA POSTERIOR VIA PARS PLANA",
+      "medicacion": 5,
+      "cardex": 5,
       "dieresis": "ESCLEROTOMIAS TRANSCONJUNTIVALES A 4 MM DE LIMBO",
       "exposicion": "CAVIDAD VITREA",
       "hallazgo": "HEMORRAGIA VITREA ",
