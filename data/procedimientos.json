@@ -502,6 +502,7 @@
       "codigoCount": 1,
       "diagnosticoCount": 1,
       "recetaCount": 0,
+      "horas": 1,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -582,6 +583,7 @@
       "codigoCount": 2,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 3,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -693,6 +695,7 @@
       "codigoCount": 3,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 3,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -809,6 +812,7 @@
       "codigoCount": 3,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 3,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -925,6 +929,7 @@
       "codigoCount": 3,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 3,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -1041,6 +1046,7 @@
       "codigoCount": 4,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 3,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -1162,6 +1168,7 @@
       "codigoCount": 4,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 3,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -1283,6 +1290,7 @@
       "codigoCount": 4,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 3,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -1404,6 +1412,7 @@
       "codigoCount": 4,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 3.5,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -1525,6 +1534,7 @@
       "codigoCount": 4,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 3.5,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -1646,6 +1656,7 @@
       "codigoCount": 5,
       "diagnosticoCount": 2,
       "recetaCount": 2,
+      "horas": 3.5,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -1778,6 +1789,7 @@
       "codigoCount": 1,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 1.5,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -2918,6 +2930,7 @@
       "codigoCount": 1,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 3,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -3256,6 +3269,7 @@
       "codigoCount": 6,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 4,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -3513,6 +3527,7 @@
       "codigoCount": 4,
       "diagnosticoCount": 1,
       "recetaCount": 2,
+      "horas": 1.5,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
@@ -3620,7 +3635,7 @@
       ]
     },
     {
-      "id": "ciclofotodestruccion",
+      "id": "ciclofoto",
       "cirugia": "CICLOFOTODESTRUCCION CON LASER",
       "categoria": "Glaucoma",
       "membrete": "CICLOFOTODESTRUCCION CON LASER",
