@@ -1,13 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Asistente CIVE",
-  "version": "3.0",
+  "version": "4.0",
   "description": "Descripción de mi extensión",
   "permissions": [
     "activeTab",
     "scripting"
   ],
   "host_permissions": [
+    "http://cive.consulmed.me/*",
+    "https://cive.consulmed.me/*",
     "http://cive.ddns.net/*",
     "https://cive.ddns.net/*",
     "http://192.168.1.13:8085/*",
@@ -28,7 +30,9 @@
         "css/popup.css",
         "css/floating_popup.css",
         "css/floating_button.css",
-        "js/floatingButton.js",
+        "js/popup_interaction.js",
+        "js/notifications.js",
+        "js/generate_pdf.js",
         "js/examenes.js",
         "js/procedimientos.js",
         "js/consulta.js",
@@ -70,6 +74,9 @@
         "http://127.0.0.1:8085/*"
       ],
       "js": [
+        "js/popup_interaction.js",
+        "js/notifications.js",
+        "js/generate_pdf.js",
         "js/examenes.js",
         "js/consulta.js",
         "js/content_script.js"

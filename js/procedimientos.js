@@ -471,32 +471,40 @@ function ejecutarProtocoloEnPagina(item) {
             return null; // Manejo de error si alguno de los valores no es un número
         }
         const fecha = new Date();
-        fecha.setHours(horas, minutos, 0); // Segundos se ponen a 0
+        fecha.setHours(horas, minutos, 0); // Establecer horas y minutos
 
-        // Sumar las horas
+        // Sumar las horas al objeto Date
         fecha.setHours(fecha.getHours() + horasASumar);
 
-        // Formatear la nueva hora
+        // Formatear la nueva hora en formato hh:mm
         return [String(fecha.getHours()).padStart(2, '0'), String(fecha.getMinutes()).padStart(2, '0')].join(':');
     }
 
-    function actualizarHoraFin() {
+    function actualizarHoraFin(item) {
         const campoHoraInicio = document.querySelector('#consultasubsecuente-horainicio');
         const campoHoraFin = document.querySelector('#consultasubsecuente-horafin');
 
         if (campoHoraInicio && campoHoraFin) {
             const horaInicio = campoHoraInicio.value;
 
-            // Asegúrate de que la hora de inicio esté en el formato correcto
+            // Verificar que la hora de inicio tenga el formato correcto (hh:mm)
             if (!/^\d{2}:\d{2}$/.test(horaInicio)) {
                 console.error('La hora de inicio no está en el formato correcto (hh:mm).');
                 return;
             }
 
-            const nuevaHoraFin = sumarHoras(horaInicio, 2);
+            // Determinar cuántas horas sumar (2 por defecto si no se especifica en item)
+            const horasASumar = item && item.horas !== undefined ? parseInt(item.horas, 10) : 2;
+
+            // Depuración para verificar los valores
+            console.log('Item recibido:', item);
+            console.log('Horas encontradas en item:', item ? item.horas : 'No especificado (usando valor por defecto: 2)');
+
+            // Calcular la nueva hora de fin
+            const nuevaHoraFin = sumarHoras(horaInicio, horasASumar);
 
             if (nuevaHoraFin) {
-                campoHoraFin.value = nuevaHoraFin; // Modificar directamente el value
+                campoHoraFin.value = nuevaHoraFin; // Asignar la nueva hora de fin
                 console.log(`La nueva hora de fin es: ${nuevaHoraFin}`);
             } else {
                 console.error('Error al sumar horas a la hora de inicio.');
@@ -507,7 +515,7 @@ function ejecutarProtocoloEnPagina(item) {
     }
 
 // Llamar a la función para actualizar la hora de fin
-    actualizarHoraFin();
+    actualizarHoraFin(item);
 
     const nombreUsuario = capturarNombreUsuario();
     const textoDictado = `DICTADO POR: ${nombreCompleto}\nFECHA DE DICTADO: ${obtenerFechaActual()}\nESCRITO POR: ${nombreUsuario}`;

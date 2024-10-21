@@ -1,7 +1,32 @@
-// js/background.js
+// Clave API de OpenAI (asegúrate de almacenarla de forma segura)
+const API_KEY = 'TU_OPENAI_API_KEY';
+
+// Listener para manejar mensajes del content script
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'getFechaCaducidad') {
+        const {hcNumber} = message;
+        console.log('Buscando fecha de caducidad para HC:', hcNumber);
+
+        // Recuperar la fecha de caducidad almacenada en chrome.storage
+        chrome.storage.local.get(['hcNumber', 'fechaCaducidad'], (result) => {
+            if (result.hcNumber === hcNumber) {
+                console.log('Fecha de caducidad encontrada:', result.fechaCaducidad);
+                sendResponse({fechaCaducidad: result.fechaCaducidad});
+            } else {
+                console.log('No se encontró fecha de caducidad para este HC.');
+                sendResponse({fechaCaducidad: null});
+            }
+        });
+
+        return true; // Esto permite que el response sea enviado de forma asíncrona
+    }
+});
+
+
+// Manejo de mensajes en background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "consultaAnterior") {
-        // Obtener la pestaña activa
+        // Ejecutar la función consultaAnterior como ya lo tienes
         chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
             if (tabs.length === 0) {
                 console.error('No se encontró la pestaña activa.');
@@ -10,7 +35,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
             // Inyectar el script de consulta.js y luego ejecutar la función consultaAnterior
             chrome.scripting.executeScript({
-                target: {tabId: tabs[0].id}, files: ['js/consulta.js'] // Inyecta el archivo consulta.js
+                target: {tabId: tabs[0].id}, files: ['js/consulta.js']
             }, () => {
                 chrome.scripting.executeScript({
                     target: {tabId: tabs[0].id}, function: () => {
@@ -24,9 +49,32 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 });
             });
         });
-    }
-    if (request.action === "ejecutarPopEnPagina") {
-        // Obtener la pestaña activa
+    } else if (request.action === "openai_request") {
+        // Llamada a OpenAI
+        fetch('https://api.openai.com/v1/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${API_KEY}`
+            },
+            body: JSON.stringify({
+                model: "text-davinci-003", // Modelo de OpenAI
+                prompt: request.prompt,     // Contenido para enviar
+                max_tokens: 150
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                sendResponse({text: data.choices[0].text}); // Enviar respuesta de OpenAI al script de contenido
+            })
+            .catch(error => {
+                console.error('Error en OpenAI API:', error);
+                sendResponse({text: 'Error al procesar la solicitud.'});
+            });
+
+        return true; // Mantener el canal de mensajes abierto para respuestas asincrónicas
+    } else if (request.action === "ejecutarPopEnPagina") {
+        // Código para ejecutarPopEnPagina como ya lo tienes
         chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
             if (tabs.length === 0) {
                 console.error('No se encontró la pestaña activa.');
@@ -35,7 +83,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
             // Inyectar el script de consulta.js y luego ejecutar la función ejecutarPopEnPagina
             chrome.scripting.executeScript({
-                target: {tabId: tabs[0].id}, files: ['js/consulta.js'] // Inyecta el archivo consulta.js
+                target: {tabId: tabs[0].id}, files: ['js/consulta.js']
             }, () => {
                 chrome.scripting.executeScript({
                     target: {tabId: tabs[0].id}, function: () => {
@@ -50,6 +98,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
         });
     }
+    // Otros manejos de mensajes como ejecutarReceta, ejecutarProtocolo, etc.
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -150,7 +199,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log('Received request for subscription check');
 
         // Simula una respuesta positiva
-        const simulatedResponse = { isSubscribed: true, isApproved: true };
+        const simulatedResponse = {isSubscribed: true, isApproved: true};
 
         if (simulatedResponse.isSubscribed && simulatedResponse.isApproved) {
             sendResponse({success: true});
