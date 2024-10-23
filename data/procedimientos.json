@@ -1536,7 +1536,7 @@
       "codigoCount": 4,
       "diagnosticoCount": 1,
       "recetaCount": 2,
-      "horas": 3,
+      "horas": 3.5,
       "tecnicos": [
         {
           "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
