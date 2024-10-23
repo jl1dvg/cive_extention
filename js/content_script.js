@@ -263,10 +263,11 @@
     function agregarListenerAFila(fila) {
         fila.addEventListener('click', function () {
             // Extraer los valores de Identificación y Fecha de Caducidad de la fila clickeada
-            const patientName = fila.querySelector('td[data-col-seq="8"]')?.textContent.trim();
-            const identificacion = fila.querySelector('td[data-col-seq="9"]')?.textContent.trim();
-            const afiliacion = fila.querySelector('td[data-col-seq="11"]')?.textContent.trim();
-            const procedimiento_proyectado = fila.querySelector('td[data-col-seq="13"]')?.textContent.trim();
+            const doctor = fila.querySelector('td[data-col-seq="6"]')?.textContent.trim() || null;
+            const patientName = fila.querySelector('td[data-col-seq="8"]')?.textContent.trim() || null;
+            const identificacion = fila.querySelector('td[data-col-seq="9"]')?.textContent.trim() || null;
+            const afiliacion = fila.querySelector('td[data-col-seq="11"]')?.textContent.trim() || null;
+            const procedimiento_proyectado = fila.querySelector('td[data-col-seq="13"]')?.textContent.trim() || null;
 
             // Extraer el form_id del enlace
             const enlace = fila.querySelector('td[data-col-seq="13"]');
@@ -279,19 +280,19 @@
 
             const {lname, lname2, fname, mname} = descomponerNombreCompleto(patientName);
 
-            if (identificacion) {
-                enviarDatosAHC(identificacion, lname, lname2, fname, mname, afiliacion, procedimiento_proyectado, fechaCaducidad, form_id);
+            if (identificacion && lname && fname && form_id) {
+                enviarDatosAHC(identificacion, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id);
             } else {
-                console.warn('Faltan datos necesarios para enviar.');
+                console.warn('Faltan datos necesarios para enviar. Verifique si los valores de identificación, nombre o form_id están completos.');
             }
         });
     }
 
-    function enviarDatosAHC(hcNumber, lname, lname2, fname, mname, afiliacion, procedimiento_proyectado, fechaCaducidad, form_id) {
+    function enviarDatosAHC(hcNumber, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id) {
         const url = 'http://cive.consulmed.me/interface/guardar_datos.php';
 
         const data = {
-            hcNumber, lname, lname2, fname, mname, afiliacion, procedimiento_proyectado, fechaCaducidad, form_id
+            hcNumber, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id
         };
 
         fetch(url, {
@@ -315,115 +316,226 @@
 
 // Función para extraer datos del div y enviar al servidor
     function extraerDatosYEnviar() {
-        const div = document.querySelector('.media-body.responsive');
+        // Detectar si es un protocolo quirúrgico o una consulta normal
+        const isProtocoloQuirurgico = !!document.querySelector('#consultasubsecuente-membrete'); // Comprueba si el membrete de protocolo existe
+        const url = isProtocoloQuirurgico ? 'http://cive.consulmed.me/interface/protocolos_datos.php' : 'http://cive.consulmed.me/interface/datos_consulta.php'; // Cambia el URL según el tipo de formulario
 
-        if (!div) {
-            console.warn('No se encontró el div con los datos del paciente.');
-            return;
-        }
+        const data = {};
 
-        // Extraer datos básicos del paciente
-        const hcNumber = div.querySelector('p:nth-of-type(2)')?.textContent.replace('HC #:', '').trim() || '';
-        const fechaNacimiento = div.querySelector('p:nth-of-type(4)')?.textContent.replace('Fecha de Nacimiento:', '').trim() || '';
-        const sexo = div.querySelector('p:nth-of-type(6)')?.textContent.trim() || '';
-        const celular = div.querySelector('p:nth-of-type(7)')?.textContent.replace('Celular:', '').trim() || '';
-        const ciudad = div.querySelector('p:nth-of-type(8)')?.textContent.trim() || '';
+        if (isProtocoloQuirurgico) {
+            // Extraer datos para protocolo quirúrgico
+            console.log('Protocolo Quirúrgico detectado. Extrayendo datos...');
 
-        // Validación básica
-        if (!hcNumber) {
-            console.error('El número de HC es obligatorio.');
-            return;
-        }
+            const div = document.querySelector('.media-body.responsive');
 
-        // Extraer el `idSolicitud` del URL actual
-        const urlParams = new URLSearchParams(window.location.search);
-        const form_id = urlParams.get('idSolicitud') || 'N/A';
-        const fechaActual = new Date().toISOString().slice(0, 10);
-
-        // Extraer valores de los textareas
-        const membrete = document.querySelector('#consultasubsecuente-membrete')?.value.trim() || '';
-        const dieresis = document.querySelector('#consultasubsecuente-dieresis')?.value.trim() || '';
-        const exposicion = document.querySelector('#consultasubsecuente-exposicion')?.value.trim() || '';
-        const hallazgo = document.querySelector('#consultasubsecuente-hallazgo')?.value.trim() || '';
-        const operatorio = document.querySelector('#consultasubsecuente-operatorio')?.value.trim() || '';
-        const complicaciones_operatorio = document.querySelector('#consultasubsecuente-complicacionesoperatorio')?.value.trim() || '';
-        const datos_cirugia = document.querySelector('#consultasubsecuente-datoscirugia')?.value.trim() || '';
-
-        // Extraer lateralidad
-        const lateralidad = document.querySelector('.list-cell__lateralidadProcedimiento select')?.selectedOptions[0]?.textContent.trim() || '';
-
-        // Extraer fechas y horas
-        const fechaInicio = document.querySelector('#consultasubsecuente-fecha_inicio')?.value || '';
-        const horaInicio = document.querySelector('#consultasubsecuente-horainicio')?.value || '';
-        const fechaFin = document.querySelector('#consultasubsecuente-fecha_fin')?.value || '';
-        const horaFin = document.querySelector('#consultasubsecuente-horafin')?.value || '';
-
-        // Extraer tipo de anestesia
-        const tipoAnestesia = document.querySelector('#consultasubsecuente-anestesia_id')?.selectedOptions[0]?.textContent || '';
-
-        // Recopilar datos del protocolo
-        const protocoloData = {};
-        document.querySelectorAll('.multiple-input-list__item').forEach((item) => {
-            const funcion = item.querySelector('.list-cell__funcion select')?.selectedOptions[0]?.textContent.trim() || '';
-            const doctor = item.querySelector('.list-cell__doctor select')?.selectedOptions[0]?.textContent.trim() || '';
-
-            if (funcion && doctor) {
-                protocoloData[funcion.replace(/\s+/g, '_').toLowerCase()] = doctor;
+            if (!div) {
+                console.warn('No se encontró el div con los datos del paciente.');
+                return;
             }
-        });
 
-        // Extraer procedimientos
-        const procedimientos = [];
+            // Datos básicos del paciente
+            data.hcNumber = div.querySelector('p:nth-of-type(2)')?.textContent.replace('HC #:', '').trim() || '';
+            data.fechaNacimiento = div.querySelector('p:nth-of-type(4)')?.textContent.replace('Fecha de Nacimiento:', '').trim() || '';
+            data.sexo = div.querySelector('p:nth-of-type(6)')?.textContent.trim() || '';
+            data.celular = div.querySelector('p:nth-of-type(7)')?.textContent.replace('Celular:', '').trim() || '';
+            data.ciudad = div.querySelector('p:nth-of-type(8)')?.textContent.trim() || '';
 
-        document.querySelectorAll('.multiple-input-list__item').forEach((item) => {
-            const procInterno = item.querySelector('.list-cell__procInterno select')?.selectedOptions[0]?.textContent.trim() || '';
-            if (procInterno) procedimientos.push({procInterno});
-        });
-
-        // Extraer diagnósticos
-        const diagnosticos = [];
-        document.querySelectorAll('.multiple-input-list__item').forEach((item) => {
-            const idDiagnostico = item.querySelector('.list-cell__idDiagnostico select')?.selectedOptions[0]?.textContent.trim() || '';
-            const evidencia = item.querySelector('.list-cell__evidencia .cbx-icon')?.textContent.trim() || '';
-            const ojo = item.querySelector('.list-cell__ojo_id select')?.selectedOptions[0]?.textContent.trim() || '';
-            const observaciones = item.querySelector('.list-cell__observaciones textarea')?.value.trim() || '';
-
-            if (idDiagnostico) {
-                diagnosticos.push({idDiagnostico, evidencia, ojo, observaciones});
+            // Validación básica
+            if (!data.hcNumber) {
+                console.error('El número de HC es obligatorio.');
+                return;
             }
-        });
 
-        // Preparar los datos a enviar
-        const data = {
-            hcNumber,
-            fechaNacimiento,
-            sexo,
-            celular,
-            ciudad,
-            form_id,
-            fechaActual,
-            membrete,
-            dieresis,
-            exposicion,
-            hallazgo,
-            operatorio,
-            complicaciones_operatorio,
-            datos_cirugia,
-            lateralidad,
-            procedimientos,
-            fechaInicio,
-            horaInicio,
-            fechaFin,
-            horaFin,
-            tipoAnestesia,
-            diagnosticos,
-            ...protocoloData,
-        };
+            // Extraer el `idSolicitud` del URL actual
+            const urlParams = new URLSearchParams(window.location.search);
+            data.form_id = urlParams.get('idSolicitud') || 'N/A';
+            data.fechaActual = new Date().toISOString().slice(0, 10);
 
-        console.log('Datos a enviar:', data);
+            // Extraer valores de los textareas
+            data.membrete = document.querySelector('#consultasubsecuente-membrete')?.value.trim() || '';
+            data.dieresis = document.querySelector('#consultasubsecuente-dieresis')?.value.trim() || '';
+            data.exposicion = document.querySelector('#consultasubsecuente-exposicion')?.value.trim() || '';
+            data.hallazgo = document.querySelector('#consultasubsecuente-hallazgo')?.value.trim() || '';
+            data.operatorio = document.querySelector('#consultasubsecuente-operatorio')?.value.trim() || '';
+            data.complicaciones_operatorio = document.querySelector('#consultasubsecuente-complicacionesoperatorio')?.value.trim() || '';
+            data.datos_cirugia = document.querySelector('#consultasubsecuente-datoscirugia')?.value.trim() || '';
+
+            // Extraer lateralidad
+            data.lateralidad = document.querySelector('.list-cell__lateralidadProcedimiento select')?.selectedOptions[0]?.textContent.trim() || '';
+
+            // Extraer fechas y horas
+            data.fechaInicio = document.querySelector('#consultasubsecuente-fecha_inicio')?.value || '';
+            data.horaInicio = document.querySelector('#consultasubsecuente-horainicio')?.value || '';
+            data.fechaFin = document.querySelector('#consultasubsecuente-fecha_fin')?.value || '';
+            data.horaFin = document.querySelector('#consultasubsecuente-horafin')?.value || '';
+
+            // Extraer tipo de anestesia
+            data.tipoAnestesia = document.querySelector('#consultasubsecuente-anestesia_id')?.selectedOptions[0]?.textContent || '';
+
+            // Recopilar datos del protocolo
+            document.querySelectorAll('.multiple-input-list__item').forEach((item) => {
+                const funcion = item.querySelector('.list-cell__funcion select')?.selectedOptions[0]?.textContent.trim() || '';
+                const doctor = item.querySelector('.list-cell__doctor select')?.selectedOptions[0]?.textContent.trim() || '';
+
+                // Asignar los valores con los nombres correctos según lo esperado en el backend
+                if (funcion && doctor) {
+                    switch (funcion.toLowerCase()) {
+                        case 'cirujano 1':
+                            data.cirujano_1 = doctor;
+                            break;
+                        case 'cirujano 2':
+                            data.cirujano_2 = doctor;
+                            break;
+                        case 'instrumentista':
+                            data.instrumentista = doctor;
+                            break;
+                        case 'circulante':
+                            data.circulante = doctor;
+                            break;
+                        case 'anestesiologo':
+                            data.anestesiologo = doctor;
+                            break;
+                        case 'ayudante anestesiologo':
+                            data.ayudante_anestesiologo = doctor;
+                            break;
+                        case 'primer ayudante':
+                            data.primer_ayudante = doctor;
+                            break;
+                        case 'segundo ayudante':
+                            data.segundo_ayudante = doctor;
+                            break;
+                        case 'tercer ayudante':
+                            data.tercer_ayudante = doctor;
+                            break;
+                        default:
+                            data.otros = doctor;
+                    }
+                }
+            });
+
+            // Extraer procedimientos
+            data.procedimientos = [];
+            document.querySelectorAll('.multiple-input-list__item').forEach((item) => {
+                const procInterno = item.querySelector('.list-cell__procInterno select')?.selectedOptions[0]?.textContent.trim() || '';
+                if (procInterno) data.procedimientos.push({procInterno});
+            });
+
+            // Extraer diagnósticos
+            data.diagnosticos = [];
+            document.querySelectorAll('.multiple-input-list__item').forEach((item) => {
+                const idDiagnostico = item.querySelector('.list-cell__idDiagnostico select')?.selectedOptions[0]?.textContent.trim() || '';
+                const evidencia = item.querySelector('.list-cell__evidencia .cbx-icon')?.textContent.trim() || '';
+                const ojo = item.querySelector('.list-cell__ojo_id select')?.selectedOptions[0]?.textContent.trim() || '';
+                const observaciones = item.querySelector('.list-cell__observaciones textarea')?.value.trim() || '';
+
+                if (idDiagnostico) {
+                    data.diagnosticos.push({idDiagnostico, evidencia, ojo, observaciones});
+                }
+            });
+
+        } else {
+            // Extraer datos para una consulta normal
+            console.log('Consulta normal detectada. Extrayendo datos...');
+
+            const div = document.querySelector('.media-body.responsive');
+
+            if (!div) {
+                console.warn('No se encontró el div con los datos del paciente.');
+                return;
+            }
+
+            // Datos básicos del paciente
+            data.hcNumber = div.querySelector('p:nth-of-type(2)')?.textContent.replace('HC #:', '').trim() || '';
+            data.fechaNacimiento = div.querySelector('p:nth-of-type(4)')?.textContent.replace('Fecha de Nacimiento:', '').trim() || '';
+            data.sexo = div.querySelector('p:nth-of-type(6)')?.textContent.trim() || '';
+            data.celular = div.querySelector('p:nth-of-type(7)')?.textContent.replace('Celular:', '').trim() || '';
+            data.ciudad = div.querySelector('p:nth-of-type(8)')?.textContent.trim() || '';
+
+            // Validación básica
+            if (!data.hcNumber) {
+                console.error('El número de HC es obligatorio.');
+                return;
+            }
+
+            // Extraer el `idSolicitud` del URL actual
+            const urlParams = new URLSearchParams(window.location.search);
+            data.form_id = urlParams.get('idSolicitud') || 'N/A';
+            data.fechaActual = new Date().toISOString().slice(0, 10);
+
+            data.motivoConsulta = document.querySelector('#consultas-motivoconsulta')?.value.trim() || '';
+            data.enfermedadActual = document.querySelector('#consultas-enfermedadactual')?.value.trim() || '';
+            data.examenFisico = document.querySelector('#consultas-fisico-0-observacion')?.value.trim() || '';
+            data.plan = document.querySelector('#docsolicitudprocedimientos-observacion_consulta')?.value.trim() || '';
+
+            // Extraer diagnósticos de consulta normal
+            data.diagnosticos = [];
+            document.querySelectorAll('#diagnosticosconsultaexterna .multiple-input-list__item').forEach((item) => {
+                const idDiagnostico = item.querySelector('.list-cell__idEnfermedades select')?.selectedOptions[0]?.textContent.trim() || '';
+                const ojo = item.querySelector('.list-cell__ojo_id select')?.selectedOptions[0]?.textContent.trim() || '';
+                const evidencia = item.querySelector('.list-cell__evidencia input[type="checkbox"]')?.checked ? '1' : '0';
+
+                if (idDiagnostico) {
+                    data.diagnosticos.push({idDiagnostico, ojo, evidencia});
+                }
+            });
+
+            // Extraer los exámenes seleccionados
+            data.examenes = [];
+            document.querySelectorAll('.examendiv').forEach(examenDiv => {
+                const examenId = examenDiv.id;
+                const examenCheckbox = examenDiv.querySelector('input[type="text"]');
+                if (examenCheckbox && examenCheckbox.value === '1') { // Verificar si el examen está seleccionado
+                    const examenNombreCompleto = examenDiv.querySelector('.cbx-label').textContent.trim();
+
+                    // Descomponer el nombre de forma flexible
+                    const examenPartes = examenNombreCompleto.split('-');
+                    if (examenPartes.length >= 2) {
+                        const examenCodigo = examenPartes[0].trim(); // Código del examen (número)
+                        let examenNombre = examenPartes.slice(1).join('-').trim(); // Nombre del examen
+                        let examenLateralidad = '';
+
+                        // Verificar si el nombre contiene la lateralidad (OD, OI, AO)
+                        if (examenNombre.includes('(OD)')) {
+                            examenLateralidad = 'OD';
+                            examenNombre = examenNombre.replace('(OD)', '').trim();
+                        } else if (examenNombre.includes('(OI)')) {
+                            examenLateralidad = 'OI';
+                            examenNombre = examenNombre.replace('(OI)', '').trim();
+                        } else if (examenNombre.includes('(AO)')) {
+                            examenLateralidad = 'AO';
+                            examenNombre = examenNombre.replace('(AO)', '').trim();
+                        }
+
+                        // Almacenar el examen con código, nombre y lateralidad
+                        data.examenes.push({
+                            codigo: examenCodigo,
+                            nombre: examenNombre,
+                            lateralidad: examenLateralidad
+                        });
+                    } else {
+                        console.error(`No se pudo descomponer el nombre del examen: ${examenNombreCompleto}`);
+                    }
+                }
+            });
+
+            console.log('Exámenes recopilados:', data.examenes);
+
+            console.log('Exámenes recopilados:', data.examenes);
+
+            // Validación básica
+            if (!data.hcNumber || !data.motivoConsulta) {
+                console.error('El número de historia clínica o el motivo de consulta son obligatorios.');
+                return;
+            }
+
+            data.fechaActual = new Date().toISOString().slice(0, 10);
+
+            // Puedes agregar otros campos relevantes de la consulta normal aquí
+        }
 
         // Enviar los datos al backend
-        fetch('http://cive.consulmed.me/interface/protocolos_datos.php', {
+        console.log('Datos a enviar:', data);
+        fetch(url, {
             method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
         })
             .then((response) => response.json())

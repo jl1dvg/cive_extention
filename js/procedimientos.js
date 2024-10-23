@@ -514,9 +514,6 @@ function ejecutarProtocoloEnPagina(item) {
         }
     }
 
-// Llamar a la función para actualizar la hora de fin
-    actualizarHoraFin(item);
-
     const nombreUsuario = capturarNombreUsuario();
     const textoDictado = `DICTADO POR: ${nombreCompleto}\nFECHA DE DICTADO: ${obtenerFechaActual()}\nESCRITO POR: ${nombreUsuario}`;
     const observaciones = `Se realiza ${item.membrete} en ${ojoATratar.descripcion} sin complicaciones.
@@ -564,7 +561,7 @@ Se indica al paciente que debe acudir a una consulta de control en las próximas
         .then(() => ejecutarCodigos(item, ojoATratar.sigla))
         .then(() => llenarCampoTexto('#consultasubsecuente-datoscirugia', textoDictado))
         .then(() => seleccionarRadioNo())
-        .then(() => actualizarHoraFin())
+        .then(() => actualizarHoraFin(item))
         .then(() => hacerClickEnSelect2('#select2-consultasubsecuente-anestesia_id-container'))
         .then(() => establecerBusqueda('#select2-consultasubsecuente-anestesia_id-container', "REGIONAL"))
         .then(() => seleccionarOpcion())
