@@ -306,6 +306,9 @@
             })
             .catch(error => {
                 console.error('Error al enviar los datos:', error);
+                if (error instanceof TypeError) {
+                    console.error("Tipo de error detectado. ¿Problema de conexión?");
+                }
             });
     }
 
@@ -315,7 +318,16 @@
 // Función para extraer datos del div y enviar al servidor
     function extraerDatosYEnviar() {
         const btnGuardar = document.getElementById('interconsulta-btn-guardar');
-        if (btnGuardar) btnGuardar.disabled = true; // Desactiva temporalmente el botón
+        if (btnGuardar) btnGuardar.disabled = true;
+
+        // Inicializar el objeto data
+        const data = {};
+
+        // Determinar el URL según el tipo de formato
+        const isProtocoloQuirurgico = document.querySelector('#consultasubsecuente-membrete') !== null;
+        const url = isProtocoloQuirurgico
+            ? 'http://cive.consulmed.me/interface/protocolos_datos.php'
+            : 'http://cive.consulmed.me/interface/datos_consulta.php';
 
         if (isProtocoloQuirurgico) {
             // Extraer datos para protocolo quirúrgico
@@ -429,9 +441,9 @@
             });
 
         } else {
-            // Extraer datos para una consulta normal
-            console.log('Consulta normal detectada. Extrayendo datos...');
+            console.log('Formato de consulta u optometría detectado');
 
+            // Extraer datos para una consulta normal
             const div = document.querySelector('.media-body.responsive');
 
             if (!div) {
@@ -556,39 +568,39 @@
     }
 
     // Función principal para añadir el evento de clic al botón de guardar
-function agregarEventoGuardar() {
-            const btnGuardar = document.getElementById('interconsulta-btn-guardar');
+    function agregarEventoGuardar() {
+        const btnGuardar = document.getElementById('interconsulta-btn-guardar');
 
-            if (btnGuardar) {
-        // Prevenir duplicados de eventos
-        if (!btnGuardar.classList.contains('evento-agregado')) {
-            btnGuardar.classList.add('evento-agregado');
-                    btnGuardar.addEventListener('click', function (e) {
-                e.preventDefault(); // Prevenir envío automático
-                console.log('Botón clicado, iniciando extracción de datos...'); // Confirmación en la consola
-                extraerDatosSolicitudYEnviar(btnGuardar); // Llamada a la función de extracción y envío
-                    });
-                }
-            } else {
-        console.log('Botón interconsulta-btn-guardar no encontrado en la página.');
+        if (btnGuardar) {
+            // Prevenir duplicados de eventos
+            if (!btnGuardar.classList.contains('evento-agregado')) {
+                btnGuardar.classList.add('evento-agregado');
+                btnGuardar.addEventListener('click', function (e) {
+                    e.preventDefault(); // Prevenir envío automático
+                    console.log('Botón clicado, iniciando extracción de datos...'); // Confirmación en la consola
+                    extraerDatosSolicitudYEnviar(btnGuardar); // Llamada a la función de extracción y envío
+                });
             }
+        } else {
+            console.log('Botón interconsulta-btn-guardar no encontrado en la página.');
         }
+    }
 
 // Observador para detectar cambios en el DOM (por si el botón se carga dinámicamente)
-const observador = new MutationObserver(agregarEventoGuardar);
-observador.observe(document.body, { childList: true, subtree: true });
+    const observador = new MutationObserver(agregarEventoGuardar);
+    observador.observe(document.body, {childList: true, subtree: true});
 
 // Ejecutar la función al cargar la página por primera vez
-document.addEventListener('DOMContentLoaded', agregarEventoGuardar);
+    document.addEventListener('DOMContentLoaded', agregarEventoGuardar);
 
 // Función de extracción y envío de datos
     function extraerDatosSolicitudYEnviar(btnGuardar) {
-    const url = 'http://cive.consulmed.me/interface/solicitud_procedimiento.php';
+        const url = 'http://cive.consulmed.me/interface/solicitud_procedimiento.php';
         const data = {};
 
         const div = document.querySelector('.media-body.responsive');
         if (!div) {
-        console.warn('Div de datos del paciente no encontrado.');
+            console.warn('Div de datos del paciente no encontrado.');
             return;
         }
 
@@ -597,13 +609,13 @@ document.addEventListener('DOMContentLoaded', agregarEventoGuardar);
         data.form_id = new URLSearchParams(window.location.search).get('idSolicitud') || 'N/A';
 
         if (!data.hcNumber || !data.form_id) {
-        console.error('Número de HC o form_id faltante.');
+            console.error('Número de HC o form_id faltante.');
             return;
         }
 
-    // Extracción de datos de solicitudes
+        // Extracción de datos de solicitudes
         data.solicitudes = [];
-document.querySelectorAll('#interconsultas .multiple-input-list__item').forEach((item, index) => {
+        document.querySelectorAll('#interconsultas .multiple-input-list__item').forEach((item, index) => {
             const tipo = item.querySelector('.list-cell__tipo .cbx-icon')?.textContent.trim() || '';
             const afiliacion = item.querySelector('.list-cell__afiliacion_id select')?.selectedOptions[0]?.textContent.trim() || '';
             const procedimiento = item.querySelector('.list-cell__procedimiento_id select')?.selectedOptions[0]?.textContent.trim() || '';
@@ -616,20 +628,20 @@ document.querySelectorAll('#interconsultas .multiple-input-list__item').forEach(
             const observacion = item.querySelector('.list-cell__observacionInterconsulta textarea')?.value.trim() || '';
 
             data.solicitudes.push({
-        secuencia: index + 1,
+                secuencia: index + 1,
                 tipo, afiliacion, procedimiento, doctor, fecha, duracion, ojo, prioridad, producto, observacion
             });
         });
 
         if (!data.solicitudes.length) {
-        console.error('No se encontraron solicitudes.');
+            console.error('No se encontraron solicitudes.');
             return;
         }
 
-    // Desactivar el botón mientras se envían los datos
+        // Desactivar el botón mientras se envían los datos
         if (btnGuardar) btnGuardar.disabled = true;
 
-    console.log('Datos a enviar:', data); // Verificar los datos antes de enviar
+        console.log('Datos a enviar:', data); // Verificar los datos antes de enviar
         fetch(url, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -647,7 +659,7 @@ document.querySelectorAll('#interconsultas .multiple-input-list__item').forEach(
                 console.error('Error al enviar los datos:', error);
             })
             .finally(() => {
-        if (btnGuardar) btnGuardar.disabled = false; // Reactivar el botón después del envío
+                if (btnGuardar) btnGuardar.disabled = false; // Reactivar el botón después del envío
             });
     }
 
