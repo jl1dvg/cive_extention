@@ -563,7 +563,11 @@ Se indica al paciente que debe acudir a una consulta de control en las próximas
         .then(() => seleccionarRadioNo())
         .then(() => actualizarHoraFin(item))
         .then(() => hacerClickEnSelect2('#select2-consultasubsecuente-anestesia_id-container'))
-        .then(() => establecerBusqueda('#select2-consultasubsecuente-anestesia_id-container', "REGIONAL"))
+        .then(() => {
+            // Determinar si la búsqueda debe ser "LOCAL" o "REGIONAL"
+            const anestesiaBusqueda = item.id === "avastin" ? "LOCAL" : "REGIONAL";
+            return establecerBusqueda('#select2-consultasubsecuente-anestesia_id-container', anestesiaBusqueda);
+        })
         .then(() => seleccionarOpcion())
         .then(() => ejecutarDiagnosticos(item, ojoATratar.sigla))
         .then(() => hacerClickEnPresuntivo('.form-group.field-proyectada .cbx-container .cbx', 2))
