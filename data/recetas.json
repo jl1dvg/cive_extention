@@ -100,7 +100,7 @@
           "pauta": "dia",
           "cantidad": 5,
           "totalFarmacia": "5",
-          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS EN AYUNAS"
         },
         {
           "id": 1,
@@ -110,7 +110,7 @@
           "pauta": "12",
           "cantidad": 5,
           "totalFarmacia": "10",
-          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS CON ALIMENTOS X 5 DÍAS"
         },
         {
           "id": 2,
@@ -138,7 +138,7 @@
           "pauta": "6",
           "cantidad": 31,
           "totalFarmacia": "1",
-          "observaciones": "CIPROFLOXAINA 0.3% DEXAMETASONA 0.1% - 1 GOTA CADA 6 HORAS X  30 DÍAS EN OJO OPREADO (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
+          "observaciones": "CIPROFLOXACINA 0.3% DEXAMETASONA 0.1% - 1 GOTA CADA 6 HORAS X  30 DÍAS EN OJO OPREADO (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
         },
         {
           "id": 1,
