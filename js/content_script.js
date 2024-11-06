@@ -489,7 +489,6 @@
             // Extraer los exámenes seleccionados
             data.examenes = [];
             document.querySelectorAll('.examendiv').forEach(examenDiv => {
-                const examenId = examenDiv.id;
                 const examenCheckbox = examenDiv.querySelector('input[type="text"]');
                 if (examenCheckbox && examenCheckbox.value === '1') { // Verificar si el examen está seleccionado
                     const examenNombreCompleto = examenDiv.querySelector('.cbx-label').textContent.trim();
@@ -662,6 +661,81 @@
                 if (btnGuardar) btnGuardar.disabled = false; // Reactivar el botón después del envío
             });
     }
+
+    const estilo = document.createElement('style');
+    estilo.innerHTML = `
+    .llegado-particular {
+        background-color: #FFD700 !important; /* Color para menos de 30 min */
+    }
+
+    .espera-prolongada-particular {
+        background-color: #FF6347 !important; /* Color para más de 30 min */
+    }
+`;
+    document.head.appendChild(estilo);
+
+    function actualizarColorFilasPorTiempoYAfiliacion() {
+        const tabla = document.querySelector('table.kv-grid-table');
+        if (!tabla) return;
+
+        const excluirAfiliaciones = [
+            'CONTRIBUYENTE VOLUNTARIO', 'CONYUGE', 'CONYUGE PENSIONISTA', 'ISSFA', 'ISSPOL',
+            'MSP', 'SEGURO CAMPESINO', 'SEGURO CAMPESINO JUBILADO', 'SEGURO GENERAL',
+            'SEGURO GENERAL JUBILADO', 'SEGURO GENERAL POR MONTEPIO', 'SEGURO GENERAL TIEMPO PARCIAL'
+        ];
+
+        const filas = tabla.querySelectorAll('tbody tr');
+        filas.forEach((fila) => {
+            const afiliacionTd = fila.querySelector('td[data-col-seq="11"]');
+            const tiempoTd = fila.querySelector('td[data-col-seq="17"]');
+
+            if (afiliacionTd && tiempoTd) {
+                const afiliacionTexto = afiliacionTd.textContent.trim();
+                const tiempoTexto = tiempoTd.querySelector('span[name="intervalos"]')?.textContent.trim();
+
+                if (!excluirAfiliaciones.includes(afiliacionTexto) && tiempoTexto) {
+                    const [horas, minutos] = tiempoTexto.split(':').map(Number);
+                    const tiempoTotalMinutos = horas * 60 + minutos;
+
+                    // Aplicar clases en función del tiempo de espera
+                    if (tiempoTotalMinutos >= 30) {
+                        fila.classList.add('espera-prolongada-particular');
+                        fila.classList.remove('llegado-particular');
+                    } else if (tiempoTotalMinutos > 0) {
+                        fila.classList.add('llegado-particular');
+                        fila.classList.remove('espera-prolongada-particular');
+                    }
+                } else {
+                    // Remover cualquier clase previa si no cumple la condición
+                    fila.classList.remove('llegado-particular', 'espera-prolongada-particular');
+                }
+            }
+        });
+    }
+
+// Observador de cambios en la tabla y en el paginador
+    function observarCambiosEnTablaYPaginacion() {
+        const contenedorTabla = document.querySelector('.kv-grid-container'); // Contenedor de la tabla con paginación
+        if (!contenedorTabla) return;
+
+        // Observar cambios en el contenido de la tabla
+        const observer = new MutationObserver(() => {
+            actualizarColorFilasPorTiempoYAfiliacion();
+        });
+
+        // Observar cambios en el contenedor de la tabla
+        observer.observe(contenedorTabla, {childList: true, subtree: true});
+    }
+
+// Esperar a que la tabla esté presente en el DOM y luego aplicar el MutationObserver
+    const intervalo = setInterval(() => {
+        const contenedorTabla = document.querySelector('.kv-grid-container');
+        if (contenedorTabla) {
+            clearInterval(intervalo); // Detener el intervalo una vez que encontramos la tabla
+            observarCambiosEnTablaYPaginacion(); // Activar el observador de cambios
+            actualizarColorFilasPorTiempoYAfiliacion(); // Aplicar el color inicial
+        }
+    }, 250); // Comprobamos cada 500 ms
 
     // Añadir el evento click al botón Exámenes después de cargar el popup
     document.getElementById('btnExamenes').addEventListener('click', () => {

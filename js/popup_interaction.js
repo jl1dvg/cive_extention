@@ -83,19 +83,27 @@ function cargarRecetas() {
         .catch(error => console.error('Error cargando JSON de recetas:', error));
 }
 
+// Función para cargar los protocolos desde la API
 function cargarProtocolos() {
     console.log('Intentando cargar procedimientos...');
-    const jsonUrl = 'https://raw.githubusercontent.com/jl1dvg/cive_extention/main/data/procedimientos.json';
+    const apiUrl = 'https://cive.consulmed.me/api/obtener_procedimientos.php'; // Cambia esto a la URL de tu API
 
-    cargarJSON(jsonUrl)
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener los datos desde la API');
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Datos de procedimientos cargados:', data);
             const procedimientosData = data.procedimientos;
             crearBotonesCategorias(procedimientosData, 'contenedorProtocolos', ejecutarProtocolos);
         })
-        .catch(error => console.error('Error cargando JSON de procedimientos:', error));
+        .catch(error => console.error('Error cargando procedimientos desde MySQL:', error));
 }
 
+// Función para mostrar los procedimientos según la categoría seleccionada
 function mostrarProcedimientosPorCategoria(procedimientos) {
     const contenedorProcedimientos = document.getElementById('contenedorProcedimientos');
     contenedorProcedimientos.innerHTML = ''; // Limpiar el contenedor
@@ -104,16 +112,44 @@ function mostrarProcedimientosPorCategoria(procedimientos) {
         col.className = 'col-sm-4'; // Cada botón ocupará un tercio del ancho de la fila
         const boton = document.createElement('button');
         boton.id = `${procedimiento.id}`;
-        boton.className = 'btn btn-outline-success btn-sm'; // Estilo de botón y ancho completo
+        boton.className = 'btn btn-outline-success btn-sm'; // Estilo del botón
         boton.textContent = `${procedimiento.cirugia}`;
         boton.addEventListener('click', () => {
             console.log(`Botón clickeado: ${procedimiento.cirugia}`);
-            ejecutarProtocolos(procedimiento.id); // Ensure this function is called correctly
+            ejecutarProtocolos(procedimiento.id);
         });
         col.appendChild(boton);
         contenedorProcedimientos.appendChild(col);
     });
-    mostrarSeccion('procedimientos');
+
+    mostrarSeccion('procedimientos'); // Mostrar la sección correspondiente
+}
+
+// Función para ejecutar los protocolos según el ID del procedimiento
+function ejecutarProtocolos(id) {
+    const apiUrl = 'https://cive.consulmed.me/api/obtener_procedimientos.php'; // URL de la API
+
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener los datos desde la API');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const item = data.procedimientos.find(d => d.id === id);
+            if (!item) throw new Error('ID no encontrado en la base de datos');
+
+            console.log("Item cargado:", item);
+
+            if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
+                chrome.runtime.sendMessage({action: "ejecutarProtocolo", item: item});
+            } else {
+                console.error("El contexto de la extensión no es válido. Intentando nuevamente en 1 segundo...");
+                setTimeout(() => ejecutarProtocolos(id), 1000);
+            }
+        })
+        .catch(error => console.error('Error en la ejecución de protocolo:', error));
 }
 
 function mostrarRecetasPorCategoria(recetas) {
@@ -174,31 +210,6 @@ function crearRecetasCategorias(recetas, contenedorId) {
         col.appendChild(boton);
         contenedorBotones.appendChild(col);
     });
-}
-
-function ejecutarProtocolos(id) {
-    const jsonUrl = 'https://raw.githubusercontent.com/jl1dvg/cive_extention/main/data/procedimientos.json';
-
-    cargarJSON(jsonUrl)
-        .then(data => {
-            const item = data.procedimientos.find(d => d.id === id);
-            if (!item) throw new Error('ID no encontrado en el JSON');
-
-            console.log("Item cargado:", item);
-
-            // Verificar que el item tenga todas las propiedades necesarias
-            if (!item || typeof item !== 'object') {
-                throw new Error('El item cargado no tiene la estructura esperada.');
-            }
-
-            if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
-                chrome.runtime.sendMessage({action: "ejecutarProtocolo", item: item});
-            } else {
-                console.error("El contexto de la extensión no es válido. Intentando nuevamente en 1 segundo...");
-                setTimeout(() => ejecutarProtocolos(id), 1000);
-            }
-        })
-        .catch(error => console.error('Error en la ejecución de protocolo:', error));
 }
 
 function ejecutarReceta(id) {

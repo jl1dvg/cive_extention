@@ -26,26 +26,34 @@ function ejecutarEnPagina(item) {
             document.body.appendChild(popup);
 
             // Escuchar el mensaje del iframe
-        window.addEventListener('message', function onMessage(event) {
-            // Asegúrate de que el mensaje proviene del iframe de la extensión
-            if (event.origin !== chrome.runtime.getURL('/').slice(0, -1)) {
-                return;
-            }
+            function onMessage(event) {
+                // Validar el origen del mensaje
+                if (event.origin !== chrome.runtime.getURL('/').slice(0, -1)) {
+                    return;
+                }
 
                 if (event.data.OD !== undefined && event.data.OI !== undefined) {
-                    document.body.removeChild(popup);
-                    window.removeEventListener('message', onMessage); // Remover el listener después de recibir el mensaje
+                    // Cerrar el popup al recibir datos válidos
+                    cerrarPopup();
                     resolve(event.data);
+                } else if (event.data.close) { // Manejar el cierre
+                    cerrarPopup();
+                    resolve(null); // Cerrar sin datos si solo se cierra el popup
                 }
-                if (event.data.close) { // Manejar el cierre
-                    document.body.removeChild(popup);
-                    window.removeEventListener('message', onMessage);
-                }
-        });
+            }
+
+            // Función para cerrar el popup y limpiar el listener
+            function cerrarPopup() {
+                document.body.removeChild(popup);
+                window.removeEventListener('message', onMessage);
+            }
+
+            window.addEventListener('message', onMessage);
 
             // Añadir evento al botón de cierre
             popup.querySelector('#btnClose').addEventListener('click', () => {
-                document.body.removeChild(popup);
+                cerrarPopup();
+                resolve(null); // Resolver sin datos si el usuario cierra el popup manualmente
             });
         });
     }
