@@ -95,7 +95,7 @@
           "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS EN AYUNAS"
         },
         {
-          "id":3,
+          "id": 3,
           "nombre": "SOPHIPREN",
           "via": "GOTERO",
           "unidad": "GOTAS",
@@ -276,6 +276,5 @@
         }
       ]
     }
-
   ]
 }
