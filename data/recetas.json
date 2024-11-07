@@ -59,64 +59,6 @@
       ]
     },
     {
-      "id": "jphgeneral",
-      "cirugia": "Faco y VPP",
-      "categoria": "Dr. Joaquín Pólit Hoyos",
-      "recetaCount": 4,
-      "recetas": [
-        {
-          "id": 0,
-          "nombre": "PARACETAMOL 1G - ANALGAN",
-          "via": "VIA ORAL",
-          "unidad": "TAB",
-          "pauta": "8",
-          "cantidad": 2,
-          "totalFarmacia": "9",
-          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 2 DÍAS Y LUEGO SUSPENDER"
-        },
-        {
-          "id": 1,
-          "nombre": "CEFADROXILO",
-          "via": "VIA ORAL",
-          "unidad": "TAB",
-          "pauta": "12",
-          "cantidad": 7,
-          "totalFarmacia": "14",
-          "observaciones": "CEFADROXILO 500MG 1  TAB  GOTERO CADA 12 HORAS x  7 DÍAS Y LUEGP SUSPENDER"
-        },
-        {
-          "id": 2,
-          "nombre": "OMEPRAZOL CAPSULA 20",
-          "via": "VIA ORAL",
-          "unidad": "CAPSULAS",
-          "pauta": "dia",
-          "cantidad": 5,
-          "totalFarmacia": "5",
-          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS EN AYUNAS"
-        },
-        {
-          "id": 3,
-          "nombre": "SOPHIPREN",
-          "via": "GOTERO",
-          "unidad": "GOTAS",
-          "pauta": "6",
-          "cantidad": 7,
-          "totalFarmacia": "1",
-          "observaciones": "SOPHIPREN OFTENO 1 % SUSP. OFT. X 5 ML 1 GOTAS CADA 3 HORAS x 5 DÍAS, LUEGO 1 GOTA CADA 4 HORAS X 5 DÍAS, LUEGO 1 GOTA CADA 8 HORAS X 10 DÍAS, LUEGO 1 GOTA CADA 12 HORAS X 10 DÍAS Y LUEGO SUSPENDER (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
-        },
-        {
-          "id": 4,
-          "nombre": "MOXOF",
-          "via": "GOTERO",
-          "unidad": "GOTAS",
-          "pauta": "4",
-          "cantidad": 10,
-          "totalFarmacia": "1",
-          "observaciones": "MOXIFLOXACINA 0.5% 1 GOTAS CADA 4 HORAS x  10 DÍAS (NO NECESITA LEVANTARSE EN LA MADRUGADA PARA COLOCAR GOTAS)"
-        }
-      ]
-    },
-    {
       "id": "icl",
       "cirugia": "ICL",
       "categoria": "Dr. Andrés Pólit Hoyos",
