@@ -54,14 +54,14 @@
     "text": "DAÑO A LOS VASOS SANGUÍNEOS DE LA RETINA DEBIDO A LA DIABETES"
   },
   {
-    "id": "cicatrices_coriorretinianas",
-    "label": "Cicatrices Coriorretinianas",
-    "text": "ÁREAS DE FIBROSIS EN LA RETINA Y COROIDES"
+    "id": "miopes",
+    "label": "Miopes",
+    "text": "Papila óptica con inclinación nasal. Vasos retinianos de calibre reducido y trayecto tortuoso. Ausencia de signos de neovascularización coroidea y hemorragias retinianas. Presencia de áreas de atrofia coriorretiniana, manifestadas como zonas de hipopigmentación y adelgazamiento de las capas retinianas y coroideas."
   },
   {
     "id": "desprendimiento_retina",
     "label": "Desprendimiento de Retina",
-    "text": "SEPARACIÓN DE LA RETINA DE LA PARTE POSTERIOR DEL OJO"
+    "text": "El nervio óptico presenta una forma redonda con bordes bien definidos, con una relación copa/disco de 0.3, sin alteraciones notables. Se observan pliegues en la retina tanto en la región central como periférica, lo que sugiere un desprendimiento de retina en los cuatro cuadrantes. Además, se observa un desplazamiento de la retina central (macula off), indicando compromiso macular debido al desprendimiento."
   },
   {
     "id": "edema_papila",

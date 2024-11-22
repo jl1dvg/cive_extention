@@ -267,7 +267,7 @@ OI: ${OI}`;
             }
 
             ejecutarTecnicos(item)
-                //.then(() => hacerClickEnBotonTerminar())
+                .then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
     } else if (item.id === 'angio') {
@@ -286,7 +286,7 @@ OI: ${OI}`;
             }
 
             ejecutarTecnicos(item)
-                //.then(() => hacerClickEnBotonTerminar())
+                .then(() => hacerClickEnBotonTerminar())
                 .catch(error => console.log('Error en la ejecución de examen:', error));
         });
     } else if (item.id === 'cv') {

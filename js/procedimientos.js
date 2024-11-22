@@ -473,8 +473,12 @@ function ejecutarProtocoloEnPagina(item) {
         const fecha = new Date();
         fecha.setHours(horas, minutos, 0); // Establecer horas y minutos
 
-        // Sumar las horas al objeto Date
-        fecha.setHours(fecha.getHours() + horasASumar);
+        // Sumar las horas y minutos al objeto Date
+        const horasEnteras = Math.floor(horasASumar);
+        const minutosASumar = (horasASumar - horasEnteras) * 60;
+
+        fecha.setHours(fecha.getHours() + horasEnteras);
+        fecha.setMinutes(fecha.getMinutes() + minutosASumar);
 
         // Formatear la nueva hora en formato hh:mm
         return [String(fecha.getHours()).padStart(2, '0'), String(fecha.getMinutes()).padStart(2, '0')].join(':');
@@ -494,7 +498,7 @@ function ejecutarProtocoloEnPagina(item) {
             }
 
             // Determinar cuántas horas sumar (2 por defecto si no se especifica en item)
-            const horasASumar = item && item.horas !== undefined ? parseInt(item.horas, 10) : 2;
+            const horasASumar = item && item.horas !== undefined ? parseFloat(item.horas) : 2;
 
             // Depuración para verificar los valores
             console.log('Item recibido:', item);
