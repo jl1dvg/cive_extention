@@ -3636,106 +3636,106 @@
         }
       ]
     },
-    {
-      "id": "ciclofoto",
-      "cirugia": "CICLOFOTODESTRUCCION CON LASER",
-      "categoria": "Glaucoma",
-      "membrete": "CICLOFOTODESTRUCCION CON LASER",
-      "dieresis": "",
-      "exposicion": "SUPERFICIE LIMBAR OCULAR",
-      "hallazgo": "HIPERTENSION OCULAR",
-      "operatorio": "INSTILACION DE CLORHIDRATO DE PROXIMETACAINA AL 0,5%\n PREVIA ASEPSIA Y ANTISEPSIA \nSE COLOCA TEGADERM 10X12 PARA FIJAR LAS PESTAÑAS\nBAJO VISUALIZACION CON MICROSCOPIO QUIRURGICA Y SISTEMA DE VISUALIZACION SE COLOCACION DE CAMPOS, BLEFARO Y LAVADO\nINSTILACIÓN DE SOLUCION OFTALMICA DE TOBRAMICINA Y DEXAMETASONA AL 0.3%\nSE REALIZA LOCALIZACION DE CUERPO CILIAR POR MEDIO DE TRANSILUMINACION\nSE CONECTA SONDA EYEOP-PACKS Y SE APLICA LASER TRANSESCLERAL PODER 2500 A 1MM Y MEDIO DE LIMBO ESCLEROCORNEAL, A LA ALTURA DEL CUERPO \nCILIAR EN HEMISFERIO SUPERIOR 80 SEGUNDOS LUEGO EN HEMISFERIO INFERIOR 80 SEGUNDOS\nINSTALACIÓN DE DEXAMETASONA + TOBRAMICINA - LIQUIDO OFTALMICO 0,1%+0,3% \nRETIRO DE BLEFARO",
-      "complicacionesoperatorio": "NO",
-      "perdidasanguineat": "NO",
-      "staffCount": 5,
-      "codigoCount": 1,
-      "diagnosticoCount": 1,
-      "recetaCount": 2,
-      "tecnicos": [
-        {
-          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
-          "funcion": "CIRUJANO 1",
-          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
-          "nombre": "cirujano_principal"
-        },
-        {
-          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
-          "funcion": "PRIMER AYUDANTE",
-          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
-          "nombre": "JAIRO"
-        },
-        {
-          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
-          "funcion": "ANESTESIOLOGO",
-          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
-          "nombre": "RORAYMA"
-        },
-        {
-          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
-          "funcion": "INSTRUMENTISTA",
-          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
-          "nombre": "FATIMA"
-        },
-        {
-          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
-          "funcion": "CIRCULANTE",
-          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
-          "nombre": "JAIME FER"
-        },
-        {
-          "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
-          "funcion": "AYUDANTE ANESTESIOLOGO",
-          "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
-          "nombre": "KENYA"
-        }
-      ],
-      "codigos": [
-        {
-          "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
-          "nombre": "66720",
-          "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
-        }
-      ],
-      "diagnosticos": [
-        {
-          "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
-          "nombre": "Z988",
-          "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
-          "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
-        }
-      ],
-      "recetas": [
-        {
-          "id": 0,
-          "nombre": "OMEPRAZOL CAPSULA 20",
-          "via": "VIA ORAL",
-          "unidad": "CAPSULAS",
-          "pauta": "dia",
-          "cantidad": 5,
-          "totalFarmacia": "5",
-          "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
-        },
-        {
-          "id": 1,
-          "nombre": "CEFADROXILO 500MG",
-          "via": "VIA ORAL",
-          "unidad": "CAPSULAS",
-          "pauta": "12",
-          "cantidad": 5,
-          "totalFarmacia": "10",
-          "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
-        },
-        {
-          "id": 2,
-          "nombre": "PARACETAMOL 1G - ANALGAN",
-          "via": "VIA ORAL",
-          "unidad": "TAB",
-          "pauta": "8",
-          "cantidad": 3,
-          "totalFarmacia": "9",
-          "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
-        }
-      ]
-    }
+      {
+        "id": "ciclofoto",
+        "cirugia": "CICLOFOTODESTRUCCION CON LASER",
+        "categoria": "Glaucoma",
+        "membrete": "CICLOFOTODESTRUCCION CON LASER",
+        "dieresis": "",
+        "exposicion": "SUPERFICIE LIMBAR OCULAR",
+        "hallazgo": "HIPERTENSION OCULAR",
+        "operatorio": "INSTILACION DE CLORHIDRATO DE PROXIMETACAINA AL 0,5%\n PREVIA ASEPSIA Y ANTISEPSIA \nSE COLOCA TEGADERM 10X12 PARA FIJAR LAS PESTAÑAS\nBAJO VISUALIZACION CON MICROSCOPIO QUIRURGICA Y SISTEMA DE VISUALIZACION SE COLOCACION DE CAMPOS, BLEFARO Y LAVADO\nINSTILACIÓN DE SOLUCION OFTALMICA DE TOBRAMICINA Y DEXAMETASONA AL 0.3%\nSE REALIZA LOCALIZACION DE CUERPO CILIAR POR MEDIO DE TRANSILUMINACION\nSE CONECTA SONDA EYEOP-PACKS Y SE APLICA LASER TRANSESCLERAL PODER 2500 A 1MM Y MEDIO DE LIMBO ESCLEROCORNEAL, A LA ALTURA DEL CUERPO \nCILIAR EN HEMISFERIO SUPERIOR 80 SEGUNDOS LUEGO EN HEMISFERIO INFERIOR 80 SEGUNDOS\nINSTALACIÓN DE DEXAMETASONA + TOBRAMICINA - LIQUIDO OFTALMICO 0,1%+0,3% \nRETIRO DE BLEFARO",
+        "complicacionesoperatorio": "NO",
+        "perdidasanguineat": "NO",
+        "staffCount": 5,
+        "codigoCount": 1,
+        "diagnosticoCount": 1,
+        "recetaCount": 2,
+        "tecnicos": [
+          {
+            "selector": "#select2-consultasubsecuente-trabajadorprotocolo-0-funcion-container",
+            "funcion": "CIRUJANO 1",
+            "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-0-doctor-container",
+            "nombre": "cirujano_principal"
+          },
+          {
+            "selector": "#select2-consultasubsecuente-trabajadorprotocolo-1-funcion-container",
+            "funcion": "PRIMER AYUDANTE",
+            "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-1-doctor-container",
+            "nombre": "JAIRO"
+          },
+          {
+            "selector": "#select2-consultasubsecuente-trabajadorprotocolo-2-funcion-container",
+            "funcion": "ANESTESIOLOGO",
+            "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-2-doctor-container",
+            "nombre": "RORAYMA"
+          },
+          {
+            "selector": "#select2-consultasubsecuente-trabajadorprotocolo-3-funcion-container",
+            "funcion": "INSTRUMENTISTA",
+            "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-3-doctor-container",
+            "nombre": "FATIMA"
+          },
+          {
+            "selector": "#select2-consultasubsecuente-trabajadorprotocolo-4-funcion-container",
+            "funcion": "CIRCULANTE",
+            "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-4-doctor-container",
+            "nombre": "JAIME FER"
+          },
+          {
+            "selector": "#select2-consultasubsecuente-trabajadorprotocolo-5-funcion-container",
+            "funcion": "AYUDANTE ANESTESIOLOGO",
+            "trabajador": "#select2-consultasubsecuente-trabajadorprotocolo-5-doctor-container",
+            "nombre": "KENYA"
+          }
+        ],
+        "codigos": [
+          {
+            "selector": "#select2-consultasubsecuente-procedimientoprotocolo-0-procinterno-container",
+            "nombre": "66720",
+            "lateralidad": "#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container"
+          }
+        ],
+        "diagnosticos": [
+          {
+            "selector": "#select2-consultasubsecuente-presuntivosenfermedades-0-iddiagnostico-container",
+            "nombre": "Z988",
+            "definitivo": ".form-group.field-consultasubsecuente-presuntivosenfermedades-0-evidencia .cbx-container .cbx",
+            "lateralidad": "#select2-consultasubsecuente-presuntivosenfermedades-0-ojo_id-container"
+          }
+        ],
+        "recetas": [
+          {
+            "id": 0,
+            "nombre": "OMEPRAZOL CAPSULA 20",
+            "via": "VIA ORAL",
+            "unidad": "CAPSULAS",
+            "pauta": "dia",
+            "cantidad": 5,
+            "totalFarmacia": "5",
+            "observaciones": "OMEPRAZOL 20MG 1 CAPSULAS VIA ORAL CADA DIA X 5 DÍAS"
+          },
+          {
+            "id": 1,
+            "nombre": "CEFADROXILO 500MG",
+            "via": "VIA ORAL",
+            "unidad": "CAPSULAS",
+            "pauta": "12",
+            "cantidad": 5,
+            "totalFarmacia": "10",
+            "observaciones": "CEFADROXILO 500MG 1 CAPSULAS VIA ORAL CADA 12 HORAS X 5 DÍAS"
+          },
+          {
+            "id": 2,
+            "nombre": "PARACETAMOL 1G - ANALGAN",
+            "via": "VIA ORAL",
+            "unidad": "TAB",
+            "pauta": "8",
+            "cantidad": 3,
+            "totalFarmacia": "9",
+            "observaciones": "PARACETAMOL 1G - ANALGAN 1 TAB VIA ORAL CADA 8 HORAS X 3 DÍAS"
+          }
+        ]
+      }
   ]
 }
