@@ -232,9 +232,26 @@
 
     // Función para observar la tabla de pacientes y añadir listeners a las filas cuando se carga la página
     function inicializarTablaPacientes() {
+        // Verificar si la URL contiene la ruta específica
+        const rutaValida = window.location.pathname.includes('/documentacion/doc-solicitud-procedimientos/index-doctor');
+
+        // Verificar si el título del panel es "PACIENTES POR ATENDER"
+        const panelTitle = document.querySelector('h3.panel-title');
+        const tituloValido = panelTitle && panelTitle.textContent.trim().includes('PACIENTES POR ATENDER');
+
+        // Si ninguna de las condiciones es verdadera, no ejecutar la función
+        if (!rutaValida && !tituloValido) {
+            console.log("La función 'inicializarTablaPacientes' no se ejecutará porque no cumple con las condiciones.");
+            return;
+        }
+
+        console.log("Condiciones cumplidas. Inicializando tabla de pacientes...");
+
+        // Seleccionar la tabla
         const tabla = document.querySelector('table.kv-grid-table'); // Selector de la tabla
 
         if (!tabla) {
+            console.log("No se encontró la tabla de pacientes.");
             return;
         }
 
@@ -247,6 +264,7 @@
             agregarListenerAFila(fila);
         });
     }
+
 
     function descomponerNombreCompleto(patientName) {
         const partes = patientName.split(' ');
@@ -294,9 +312,7 @@
         };
 
         fetch(url, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data),
+            method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
         })
             .then(response => response.json())
             .then(data => {
@@ -325,9 +341,7 @@
 
         // Determinar el URL según el tipo de formato
         const isProtocoloQuirurgico = document.querySelector('#consultasubsecuente-membrete') !== null;
-        const url = isProtocoloQuirurgico
-            ? 'http://cive.consulmed.me/interface/protocolos_datos.php'
-            : 'http://cive.consulmed.me/interface/datos_consulta.php';
+        const url = isProtocoloQuirurgico ? 'http://cive.consulmed.me/interface/protocolos_datos.php' : 'http://cive.consulmed.me/interface/datos_consulta.php';
 
         if (isProtocoloQuirurgico) {
             // Extraer datos para protocolo quirúrgico
@@ -360,6 +374,7 @@
 
             // Extraer valores de los textareas
             data.membrete = document.querySelector('#consultasubsecuente-membrete')?.value.trim() || '';
+            data.procedimiento_id = document.querySelector('#consultasubsecuente-piepagina')?.value.trim() || '';
             data.dieresis = document.querySelector('#consultasubsecuente-dieresis')?.value.trim() || '';
             data.exposicion = document.querySelector('#consultasubsecuente-exposicion')?.value.trim() || '';
             data.hallazgo = document.querySelector('#consultasubsecuente-hallazgo')?.value.trim() || '';
@@ -514,9 +529,7 @@
 
                         // Almacenar el examen con código, nombre y lateralidad
                         data.examenes.push({
-                            codigo: examenCodigo,
-                            nombre: examenNombre,
-                            lateralidad: examenLateralidad
+                            codigo: examenCodigo, nombre: examenNombre, lateralidad: examenLateralidad
                         });
                     } else {
                         console.error(`No se pudo descomponer el nombre del examen: ${examenNombreCompleto}`);
@@ -566,6 +579,229 @@
         });
     }
 
+    // Función para extraer y enviar datos al API
+    function extraerDatosYEnviarPacienteNuevo() {
+        const botonGuardarNuevoPaciente = document.querySelector('button.btn.btn-success[type="submit"]');
+        if (botonGuardarNuevoPaciente) botonGuardarNuevoPaciente.disabled = true;
+
+        // Inicializar el objeto data
+        const data = {};
+
+        // Extraer valores del formulario
+        data.apellidos = document.getElementById('paciente-apellidos')?.value.trim() || '';
+        data.nombres = document.getElementById('paciente-nombres')?.value.trim() || '';
+
+        // Split names and last names
+        const partesApellidos = data.apellidos.replace(/\s+/g, ' ').split(' ');
+        data.lname = partesApellidos[0] || ''; // Primer apellido
+        data.lname2 = partesApellidos[1] || ''; // Segundo apellido
+        const partesNombres = data.nombres.replace(/\s+/g, ' ').split(' ');
+        data.fname = partesNombres[0] || ''; // Primer nombre
+        data.mname = partesNombres[1] || ''; // Segundo nombre
+
+        data.hcNumber = document.getElementById('numero-historia-clinica')?.value.trim() || '';
+        data.sexo = document.querySelector('#paciente-sexo')?.selectedOptions[0]?.value || '';
+        data.estadoCivil = document.querySelector('#paciente-estado_civil_id')?.selectedOptions[0]?.textContent.trim()
+        data.fechaNacimiento = document.getElementById('paciente-fecha_nac')?.value.trim() || '';
+        data.telefonoMovil = document.getElementById('paciente-celular')?.value.trim() || '';
+        data.email = document.getElementById('paciente-email')?.value.trim() || '';
+        data.direccion = document.getElementById('paciente-direccion')?.value.trim() || '';
+        data.ocupacion = document.getElementById('paciente-ocupacion')?.value.trim() || '';
+        data.lugarTrabajo = document.getElementById('paciente-lugar_trabajo')?.value.trim() || '';
+        data.ciudad = document.querySelector('#paciente-ciudad_id')?.selectedOptions[0]?.textContent.trim() || '';
+        data.parroquia = document.querySelector('#paciente-parroquia_id')?.selectedOptions[0]?.textContent.trim() || '';
+        data.nacionalidad = document.querySelector('#paciente-pais_id')?.selectedOptions[0]?.textContent.trim() || '';
+        data.idProcedencia = document.querySelector('#select2-paciente-id_procedencia-container')?.textContent.trim() || '';
+        data.idReferido = document.querySelector('#select2-paciente-referido_id-container')?.textContent.trim() || '';
+
+        // URL de la API
+        const url = 'http://cive.consulmed.me/interface/formulario_datos_paciente_nuevo.php';
+
+        // Enviar los datos al backend
+        console.log('Datos a enviar:', data);
+        fetch(url, {
+            method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((result) => {
+                if (result.success) {
+                    console.log('Datos guardados correctamente.');
+                    alert('Datos enviados con éxito');
+                } else {
+                    console.error('Error en la API:', result.message);
+                    alert('Ocurrió un error al enviar los datos: ' + result.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error al enviar los datos:', error);
+                alert('Error al conectar con el servidor.');
+            })
+            .finally(() => {
+                if (botonGuardarNuevoPaciente) botonGuardarNuevoPaciente.disabled = false;
+            });
+    }
+
+// Agregar listener al botón de guardar
+    const botonGuardarNuevoPaciente = document.querySelector('button.btn.btn-success[type="submit"]');
+    if (botonGuardarNuevoPaciente) {
+        botonGuardarNuevoPaciente.addEventListener('click', function (e) {
+            e.preventDefault(); // Evita el envío tradicional del formulario
+            extraerDatosYEnviarPacienteNuevo(); // Llama a la función para enviar los datos
+        });
+    } //else {
+    //console.error('No se encontró el botón de guardar.');
+    //}
+// Correcciones para manejar cambios dinámicos en los campos del modal
+
+    let modalData = {
+        sede: '',
+        area: '',
+        afiliacion: '',
+        parentesco: '',
+        hcNumber: '',
+        tipoAfiliacion: '',
+        numeroAprobacion: '',
+        tipoPlan: '',
+        fechaRegistro: '',
+        fechaVigencia: '',
+        codDerivacion: '',
+        numSecuencialDerivacion: '',
+        numHistoria: '',
+        examenFisico: '',
+        observacion: ''
+    };
+
+    let isSubmitting = false; // Flag to prevent multiple submissions
+
+    function registrarCambiosEnCampos() {
+        const fields = [
+            {id: '#docsolicitudpaciente-sede_id', key: 'sede', type: 'select'},
+            {id: '#docsolicitudpaciente-externa_hospitalizacion', key: 'area', type: 'select'},
+            {id: '#docsolicitudpaciente-afiliacionid', key: 'afiliacion', type: 'select'},
+            {id: '#docsolicitudpaciente-parentescoid', key: 'parentesco', type: 'select'},
+            {id: '#numero-historia-clinica', key: 'hcNumber', type: 'input'},
+            {id: '#docsolicitudpaciente-tipoafiliacion', key: 'tipoAfiliacion', type: 'select'},
+            {id: '#docsolicitudpaciente-numeroaprobacion', key: 'numeroAprobacion', type: 'input'},
+            {id: '#docsolicitudpaciente-tipoplan', key: 'tipoPlan', type: 'select'},
+            {id: '#docsolicitudpaciente-fecha_registro', key: 'fechaRegistro', type: 'input'},
+            {id: '#docsolicitudpaciente-fecha_vigencia', key: 'fechaVigencia', type: 'input'},
+            {id: '#docsolicitudpaciente-cod_derivacion', key: 'codDerivacion', type: 'input'},
+            {id: '#docsolicitudpaciente-num_secuencial_derivacion', key: 'numSecuencialDerivacion', type: 'input'},
+            {id: '#docsolicitudpaciente-num_historia', key: 'numHistoria', type: 'input'},
+            {id: '#docsolicitudpaciente-examenfisico', key: 'examenFisico', type: 'input'},
+            {id: '#docsolicitudpaciente-observacion', key: 'observacion', type: 'input'}
+        ];
+
+        fields.forEach(({id, key, type}) => {
+            const field = document.querySelector(id);
+            if (field) {
+                if (type === 'select') {
+                    modalData[key] = field.selectedOptions[0]?.textContent?.trim() || '';
+                    field.addEventListener('change', () => {
+                        modalData[key] = field.selectedOptions[0]?.textContent?.trim() || '';
+                        console.log(`Campo ${key} actualizado:`, modalData[key]);
+                    });
+                } else if (type === 'input') {
+                    modalData[key] = field.value.trim() || '';
+                    field.addEventListener('input', () => {
+                        modalData[key] = field.value.trim() || '';
+                        console.log(`Campo ${key} actualizado:`, modalData[key]);
+                    });
+                }
+            } else {
+                console.info(`Campo ${key} no encontrado o no es obligatorio.`);
+            }
+        });
+
+        console.log('Listeners para cambios en campos relevantes configurados.');
+    }
+
+    function attachSaveButtonListener() {
+        const botonGuardar = document.querySelector('.modal-footer .btn-success[type="submit"]');
+        if (botonGuardar) {
+            // Remove any existing listener to avoid duplicates
+            botonGuardar.removeEventListener('click', handleSaveButtonClick);
+            botonGuardar.addEventListener('click', handleSaveButtonClick);
+        }
+    }
+
+    function handleSaveButtonClick(event) {
+        event.preventDefault(); // Prevent default form submission
+        extraerDatosYEnviarDesdeModal();
+    }
+
+    function extraerDatosYEnviarDesdeModal() {
+        if (isSubmitting) return; // Prevent multiple submissions
+        isSubmitting = true;
+
+        // Verificar y mostrar en consola el estado de los campos
+        Object.entries(modalData).forEach(([key, value]) => {
+            if (value) {
+                console.log(`${key} detectado:`, value);
+            } else {
+                console.info(`${key} está vacío pero puede ser opcional.`);
+            }
+        });
+
+        // Mostrar los datos en la consola para verificación
+        console.log('Datos extraídos del modal:', modalData);
+
+        // URL de la API para enviar los datos
+        const url = 'http://cive.consulmed.me/interface/formulario_datos_modal.php';
+
+        // Enviar los datos al backend usando fetch
+        fetch(url, {
+            method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(modalData),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((result) => {
+                if (result.success) {
+                    console.log('Datos enviados correctamente desde el modal.');
+                } else {
+                    console.error('Error en la API:', result.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error al enviar los datos desde el modal:', error);
+            })
+            .finally(() => {
+                isSubmitting = false; // Reset flag after operation completes
+            });
+    }
+
+    // Configurar el MutationObserver para capturar campos dinámicos en el modal
+    const modal = document.getElementById('ajaxCrudModal');
+    if (modal) {
+        const observer = new MutationObserver((mutationsList) => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    attachSaveButtonListener(); // Attach save button listener when modal is updated
+                    registrarCambiosEnCampos(); // Track changes in fields
+                    break; // Avoid processing further mutations in this cycle
+                }
+            }
+        });
+
+        observer.observe(modal, {
+            childList: true, subtree: true
+        });
+
+        console.log('Observando el modal para cambios y eventos de guardado...');
+    } else {
+        console.log('Modal no encontrado.');
+    }
+
+
     // Función principal para añadir el evento de clic al botón de guardar
     function agregarEventoGuardar() {
         const btnGuardar = document.getElementById('interconsulta-btn-guardar');
@@ -580,9 +816,9 @@
                     extraerDatosSolicitudYEnviar(btnGuardar); // Llamada a la función de extracción y envío
                 });
             }
-        } else {
-            console.log('Botón interconsulta-btn-guardar no encontrado en la página.');
-        }
+        } //else {
+        //console.log('Botón interconsulta-btn-guardar no encontrado en la página.');
+        //}
     }
 
 // Observador para detectar cambios en el DOM (por si el botón se carga dinámicamente)
@@ -628,7 +864,16 @@
 
             data.solicitudes.push({
                 secuencia: index + 1,
-                tipo, afiliacion, procedimiento, doctor, fecha, duracion, ojo, prioridad, producto, observacion
+                tipo,
+                afiliacion,
+                procedimiento,
+                doctor,
+                fecha,
+                duracion,
+                ojo,
+                prioridad,
+                producto,
+                observacion
             });
         });
 
@@ -642,9 +887,7 @@
 
         console.log('Datos a enviar:', data); // Verificar los datos antes de enviar
         fetch(url, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data),
+            method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
         })
             .then((response) => response.json())
             .then((result) => {
@@ -678,11 +921,7 @@
         const tabla = document.querySelector('table.kv-grid-table');
         if (!tabla) return;
 
-        const excluirAfiliaciones = [
-            'CONTRIBUYENTE VOLUNTARIO', 'CONYUGE', 'CONYUGE PENSIONISTA', 'ISSFA', 'ISSPOL',
-            'MSP', 'SEGURO CAMPESINO', 'SEGURO CAMPESINO JUBILADO', 'SEGURO GENERAL',
-            'SEGURO GENERAL JUBILADO', 'SEGURO GENERAL POR MONTEPIO', 'SEGURO GENERAL TIEMPO PARCIAL'
-        ];
+        const excluirAfiliaciones = ['CONTRIBUYENTE VOLUNTARIO', 'CONYUGE', 'CONYUGE PENSIONISTA', 'ISSFA', 'ISSPOL', 'MSP', 'SEGURO CAMPESINO', 'SEGURO CAMPESINO JUBILADO', 'SEGURO GENERAL', 'SEGURO GENERAL JUBILADO', 'SEGURO GENERAL POR MONTEPIO', 'SEGURO GENERAL TIEMPO PARCIAL'];
 
         const filas = tabla.querySelectorAll('tbody tr');
         filas.forEach((fila) => {

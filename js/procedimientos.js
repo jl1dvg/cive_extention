@@ -226,7 +226,7 @@ function ejecutarProtocoloEnPagina(item) {
         // Llenar campos de texto
         return Promise.all([
             llenarCampoTexto('#consultasubsecuente-membrete', `${item.membrete} en ${ojoATratar.descripcion}`),
-            llenarCampoTexto('#consultasubsecuente-piepagina', `${item.id}-${item.medicacion}-${item.cardex}`),
+            llenarCampoTexto('#consultasubsecuente-piepagina', `${item.id}`),
             llenarCampoTexto('#consultasubsecuente-dieresis', item.dieresis),
             llenarCampoTexto('#consultasubsecuente-exposicion', item.exposicion),
             llenarCampoTexto('#consultasubsecuente-hallazgo', item.hallazgo),
@@ -567,16 +567,18 @@ Se indica al paciente que debe acudir a una consulta de control en las próximas
         .then(() => seleccionarRadioNo())
         .then(() => actualizarHoraFin(item))
         .then(() => hacerClickEnSelect2('#select2-consultasubsecuente-anestesia_id-container'))
-        .then(() => {
-            // Determinar si la búsqueda debe ser "LOCAL" o "REGIONAL"
-            const anestesiaBusqueda = item.id === "avastin" ? "LOCAL" : "REGIONAL";
-            return establecerBusqueda('#select2-consultasubsecuente-anestesia_id-container', anestesiaBusqueda);
-        })
+        .then(() => establecerBusqueda('#select2-consultasubsecuente-anestesia_id-container', item.anestesia))
         .then(() => seleccionarOpcion())
         .then(() => ejecutarDiagnosticos(item, ojoATratar.sigla))
         .then(() => hacerClickEnPresuntivo('.form-group.field-proyectada .cbx-container .cbx', 2))
         .then(() => hacerClickEnPresuntivo('.form-group.field-termsChkbx .cbx-container .cbx', 1))
-        //.then(() => ejecutarRecetas(item))
+        .then(() => {
+            if (item.anestesia === 'OTROS') {
+                return llenarCampoTexto('#consultasubsecuente-nombreanestesia', 'TOPICA');
+            } else {
+                return Promise.resolve(); // Si no es 'OTROS', pasar al siguiente paso
+            }
+        })
         .then(() => esperarElemento('#docsolicitudprocedimientos-observacion_consulta'))
         .then(() => llenarCampoTexto('#docsolicitudprocedimientos-observacion_consulta', observaciones))
         .then(() => hacerClickEnBoton('#consultaActual', 1))
