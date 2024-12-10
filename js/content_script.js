@@ -706,13 +706,13 @@
                     modalData[key] = field.selectedOptions[0]?.textContent?.trim() || '';
                     field.addEventListener('change', () => {
                         modalData[key] = field.selectedOptions[0]?.textContent?.trim() || '';
-                        console.log(`Campo ${key} actualizado:`, modalData[key]);
+                        //console.log(`Campo ${key} actualizado:`, modalData[key]);
                     });
                 } else if (type === 'input') {
                     modalData[key] = field.value.trim() || '';
                     field.addEventListener('input', () => {
                         modalData[key] = field.value.trim() || '';
-                        console.log(`Campo ${key} actualizado:`, modalData[key]);
+                        //console.log(`Campo ${key} actualizado:`, modalData[key]);
                     });
                 }
             } else {
@@ -736,8 +736,6 @@
 
             // Agrega la fila solo si contiene datos válidos
             if (procedimiento || procedimientoAfiliacion || ojoId || equipment || precio) {
-                console.log(`Fila ${index}:`, {procedimiento, procedimientoAfiliacion, ojoId, equipment, precio});
-
                 rowData.push({
                     procedimiento,
                     procedimientoAfiliacion,
@@ -753,8 +751,38 @@
         } else {
             console.warn('No se encontraron datos válidos en la tabla.');
         }
-
         console.log('Datos extraídos de la tabla:', rowData);
+    }
+
+    function extractDiagnosticosData() {
+        //console.group('Extracción de datos de diagnósticos');
+        const rows = document.querySelectorAll('#diagnosticosconsultaexterna .multiple-input-list tbody tr');
+        const diagnosticosData = [];
+
+        rows.forEach((row, index) => {
+            const diagnostico = row.querySelector('.list-cell__idEnfermedades .select2-selection__rendered')?.textContent.trim() || '';
+            const ojoId = row.querySelector('.list-cell__ojo_id .select2-selection__rendered')?.textContent.trim() || '';
+            const evidenciaCheckbox = row.querySelector('.list-cell__evidencia input[type="checkbox"]');
+            const evidencia = evidenciaCheckbox ? evidenciaCheckbox.checked : false;
+
+            // Agregar solo si hay información válida
+            if (diagnostico || ojoId || evidencia) {
+                console.log(`Fila ${index}:`, {diagnostico, ojoId, evidencia});
+
+                diagnosticosData.push({
+                    diagnostico,
+                    ojoId,
+                    evidencia,
+                });
+            }
+        });
+
+        if (diagnosticosData.length > 0) {
+            modalData.diagnosticos = diagnosticosData; // Solo actualiza si hay datos válidos
+        } else {
+            console.warn('No se encontraron datos válidos en la tabla.');
+        }
+        console.log('Datos extraídos de la tabla:', diagnosticosData);
     }
 
     function attachSaveButtonListener() {
@@ -770,7 +798,7 @@
                     console.log('Evento asignado al botón guardar.');
                 }
             } else {
-                console.log('Formulario no relevante, no se asignará evento al botón guardar.');
+                //console.log('Formulario no relevante, no se asignará evento al botón guardar.');
             }
         } else {
             console.error('El modal especificado no contiene el botón guardar.');
@@ -779,20 +807,17 @@
 
     function handleSaveButtonClick(event) {
         event.preventDefault(); // Evita el envío predeterminado del formulario
-
-        // Extrae los datos de las filas de la tabla inmediatamente
         extractTableRowData();
-
-        // Llama a la función para enviar los datos
+        extractDiagnosticosData();
         extraerDatosYEnviarDesdeModal();
     }
 
     function extraerDatosYEnviarDesdeModal() {
         if (isSubmitting) return; // Prevent multiple submissions
         isSubmitting = true;
-
         // Extraer datos de la tabla antes de enviar
         extractTableRowData();
+        extractDiagnosticosData();
 
         // Verificar y mostrar en consola el estado de los campos
         Object.entries(modalData).forEach(([key, value]) => {
@@ -842,7 +867,8 @@
                 if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
                     attachSaveButtonListener(); // Attach save button listener when modal is updated
                     registrarCambiosEnCampos(); // Track changes in fields
-                    extractTableRowData()
+                    extractTableRowData();
+                    extractDiagnosticosData();
                     break; // Avoid processing further mutations in this cycle
                 }
             }
