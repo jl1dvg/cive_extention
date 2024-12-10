@@ -656,6 +656,7 @@
     } //else {
     //console.error('No se encontró el botón de guardar.');
     //}
+
 // Correcciones para manejar cambios dinámicos en los campos del modal
 
     let modalData = {
@@ -673,7 +674,8 @@
         numSecuencialDerivacion: '',
         numHistoria: '',
         examenFisico: '',
-        observacion: ''
+        observacion: '',
+        procedimientos: [] // Campo para almacenar los datos de las filas de la tabla
     };
 
     let isSubmitting = false; // Flag to prevent multiple submissions
@@ -721,23 +723,76 @@
         console.log('Listeners para cambios en campos relevantes configurados.');
     }
 
+    function extractTableRowData() {
+        const rows = document.querySelectorAll('.multiple-input-list tbody tr'); // Selecciona todas las filas de la tabla
+        const rowData = []; // Almacena los datos extraídos
+
+        rows.forEach((row, index) => {
+            const procedimiento = row.querySelector('.list-cell__Procedimiento .select2-selection__rendered')?.textContent.trim() || '';
+            const procedimientoAfiliacion = row.querySelector('.list-cell__ProcedimientoAfiliacion .select2-selection__rendered')?.textContent.trim() || '';
+            const ojoId = row.querySelector('.list-cell__ojo_id .select2-selection__rendered')?.textContent.trim() || '';
+            const equipment = row.querySelector('.list-cell__equipment_id .select2-selection__rendered')?.textContent.trim() || '';
+            const precio = row.querySelector('.list-cell__precio input')?.value.trim() || '';
+
+            // Agrega la fila solo si contiene datos válidos
+            if (procedimiento || procedimientoAfiliacion || ojoId || equipment || precio) {
+                console.log(`Fila ${index}:`, {procedimiento, procedimientoAfiliacion, ojoId, equipment, precio});
+
+                rowData.push({
+                    procedimiento,
+                    procedimientoAfiliacion,
+                    ojoId,
+                    equipment,
+                    precio,
+                });
+            }
+        });
+
+        if (rowData.length > 0) {
+            modalData.procedimientos = rowData; // Solo actualiza si hay datos válidos
+        } else {
+            console.warn('No se encontraron datos válidos en la tabla.');
+        }
+
+        console.log('Datos extraídos de la tabla:', rowData);
+    }
+
     function attachSaveButtonListener() {
-        const botonGuardar = document.querySelector('.modal-footer .btn-success[type="submit"]');
-        if (botonGuardar) {
-            // Remove any existing listener to avoid duplicates
-            botonGuardar.removeEventListener('click', handleSaveButtonClick);
-            botonGuardar.addEventListener('click', handleSaveButtonClick);
+        const modal = document.getElementById('ajaxCrudModal');
+        if (modal) {
+            const form = modal.querySelector('form');
+            if (form && form.id === 'formprodoc1') {
+                const botonGuardar = modal.querySelector('.modal-footer .btn-success[type="submit"]');
+                if (botonGuardar) {
+                    // Elimina cualquier listener previo antes de asignar uno nuevo
+                    botonGuardar.removeEventListener('click', handleSaveButtonClick);
+                    botonGuardar.addEventListener('click', handleSaveButtonClick);
+                    console.log('Evento asignado al botón guardar.');
+                }
+            } else {
+                console.log('Formulario no relevante, no se asignará evento al botón guardar.');
+            }
+        } else {
+            console.error('El modal especificado no contiene el botón guardar.');
         }
     }
 
     function handleSaveButtonClick(event) {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault(); // Evita el envío predeterminado del formulario
+
+        // Extrae los datos de las filas de la tabla inmediatamente
+        extractTableRowData();
+
+        // Llama a la función para enviar los datos
         extraerDatosYEnviarDesdeModal();
     }
 
     function extraerDatosYEnviarDesdeModal() {
         if (isSubmitting) return; // Prevent multiple submissions
         isSubmitting = true;
+
+        // Extraer datos de la tabla antes de enviar
+        extractTableRowData();
 
         // Verificar y mostrar en consola el estado de los campos
         Object.entries(modalData).forEach(([key, value]) => {
@@ -779,7 +834,7 @@
             });
     }
 
-    // Configurar el MutationObserver para capturar campos dinámicos en el modal
+// Configurar el MutationObserver para capturar campos dinámicos en el modal
     const modal = document.getElementById('ajaxCrudModal');
     if (modal) {
         const observer = new MutationObserver((mutationsList) => {
@@ -787,6 +842,7 @@
                 if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
                     attachSaveButtonListener(); // Attach save button listener when modal is updated
                     registrarCambiosEnCampos(); // Track changes in fields
+                    extractTableRowData()
                     break; // Avoid processing further mutations in this cycle
                 }
             }
