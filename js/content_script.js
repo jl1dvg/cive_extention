@@ -735,7 +735,7 @@
             const precio = row.querySelector('.list-cell__precio input')?.value.trim() || '';
 
             // Agrega la fila solo si contiene datos válidos
-            if (procedimiento || procedimientoAfiliacion || ojoId || equipment || precio) {
+            if (procedimiento || procedimientoAfiliacion || equipment || precio) {
                 rowData.push({
                     procedimiento,
                     procedimientoAfiliacion,
@@ -766,7 +766,7 @@
             const evidencia = evidenciaCheckbox ? evidenciaCheckbox.checked : false;
 
             // Agregar solo si hay información válida
-            if (diagnostico || ojoId || evidencia) {
+            if ((diagnostico || ojoId || evidencia) && diagnostico !== 'SELECCIONE') {
                 console.log(`Fila ${index}:`, {diagnostico, ojoId, evidencia});
 
                 diagnosticosData.push({
