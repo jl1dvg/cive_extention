@@ -305,7 +305,7 @@
     }
 
     function enviarDatosAHC(hcNumber, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id) {
-        const url = 'http://cive.consulmed.me/interface/guardar_datos.php';
+        const url = 'https://cive.consulmed.me/interface/guardar_datos.php';
 
         const data = {
             hcNumber, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id
@@ -341,7 +341,7 @@
 
         // Determinar el URL según el tipo de formato
         const isProtocoloQuirurgico = document.querySelector('#consultasubsecuente-membrete') !== null;
-        const url = isProtocoloQuirurgico ? 'http://cive.consulmed.me/interface/protocolos_datos.php' : 'http://cive.consulmed.me/interface/datos_consulta.php';
+        const url = isProtocoloQuirurgico ? 'https://cive.consulmed.me/interface/protocolos_datos.php' : 'https://cive.consulmed.me/interface/datos_consulta.php';
 
         if (isProtocoloQuirurgico) {
             // Extraer datos para protocolo quirúrgico
@@ -615,7 +615,7 @@
         data.idReferido = document.querySelector('#select2-paciente-referido_id-container')?.textContent.trim() || '';
 
         // URL de la API
-        const url = 'http://cive.consulmed.me/interface/formulario_datos_paciente_nuevo.php';
+        const url = 'https://cive.consulmed.me/interface/formulario_datos_paciente_nuevo.php';
 
         // Enviar los datos al backend
         console.log('Datos a enviar:', data);
@@ -631,15 +631,12 @@
             .then((result) => {
                 if (result.success) {
                     console.log('Datos guardados correctamente.');
-                    alert('Datos enviados con éxito');
                 } else {
                     console.error('Error en la API:', result.message);
-                    alert('Ocurrió un error al enviar los datos: ' + result.message);
                 }
             })
             .catch((error) => {
                 console.error('Error al enviar los datos:', error);
-                alert('Error al conectar con el servidor.');
             })
             .finally(() => {
                 if (botonGuardarNuevoPaciente) botonGuardarNuevoPaciente.disabled = false;
@@ -832,7 +829,7 @@
         console.log('Datos extraídos del modal:', modalData);
 
         // URL de la API para enviar los datos
-        const url = 'http://cive.consulmed.me/interface/formulario_datos_modal.php';
+        const url = 'https://cive.consulmed.me/interface/formulario_datos_modal.php';
 
         // Enviar los datos al backend usando fetch
         fetch(url, {
@@ -912,7 +909,7 @@
 
 // Función de extracción y envío de datos
     function extraerDatosSolicitudYEnviar(btnGuardar) {
-        const url = 'http://cive.consulmed.me/interface/solicitud_procedimiento.php';
+        const url = 'https://cive.consulmed.me/interface/solicitud_procedimiento.php';
         const data = {};
 
         const div = document.querySelector('.media-body.responsive');
@@ -1125,7 +1122,7 @@
                 generatePDF();
             } else {
                 // Redirigir al usuario a la página de inicio de sesión en una nueva pestaña si no tiene acceso
-                window.open('http://cive.consulmed.me/login.html', '_blank');
+                window.open('https://cive.consulmed.me/login.html', '_blank');
             }
         });
     });
