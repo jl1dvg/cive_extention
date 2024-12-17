@@ -579,83 +579,7 @@
         });
     }
 
-    // Función para extraer y enviar datos al API
-    function extraerDatosYEnviarPacienteNuevo() {
-        const botonGuardarNuevoPaciente = document.querySelector('button.btn.btn-success[type="submit"]');
-        if (botonGuardarNuevoPaciente) botonGuardarNuevoPaciente.disabled = true;
-
-        // Inicializar el objeto data
-        const data = {};
-
-        // Extraer valores del formulario
-        data.apellidos = document.getElementById('paciente-apellidos')?.value.trim() || '';
-        data.nombres = document.getElementById('paciente-nombres')?.value.trim() || '';
-
-        // Split names and last names
-        const partesApellidos = data.apellidos.replace(/\s+/g, ' ').split(' ');
-        data.lname = partesApellidos[0] || ''; // Primer apellido
-        data.lname2 = partesApellidos[1] || ''; // Segundo apellido
-        const partesNombres = data.nombres.replace(/\s+/g, ' ').split(' ');
-        data.fname = partesNombres[0] || ''; // Primer nombre
-        data.mname = partesNombres[1] || ''; // Segundo nombre
-
-        data.hcNumber = document.getElementById('numero-historia-clinica')?.value.trim() || '';
-        data.sexo = document.querySelector('#paciente-sexo')?.selectedOptions[0]?.value || '';
-        data.estadoCivil = document.querySelector('#paciente-estado_civil_id')?.selectedOptions[0]?.textContent.trim()
-        data.fechaNacimiento = document.getElementById('paciente-fecha_nac')?.value.trim() || '';
-        data.telefonoMovil = document.getElementById('paciente-celular')?.value.trim() || '';
-        data.email = document.getElementById('paciente-email')?.value.trim() || '';
-        data.direccion = document.getElementById('paciente-direccion')?.value.trim() || '';
-        data.ocupacion = document.getElementById('paciente-ocupacion')?.value.trim() || '';
-        data.lugarTrabajo = document.getElementById('paciente-lugar_trabajo')?.value.trim() || '';
-        data.ciudad = document.querySelector('#paciente-ciudad_id')?.selectedOptions[0]?.textContent.trim() || '';
-        data.parroquia = document.querySelector('#paciente-parroquia_id')?.selectedOptions[0]?.textContent.trim() || '';
-        data.nacionalidad = document.querySelector('#paciente-pais_id')?.selectedOptions[0]?.textContent.trim() || '';
-        data.idProcedencia = document.querySelector('#select2-paciente-id_procedencia-container')?.textContent.trim() || '';
-        data.idReferido = document.querySelector('#select2-paciente-referido_id-container')?.textContent.trim() || '';
-
-        // URL de la API
-        const url = 'https://cive.consulmed.me/interface/formulario_datos_paciente_nuevo.php';
-
-        // Enviar los datos al backend
-        console.log('Datos a enviar:', data);
-        fetch(url, {
-            method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((result) => {
-                if (result.success) {
-                    console.log('Datos guardados correctamente.');
-                } else {
-                    console.error('Error en la API:', result.message);
-                }
-            })
-            .catch((error) => {
-                console.error('Error al enviar los datos:', error);
-            })
-            .finally(() => {
-                if (botonGuardarNuevoPaciente) botonGuardarNuevoPaciente.disabled = false;
-            });
-    }
-
-// Agregar listener al botón de guardar
-    const botonGuardarNuevoPaciente = document.querySelector('button.btn.btn-success[type="submit"]');
-    if (botonGuardarNuevoPaciente) {
-        botonGuardarNuevoPaciente.addEventListener('click', function (e) {
-            e.preventDefault(); // Evita el envío tradicional del formulario
-            extraerDatosYEnviarPacienteNuevo(); // Llama a la función para enviar los datos
-        });
-    } //else {
-    //console.error('No se encontró el botón de guardar.');
-    //}
-
-// Correcciones para manejar cambios dinámicos en los campos del modal
-
+// Inicializamos modalData con los campos del formulario principal y del modal
     let modalData = {
         sede: '',
         area: '',
@@ -672,7 +596,27 @@
         numHistoria: '',
         examenFisico: '',
         observacion: '',
-        procedimientos: [] // Campo para almacenar los datos de las filas de la tabla
+        procedimientos: [], // Campo para almacenar los datos de las filas de la tabla
+        diagnosticos: [], // Diagnósticos extraídos
+        apellidos: '',
+        nombres: '',
+        lname: '',
+        lname2: '',
+        fname: '',
+        mname: '',
+        sexo: '',
+        fechaNacimiento: '',
+        estadoCivil: '',
+        telefonoMovil: '',
+        email: '',
+        direccion: '',
+        ocupacion: '',
+        lugarTrabajo: '',
+        ciudad: '',
+        parroquia: '',
+        nacionalidad: '',
+        idProcedencia: '',
+        idReferido: ''
     };
 
     let isSubmitting = false; // Flag to prevent multiple submissions
@@ -693,7 +637,23 @@
             {id: '#docsolicitudpaciente-num_secuencial_derivacion', key: 'numSecuencialDerivacion', type: 'input'},
             {id: '#docsolicitudpaciente-num_historia', key: 'numHistoria', type: 'input'},
             {id: '#docsolicitudpaciente-examenfisico', key: 'examenFisico', type: 'input'},
-            {id: '#docsolicitudpaciente-observacion', key: 'observacion', type: 'input'}
+            {id: '#docsolicitudpaciente-observacion', key: 'observacion', type: 'input'},
+            {id: '#paciente-apellidos', key: 'apellidos', type: 'input'},
+            {id: '#paciente-nombres', key: 'nombres', type: 'input'},
+            {id: '#numero-historia-clinica', key: 'hcNumber', type: 'input'},
+            {id: '#paciente-sexo', key: 'sexo', type: 'select'},
+            {id: '#paciente-fecha_nac', key: 'fechaNacimiento', type: 'input'},
+            {id: '#paciente-estado_civil_id', key: 'estadoCivil', type: 'select'},
+            {id: '#paciente-celular', key: 'telefonoMovil', type: 'input'},
+            {id: '#paciente-email', key: 'email', type: 'input'},
+            {id: '#paciente-direccion', key: 'direccion', type: 'input'},
+            {id: '#paciente-ocupacion', key: 'ocupacion', type: 'input'},
+            {id: '#paciente-lugar_trabajo', key: 'lugarTrabajo', type: 'input'},
+            {id: '#paciente-ciudad_id', key: 'ciudad', type: 'select'},
+            {id: '#paciente-parroquia_id', key: 'parroquia', type: 'select'},
+            {id: '#paciente-pais_id', key: 'nacionalidad', type: 'select'},
+            {id: '#select2-paciente-id_procedencia-container', key: 'idProcedencia', type: 'selectText'},
+            {id: '#select2-paciente-referido_id-container', key: 'idReferido', type: 'selectText'}
         ];
 
         fields.forEach(({id, key, type}) => {
@@ -716,6 +676,11 @@
                 console.info(`Campo ${key} no encontrado o no es obligatorio.`);
             }
         });
+        // Procesar apellidos y nombres en campos separados
+        modalData.lname = modalData.apellidos.split(' ')[0] || '';
+        modalData.lname2 = modalData.apellidos.split(' ')[1] || '';
+        modalData.fname = modalData.nombres.split(' ')[0] || '';
+        modalData.mname = modalData.nombres.split(' ')[1] || '';
 
         console.log('Listeners para cambios en campos relevantes configurados.');
     }
