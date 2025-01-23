@@ -24,9 +24,9 @@
     "text": "DEPÓSITOS LIPÍDICOS AMARILLOS EN LA RETINA"
   },
   {
-    "id": "exudados_algodonosos",
-    "label": "Exudados Algodonosos",
-    "text": "ÁREAS BLANCAS Y SUAVES EN LA RETINA DEBIDO A ISQUEMIA"
+    "id": "toxo",
+    "label": "Toxo",
+    "text": "Se observa una cicatriz coriorretiniana en la región posterior de la retina, con hipopigmentación y pérdida de la arquitectura del epitelio pigmentario de la retina (EPR). Los márgenes son bien definidos, con leve engrosamiento en el EPR circundante. No hay hemorragias ni exudados en la zona afectada, y la retina circundante está intacta, sin signos de edema o neovascularización. La papila óptica y los vasos retinianos están normales."
   },
   {
     "id": "neovascularizacion",
