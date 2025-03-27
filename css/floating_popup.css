@@ -7,11 +7,14 @@
     right: -300px; /* Oculto fuera de la pantalla */
     width: 300px;
     height: 50%; /* Ajuste de altura */
-    background-color: white;
+    background-color: rgba(240, 248, 255, 0.95);
+    backdrop-filter: blur(10px);
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
     transition: right 0.3s ease;
     z-index: 1051; /* Asegurar que esté por encima del modal */
     overflow-y: auto;
+    border-radius: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #floatingPopup.active {
@@ -21,6 +24,7 @@
 /* Estilos del contenido del popup */
 .popup-content {
     padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .popup-header {
@@ -29,6 +33,9 @@
     align-items: center;
     font-size: 1.2em;
     margin-bottom: 20px;
+    font-weight: bold;
+    background: linear-gradient(to right, #007bff, #66b2ff); color: white; border-bottom: none;
+    padding-bottom: 10px;
 }
 
 .popup-close-btn {
@@ -36,6 +43,7 @@
     border: none;
     font-size: 1.2em;
     cursor: pointer;
+    color: white;
 }
 
 .popup-item {
@@ -44,6 +52,12 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    transition: background-color 0.2s ease;
+    border-radius: 8px;
+}
+
+.popup-item:hover {
+    background-color: #d0e8ff;
 }
 
 .popup-item i {
@@ -67,6 +81,16 @@
 
 .grid-item {
     cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 12px;
+    background-color: #e6f2ff;
+}
+
+.grid-item:hover {
+    background-color: #cce6ff;
+    border-color: #66b2ff;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
 }
 
 .card {
