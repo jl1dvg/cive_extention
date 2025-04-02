@@ -42,4 +42,12 @@ window.addEventListener("load", () => {
     } else {
         console.warn("⚠️ detectarInsumosPaciente no está definida.");
     }
+
+    // Ejecutar detección de admisión si la función existe
+    if (window.inicializarDeteccionModalAdmision) {
+        console.log("🟢 inicializarDeteccionModalAdmision disponible. Iniciando...");
+        window.inicializarDeteccionModalAdmision();
+    } else {
+        console.warn("⚠️ inicializarDeteccionModalAdmision no está definida.");
+    }
 });

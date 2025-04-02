@@ -1,3 +1,43 @@
+window.inicializarDeteccionModalAdmision = () => {
+    console.log("🟢 Esperando clic en el botón + para cargar el modal...");
+
+    document.querySelectorAll('a[role="modal-remote"] .glyphicon-plus').forEach(iconoPlus => {
+        const btnPlus = iconoPlus.closest('a');
+        if (btnPlus) {
+            btnPlus.addEventListener("click", (e) => {
+                console.log("➕ Botón plus clickeado. Esperando modal...");
+
+                let intentos = 0;
+                const maxIntentos = 10;
+
+                const esperarModal = setInterval(() => {
+                    const modal = document.querySelector('.modal.show, .modal[style*="display: block"], .modal[aria-hidden="false"]');
+
+                    if (modal) {
+                        clearInterval(esperarModal);
+                        console.log("✅ Modal detectado. Inicializando lógica...");
+
+                        // Ejecutar tus funciones solo una vez que el modal esté visible
+                        inicializarFormularioAdmision();
+
+                    } else {
+                        intentos++;
+                        if (intentos >= maxIntentos) {
+                            console.warn("❌ No se detectó el modal después de varios intentos.");
+                            clearInterval(esperarModal);
+                        }
+                    }
+                }, 500);
+            });
+        }
+    });
+};
+
+// Ejecutar al cargar la página
+window.addEventListener('DOMContentLoaded', () => {
+    inicializarDeteccionModalAdmision();
+});
+
 // Inicializamos modalData con los campos del formulario principal y del modal
 let modalData = {
     sede: '',
@@ -93,7 +133,7 @@ function registrarCambiosEnCampos() {
                 });
             }
         } else {
-            //console.info(`Campo ${key} no encontrado o no es obligatorio.`);
+            console.info(`Campo ${key} no encontrado o no es obligatorio.`);
         }
     });
     // Procesar apellidos y nombres en campos separados
@@ -102,7 +142,7 @@ function registrarCambiosEnCampos() {
     modalData.fname = modalData.nombres.split(' ')[0] || '';
     modalData.mname = modalData.nombres.split(' ')[1] || '';
 
-    //console.log('Listeners para cambios en campos relevantes configurados.');
+    console.log('Listeners para cambios en campos relevantes configurados.');
 }
 
 // Extraer datos de la tabla de procedimientos
@@ -132,14 +172,14 @@ function extractTableRowData() {
     if (rowData.length > 0) {
         modalData.procedimientos = rowData; // Solo actualiza si hay datos válidos
     } else {
-        //console.warn('No se encontraron datos válidos en la tabla.');
+        console.warn('No se encontraron datos válidos en la tabla.');
     }
-    //console.log('Datos extraídos de la tabla:', rowData);
+    console.log('Datos extraídos de la tabla:', rowData);
 }
 
 // Extraer datos de diagnósticos
 function extractDiagnosticosData() {
-    //console.group('Extracción de datos de diagnósticos');
+    console.group('Extracción de datos de diagnósticos');
     const rows = document.querySelectorAll('#diagnosticosconsultaexterna .multiple-input-list tbody tr');
     const diagnosticosData = [];
 
@@ -151,7 +191,7 @@ function extractDiagnosticosData() {
 
         // Agregar solo si hay información válida
         if ((diagnostico || ojoId || evidencia) && diagnostico !== 'SELECCIONE') {
-            //console.log(`Fila ${index}:`, {diagnostico, ojoId, evidencia});
+            console.log(`Fila ${index}:`, {diagnostico, ojoId, evidencia});
 
             diagnosticosData.push({
                 diagnostico,
@@ -164,9 +204,9 @@ function extractDiagnosticosData() {
     if (diagnosticosData.length > 0) {
         modalData.diagnosticos = diagnosticosData; // Solo actualiza si hay datos válidos
     } else {
-        //console.warn('No se encontraron datos válidos en la tabla.');
+        console.warn('No se encontraron datos válidos en la tabla.');
     }
-    //console.log('Datos extraídos de la tabla:', diagnosticosData);
+    console.log('Datos extraídos de la tabla:', diagnosticosData);
 }
 
 function attachSaveButtonListener() {
@@ -179,13 +219,13 @@ function attachSaveButtonListener() {
                 // Elimina cualquier listener previo antes de asignar uno nuevo
                 botonGuardar.removeEventListener('click', handleSaveButtonClick);
                 botonGuardar.addEventListener('click', handleSaveButtonClick);
-                //console.log('Evento asignado al botón guardar.');
+                console.log('Evento asignado al botón guardar.');
             }
         } else {
-            //console.log('Formulario no relevante, no se asignará evento al botón guardar.');
+            console.log('Formulario no relevante, no se asignará evento al botón guardar.');
         }
     } else {
-        //console.error('El modal especificado no contiene el botón guardar.');
+        console.error('El modal especificado no contiene el botón guardar.');
     }
 }
 
@@ -196,28 +236,39 @@ function handleSaveButtonClick(event) {
     extraerDatosYEnviarDesdeModal();
 }
 
+function descargarDatosComoArchivo(data, nombreArchivo = 'datos_modal.json') {
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nombreArchivo;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
 // Extraer y enviar datos desde el modal
 function extraerDatosYEnviarDesdeModal() {
     if (isSubmitting) return; // Prevent multiple submissions
     isSubmitting = true;
-    // Extraer datos de la tabla antes de enviar
-    extractTableRowData();
-    extractDiagnosticosData();
 
     // Verificar y mostrar en consola el estado de los campos
     Object.entries(modalData).forEach(([key, value]) => {
         if (value) {
-            //console.log(`${key} detectado:`, value);
+            console.log(`${key} detectado:`, value);
         } else {
-            //console.info(`${key} está vacío pero puede ser opcional.`);
+            console.info(`${key} está vacío pero puede ser opcional.`);
         }
     });
 
     // Mostrar los datos en la consola para verificación
-    //console.log('Datos extraídos del modal:', modalData);
+    console.log('Datos extraídos del modal:', modalData);
 
     // URL de la API para enviar los datos
     const url = 'https://cive.consulmed.me/interface/formulario_datos_modal.php';
+    descargarDatosComoArchivo(modalData); // 👈 Esto genera el archivo .json
 
     // Enviar los datos al backend usando fetch
     fetch(url, {
@@ -231,43 +282,20 @@ function extraerDatosYEnviarDesdeModal() {
         })
         .then((result) => {
             if (result.success) {
-                //console.log('Datos enviados correctamente desde el modal.');
+                console.log('Datos enviados correctamente desde el modal.');
             } else {
-                //console.error('Error en la API:', result.message);
+                console.error('Error en la API:', result.message);
             }
         })
         .catch((error) => {
-            //console.error('Error al enviar los datos desde el modal:', error);
+            console.error('Error al enviar los datos desde el modal:', error);
         })
         .finally(() => {
             isSubmitting = false; // Reset flag after operation completes
         });
 }
 
-// Configurar el MutationObserver para capturar campos dinámicos en el modal
-const modal = document.getElementById('ajaxCrudModal');
-if (modal) {
-    const observer = new MutationObserver((mutationsList) => {
-        for (const mutation of mutationsList) {
-            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                attachSaveButtonListener(); // Attach save button listener when modal is updated
-                registrarCambiosEnCampos(); // Track changes in fields
-                extractTableRowData();
-                extractDiagnosticosData();
-                break; // Avoid processing further mutations in this cycle
-            }
-        }
-    });
-
-    observer.observe(modal, {
-        childList: true, subtree: true
-    });
-
-    //console.log('Observando el modal para cambios y eventos de guardado...');
-} else {
-    //console.log('Modal no encontrado.');
+function inicializarFormularioAdmision() {
+    registrarCambiosEnCampos(); // Captura en tiempo real lo que se llena
+    attachSaveButtonListener(); // La extracción final se hace al hacer clic en guardar
 }
-
-// Hacer disponible la función en `window`
-window.registrarCambiosEnCampos = registrarCambiosEnCampos;
-window.extraerDatosYEnviarDesdeModal = extraerDatosYEnviarDesdeModal;

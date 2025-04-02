@@ -162,9 +162,16 @@ function mostrarAlertaInsumos(insumos) {
         if (result.isConfirmed) {
             console.log("✅ El usuario aceptó agregar los nuevos insumos.");
 
+            // Agregar Equipos
             agregarInsumosATabla(nuevosEquipos.length, async () => {
                 await completarDatosEquipos(nuevosEquipos);
-                Swal.fire("Agregado", "Los insumos fueron añadidos correctamente.", "success");
+                console.log("✅ Equipos agregados correctamente.");
+            });
+
+            // Agregar Anestesia
+            agregarAnestesiaATabla(insumos.anestesia.length, async () => {
+                await completarDatosAnestesia(insumos.anestesia);
+                console.log("✅ Anestesia agregada correctamente.");
             });
         } else {
             console.log("❌ El usuario canceló la acción.");
@@ -200,22 +207,51 @@ function agregarInsumosATabla(cantidad, callback) {
     }, 400); // tiempo ajustable
 }
 
+function agregarAnestesiaATabla(cantidad, callback) {
+    const botonAgregar = document.querySelector("#seriales-input-anestesia .js-input-plus");
+
+    if (!botonAgregar) {
+        console.warn("⚠️ No se encontró el botón '+' para agregar anestesia.");
+        return;
+    }
+
+    console.log(`➕ Haciendo clic en el botón '+' de anestesia ${cantidad} veces...`);
+
+    let clicksRealizados = 0;
+    const interval = setInterval(() => {
+        if (clicksRealizados < cantidad) {
+            botonAgregar.click();
+            clicksRealizados++;
+        } else {
+            clearInterval(interval);
+            console.log("🎯 Todos los insumos de anestesia han sido agregados.");
+
+            if (callback && typeof callback === "function") {
+                setTimeout(callback, 500); // Espera a que se rendericen las filas
+            }
+        }
+    }, 400);
+}
+
 async function completarDatosEquipos(equipos) {
     console.log("🧠 Completando datos de equipos en la tabla...");
 
+    const filasExistentes = document.querySelectorAll("#seriales-input-derecho .multiple-input-list__item").length;
+    let filaDestino = filasExistentes - equipos.length;
+
     for (let index = 0; index < equipos.length; index++) {
-        const equipo = equipos[index];
+        const filaActual = filaDestino + index;
 
         // Validación defensiva
-        if (!equipo || typeof equipo.nombre !== 'string' || equipo.nombre.trim() === '') {
-            console.warn(`⚠️ El equipo en la fila ${index + 1} no tiene nombre válido:`, equipo);
+        if (!equipos[index] || typeof equipos[index].nombre !== 'string' || equipos[index].nombre.trim() === '') {
+            console.warn(`⚠️ El equipo en la fila ${index + 1} no tiene nombre válido:`, equipos[index]);
             continue;
         }
 
-        const nombre = equipo.nombre.trim().toUpperCase();
+        const nombre = equipos[index].nombre.trim().toUpperCase();
         console.log(`🧾 Preparando búsqueda para "${nombre}"`);
 
-        const select2ContainerId = `#select2-hccirugiahospitalizacion-derechos-${index}-derecho-container`;
+        const select2ContainerId = `#select2-hccirugiahospitalizacion-derechos-${filaActual}-derecho-container`;
 
         try {
             console.log(`🔍 Buscando y seleccionando "${nombre}" en fila ${index + 1}...`);
@@ -225,6 +261,33 @@ async function completarDatosEquipos(equipos) {
             console.log(`✅ "${nombre}" seleccionado correctamente`);
         } catch (error) {
             console.error(`❌ Error al seleccionar "${nombre}" en la fila ${index + 1}:`, error);
+        }
+    }
+}
+
+async function completarDatosAnestesia(anestesiaArray) {
+    console.log("🧠 Completando datos de anestesia en la tabla...");
+
+    for (let index = 0; index < anestesiaArray.length; index++) {
+        const item = anestesiaArray[index];
+
+        if (!item || typeof item.nombre !== 'string' || item.nombre.trim() === '') {
+            console.warn(`⚠️ El insumo de anestesia en la fila ${index + 1} no tiene nombre válido:`, item);
+            continue;
+        }
+
+        const nombre = item.nombre.trim().toUpperCase();
+        console.log(`🧾 Preparando búsqueda para anestesia "${nombre}" en fila ${index + 1}...`);
+
+        const select2ContainerId = `#select2-hccirugiahospitalizacion-anestesia-${index}-anestesia-container`;
+
+        try {
+            await hacerClickEnSelect2(select2ContainerId);
+            await escribirEnCampoBusqueda(nombre);
+            await seleccionarOpcion();
+            console.log(`✅ "${nombre}" seleccionado correctamente en anestesia`);
+        } catch (error) {
+            console.error(`❌ Error al seleccionar anestesia "${nombre}" en la fila ${index + 1}:`, error);
         }
     }
 }
