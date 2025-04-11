@@ -19,6 +19,14 @@
   "background": {
     "service_worker": "background.js"
   },
+  "commands": {
+    "ejecutar-examen-directo": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E"
+      },
+      "description": "Ejecutar examen con ID predefinido"
+    }
+  },
   "action": {
     "default_icon": "icon.png"
   },

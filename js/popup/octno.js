@@ -1,3 +1,4 @@
+document.getElementById('inputOD').focus();
 document.getElementById('btnAceptar').addEventListener('click', () => {
     const inputOD = document.getElementById('inputOD');
     const inputOI = document.getElementById('inputOI');

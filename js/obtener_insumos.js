@@ -60,13 +60,10 @@ function enviarDatosAPI(idSolicitud, hcNumber) {
     console.log("📡 Enviando datos al API...");
 
     fetch("https://cive.consulmed.me/interface/obtener_insumos.php", {
-        method: "POST",
-        headers: {
+        method: "POST", headers: {
             "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            hcNumber: hcNumber,
-            form_id: idSolicitud
+        }, body: JSON.stringify({
+            hcNumber: hcNumber, form_id: idSolicitud
         })
     })
         .then(response => response.json())
@@ -87,10 +84,7 @@ function enviarDatosAPI(idSolicitud, hcNumber) {
             } else {
                 console.warn("⚠️ Error en la respuesta del API:", data.message);
                 Swal.fire({
-                    icon: "error",
-                    title: "Error en la consulta",
-                    text: data.message,
-                    confirmButtonText: "Cerrar"
+                    icon: "error", title: "Error en la consulta", text: data.message, confirmButtonText: "Cerrar"
                 });
             }
         })
@@ -108,7 +102,7 @@ function enviarDatosAPI(idSolicitud, hcNumber) {
 // 🔍 Obtener nombres de la tabla actual (columna "Nombre")
 function obtenerNombresTabla() {
     const nombres = [];
-    document.querySelectorAll('.list-cell__derecho .select2-selection__rendered').forEach(span => {
+    document.querySelectorAll('[id^="select2-hccirugiahospitalizacion-derechos-"][id$="-derecho-container"]').forEach(span => {
         const texto = span.textContent.trim().toUpperCase();
         const nombre = texto.split(" - ")[0]; // Tomar solo el código/nombre
         if (nombre) nombres.push(nombre);
@@ -121,12 +115,54 @@ function mostrarAlertaInsumos(insumos) {
     const nombresTabla = obtenerNombresTabla();
     console.log("📋 Nombres existentes en la tabla:", nombresTabla);
 
+    const nombresAnestesiaTabla = [];
+    document.querySelectorAll('[id^="select2-hccirugiahospitalizacion-insumos-"][id$="-insumo-container"]').forEach(span => {
+        const texto = span.textContent.trim().toUpperCase();
+        const nombre = texto.split(" - ")[0]; // Extraer parte útil si tiene formato "código - descripción"
+        if (nombre) nombresAnestesiaTabla.push(nombre);
+    });
+    console.log("📋 Nombres de anestesia ya en la tabla:", nombresAnestesiaTabla);
+
     const nuevosEquipos = (insumos.equipos || []).filter(equipo => {
-        const nombreAPI = equipo.nombre.trim().toUpperCase();
-        const yaExiste = nombresTabla.some(nombreTabla => nombreAPI.startsWith(nombreTabla));
-        console.log(`🔍 Comparando: "${nombreAPI}" con [${nombresTabla.join(", ")}] → ${yaExiste ? "❌ Ya existe" : "✅ Nuevo"}`);
+        if (!equipo.codigo) return false; // Solo contar si tiene código
+        const codigoAPI = equipo.codigo.trim().toUpperCase();
+        const yaExiste = nombresTabla.includes(codigoAPI);
+        console.log(`🔍 Comparando: "${codigoAPI}" con [${nombresTabla.join(", ")}] → ${yaExiste ? "❌ Ya existe" : "✅ Nuevo"}`);
         return !yaExiste;
     });
+
+    // 🔄 Combinar anestesia y quirúrgicos por código y sumar cantidades
+    const mapInsumos = new Map();
+    const insumosCombinados = [...(insumos.anestesia || []), ...(insumos.quirurgicos || [])];
+
+    insumosCombinados.forEach(item => {
+        if (!item.codigo) return; // Solo contar si tiene código
+        const codigo = item.codigo.trim().toUpperCase();
+        const cantidad = parseInt(item.cantidad) || 0;
+
+        if (mapInsumos.has(codigo)) {
+            mapInsumos.get(codigo).cantidad += cantidad;
+        } else {
+            mapInsumos.set(codigo, {
+                ...item, codigo, cantidad
+            });
+        }
+    });
+
+    const insumosUnificados = Array.from(mapInsumos.values());
+
+    // 📋 Obtener códigos existentes en la tabla de insumos
+    const codigosTablaAnestesia = [];
+    document.querySelectorAll('[id^="select2-hccirugiahospitalizacion-insumos-"][id$="-insumo-container"]').forEach(span => {
+        const texto = span.textContent.trim().toUpperCase();
+        const codigo = texto.split(" - ")[0]; // Asumimos que inicia con el código
+        if (codigo) codigosTablaAnestesia.push(codigo);
+    });
+
+    // 🔍 Filtrar solo los nuevos insumos (no repetidos)
+    const insumosNuevos = insumosUnificados.filter(item => !codigosTablaAnestesia.includes(item.codigo));
+    console.log("📋 Códigos ya en la tabla de anestesia:", codigosTablaAnestesia);
+    console.log("🆕 Insumos (anestesia + quirúrgicos) a insertar:", insumosNuevos.map(i => `${i.codigo} (${i.cantidad})`));
 
     console.log("🆕 Equipos nuevos a insertar:", nuevosEquipos.map(e => e.nombre));
 
@@ -134,18 +170,15 @@ function mostrarAlertaInsumos(insumos) {
     if (nuevosEquipos.length > 0) {
         mensaje += `<strong>Equipos nuevos:</strong> ${nuevosEquipos.length} elementos<br>`;
     }
-    if (insumos.anestesia?.length > 0) {
-        mensaje += `<strong>Anestesia:</strong> ${insumos.anestesia.length} elementos<br>`;
-    }
-    if (insumos.quirurgicos?.length > 0) {
-        mensaje += `<strong>Quirúrgicos:</strong> ${insumos.quirurgicos.length} elementos<br>`;
+    if (insumosNuevos.length > 0) {
+        mensaje += `<strong>Anestesia/Quirúrgicos nuevos:</strong> ${insumosNuevos.length} elementos<br>`;
     }
 
-    if (nuevosEquipos.length === 0) {
+    if (nuevosEquipos.length === 0 && insumosNuevos.length === 0) {
         Swal.fire({
             icon: "info",
             title: "Insumos ya existentes",
-            text: "Todos los equipos ya están presentes en la tabla.",
+            text: "Todos los equipos y anestesias ya están presentes en la tabla.",
             confirmButtonText: "Aceptar"
         });
         return;
@@ -169,9 +202,9 @@ function mostrarAlertaInsumos(insumos) {
             });
 
             // Agregar Anestesia
-            agregarAnestesiaATabla(insumos.anestesia.length, async () => {
-                await completarDatosAnestesia(insumos.anestesia);
-                console.log("✅ Anestesia agregada correctamente.");
+            agregarAnestesiaATabla(insumosNuevos.length, async () => {
+                await completarDatosAnestesia(insumosNuevos);
+                console.log("✅ Anestesia + quirúrgicos agregados correctamente.");
             });
         } else {
             console.log("❌ El usuario canceló la acción.");
@@ -208,7 +241,7 @@ function agregarInsumosATabla(cantidad, callback) {
 }
 
 function agregarAnestesiaATabla(cantidad, callback) {
-    const botonAgregar = document.querySelector("#seriales-input-anestesia .js-input-plus");
+    const botonAgregar = document.querySelector("#seriales-input-insumos .js-input-plus");
 
     if (!botonAgregar) {
         console.warn("⚠️ No se encontró el botón '+' para agregar anestesia.");
@@ -248,7 +281,7 @@ async function completarDatosEquipos(equipos) {
             continue;
         }
 
-        const nombre = equipos[index].nombre.trim().toUpperCase();
+        const nombre = equipos[index].codigo.trim().toUpperCase();
         console.log(`🧾 Preparando búsqueda para "${nombre}"`);
 
         const select2ContainerId = `#select2-hccirugiahospitalizacion-derechos-${filaActual}-derecho-container`;
@@ -267,6 +300,8 @@ async function completarDatosEquipos(equipos) {
 
 async function completarDatosAnestesia(anestesiaArray) {
     console.log("🧠 Completando datos de anestesia en la tabla...");
+    const filasExistentes = document.querySelectorAll("#seriales-input-insumos .multiple-input-list__item").length;
+    let filaDestino = filasExistentes - anestesiaArray.length;
 
     for (let index = 0; index < anestesiaArray.length; index++) {
         const item = anestesiaArray[index];
@@ -276,15 +311,53 @@ async function completarDatosAnestesia(anestesiaArray) {
             continue;
         }
 
-        const nombre = item.nombre.trim().toUpperCase();
+        const nombre = item.codigo.trim().toUpperCase();
         console.log(`🧾 Preparando búsqueda para anestesia "${nombre}" en fila ${index + 1}...`);
 
-        const select2ContainerId = `#select2-hccirugiahospitalizacion-anestesia-${index}-anestesia-container`;
+        const filaActual = filaDestino + index;
+        const select2ContainerId = `#select2-hccirugiahospitalizacion-insumos-${filaActual}-insumo-container`;
+        // 🏪 Establecer almacén antes de seleccionar insumo
+        const almacenSelect = document.querySelector(`#hccirugiahospitalizacion-insumos-${filaActual}-almacen_id`);
+        if (almacenSelect) {
+            // Simula clic en el Select2 para asegurar que las opciones estén visibles
+            const almacenSelectContainer = `#select2-hccirugiahospitalizacion-insumos-${filaActual}-almacen_id-container`;
+            try {
+                await hacerClickEnSelect2(almacenSelectContainer);
+                await escribirEnCampoBusqueda("FACT ADMISION");
+                await seleccionarOpcion();
+            } catch (error) {
+                console.warn(`⚠️ No se pudo abrir el select de almacén en fila ${filaActual}:`, error);
+            }
+
+            // Espera breve antes de acceder a las opciones del select
+            await new Promise(r => setTimeout(r, 300));
+
+            const option = Array.from(almacenSelect.options).find(opt => opt.textContent.trim().toUpperCase() === 'FACT ADMISION');
+            if (option) {
+                almacenSelect.value = option.value;
+                const changeEvent = new Event("change", {bubbles: true});
+                almacenSelect.dispatchEvent(changeEvent);
+                console.log(`🏪 Almacén "FACT ADMISION" seleccionado para fila ${filaActual}`);
+            } else {
+                console.warn(`⚠️ No se encontró opción "FACT ADMISION" para la fila ${filaActual}`);
+            }
+        } else {
+            console.warn(`⚠️ No se encontró el select de almacén para la fila ${filaActual}`);
+        }
 
         try {
             await hacerClickEnSelect2(select2ContainerId);
             await escribirEnCampoBusqueda(nombre);
             await seleccionarOpcion();
+            const inputCantidad = document.querySelector(`#hccirugiahospitalizacion-insumos-${filaActual}-cantidad-insumos`);
+            if (inputCantidad) {
+                inputCantidad.value = item.cantidad;
+                const eventChange = new Event("change", {bubbles: true});
+                inputCantidad.dispatchEvent(eventChange);
+                console.log(`✏️ Cantidad "${item.cantidad}" establecida en fila ${index + 1}`);
+            } else {
+                console.warn(`⚠️ Campo de cantidad no encontrado para la fila ${index + 1}`);
+            }
             console.log(`✅ "${nombre}" seleccionado correctamente en anestesia`);
         } catch (error) {
             console.error(`❌ Error al seleccionar anestesia "${nombre}" en la fila ${index + 1}:`, error);

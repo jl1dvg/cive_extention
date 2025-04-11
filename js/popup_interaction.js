@@ -236,3 +236,9 @@ function ejecutarReceta(id) {
         })
         .catch(error => console.error('Error en la ejecución de receta:', error));
 }
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "ejecutarExamenDirecto" && message.examenId) {
+        ejecutarExamenes(message.examenId);
+    }
+});

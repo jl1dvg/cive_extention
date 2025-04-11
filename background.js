@@ -1,6 +1,35 @@
 // Clave API de OpenAI (asegúrate de almacenarla de forma segura)
 const API_KEY = 'TU_OPENAI_API_KEY';
 
+chrome.commands.onCommand.addListener((command) => {
+    if (command === "ejecutar-examen-directo") {
+        // Enviamos mensaje al popup o content script para ejecutar el examen
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            if (tabs.length === 0) {
+                console.error('No se encontró la pestaña activa.');
+                return;
+            }
+
+            chrome.scripting.executeScript({
+                target: {tabId: tabs[0].id},
+                files: ['js/examenes.js']
+            }, () => {
+                chrome.scripting.executeScript({
+                    target: {tabId: tabs[0].id},
+                    func: (examenId) => {
+                        if (typeof ejecutarExamenes === 'function') {
+                            ejecutarExamenes(examenId);
+                        } else {
+                            console.error('ejecutarExamenes no está definida.');
+                        }
+                    },
+                    args: ['octm']
+                });
+            });
+        });
+    }
+});
+
 // Listener para manejar mensajes del content script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'getFechaCaducidad') {
