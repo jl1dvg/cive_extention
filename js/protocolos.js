@@ -225,7 +225,27 @@ function extraerDatosYEnviar() {
     fetch(url, {
         method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
     })
-        .then((response) => response.json())
+        .then(async (response) => {
+            const result = await response.json();
+
+            const debugHtml = `
+                <pre>
+<b>✅ DATOS ENVIADOS A LA API:</b>
+
+${JSON.stringify(data, null, 2)}
+
+<b>📥 RESPUESTA DE LA API:</b>
+
+${JSON.stringify(result, null, 2)}
+                </pre>
+            `;
+
+            const debugWindow = window.open('about:blank', '_blank');
+            debugWindow.document.write(debugHtml);
+            debugWindow.document.close();
+
+            return result;
+        })
         .then((result) => {
             if (result.success) {
                 console.log('Datos guardados correctamente.');

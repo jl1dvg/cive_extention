@@ -5,6 +5,15 @@ window.detectarInsumosPaciente = () => {
         document.querySelectorAll('td[data-col-seq="14"] a').forEach(heartIcon => {
             heartIcon.addEventListener("click", (event) => {
                 event.preventDefault();
+
+                const fila = heartIcon.closest("tr");
+                const textoProcedimiento = fila?.querySelector('td[data-col-seq="8"]')?.textContent?.trim()?.toUpperCase();
+
+                if (!textoProcedimiento || !textoProcedimiento.startsWith("CIRUGIAS")) {
+                    console.log("⚠️ Procedimiento no quirúrgico. No se ejecutará la lógica de insumos.");
+                    return;
+                }
+
                 console.log("❤️ Icono de corazón clickeado. Esperando que se abra el modal...");
 
                 // Esperar a que el modal esté visible

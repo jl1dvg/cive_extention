@@ -78,13 +78,20 @@
             hcNumber, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id
         };
 
+        // window.open('about:blank', '_blank').document.write('<pre>Enviando a API:\n' + JSON.stringify(data, null, 2) + '</pre>');
+
         fetch(url, {
             method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
         })
             .then(response => response.json())
             .then(data => {
+                console.log('Respuesta del servidor:', data);
                 if (data.success) {
-                    console.log('Datos guardados correctamente.');
+                    console.log('✅ Datos guardados correctamente.');
+                } else if (data.debug) {
+                    console.log('🛠 Datos recibidos en modo depuración:', data.recibido);
+                } else {
+                    console.warn('⚠️ Respuesta sin éxito:', data.message || data);
                 }
             })
             .catch(error => {
