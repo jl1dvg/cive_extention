@@ -86,7 +86,7 @@ function cargarRecetas() {
 // Función para cargar los protocolos desde la API
 function cargarProtocolos() {
     console.log('Intentando cargar procedimientos...');
-    const apiUrl = 'https://cive.consulmed.me/api/obtener_procedimientos.php'; // Cambia esto a la URL de tu API
+    const apiUrl = 'https://asistentecive.consulmed.me/api/procedimientos/listar.php'; // Cambia esto a la URL de tu API
 
     fetch(apiUrl)
         .then(response => {
@@ -127,7 +127,7 @@ function mostrarProcedimientosPorCategoria(procedimientos) {
 
 // Función para ejecutar los protocolos según el ID del procedimiento
 function ejecutarProtocolos(id) {
-    const apiUrl = 'https://cive.consulmed.me/api/obtener_procedimientos.php'; // URL de la API
+    const apiUrl = 'https://asistentecive.consulmed.me/api/procedimientos/listar.php'; // URL de la API
 
     fetch(apiUrl)
         .then(response => {

@@ -35,6 +35,22 @@ window.addEventListener("load", () => {
         console.warn("⚠️ extraerDatosYEnviar no está definida en el contexto global.");
     }
 
+    // Asegurar que la función existe antes de asignar el evento al botón
+    if (window.extraerDatosSolicitudYEnviar) {
+        console.log("extraerDatosSolicitudYEnviar disponible, esperando interacción del usuario.");
+
+        const botonGuardar = document.querySelector("#botonGuardar");
+        if (botonGuardar) {
+            botonGuardar.addEventListener("click", (e) => {
+                e.preventDefault();
+                console.log("Botón 'Guardar Toda la Consulta' presionado. Enviando datos...");
+                window.extraerDatosSolicitudYEnviar(botonGuardar); // <== AQUÍ
+            });
+        }
+    } else {
+        console.warn("⚠️ extraerDatosSolicitudYEnviar no está definida en el contexto global."); // <== CORREGIDO
+    }
+
     // Ejecutar detección de insumos si la función existe
     if (window.detectarInsumosPaciente) {
         console.log("🟢 detectInsumosPaciente disponible. Iniciando...");

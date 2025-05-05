@@ -9,7 +9,7 @@ function extraerDatosYEnviar() {
 
     // Determinar el URL según el tipo de formato
     const isProtocoloQuirurgico = document.querySelector('#consultasubsecuente-membrete') !== null;
-    const url = isProtocoloQuirurgico ? 'https://cive.consulmed.me/interface/protocolos_datos.php' : 'https://cive.consulmed.me/interface/datos_consulta.php';
+    const url = isProtocoloQuirurgico ? 'https://asistentecive.consulmed.me/api/protocolos/guardar.php' : 'https://asistentecive.consulmed.me/api/consultas/guardar.php';
 
     if (isProtocoloQuirurgico) {
         // Extraer datos para protocolo quirúrgico
@@ -223,38 +223,35 @@ function extraerDatosYEnviar() {
     // Enviar los datos al backend
     console.log('Datos a enviar:', data);
     fetch(url, {
-        method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
     })
         .then(async (response) => {
-            const result = await response.json();
+            const raw = await response.text();
+            console.group('%c📤 Envío a API', 'color: green; font-weight: bold;');
+            console.log('✅ Datos enviados:', data);
+            console.log('📥 Respuesta RAW:', raw);
+            console.groupEnd();
 
-            const debugHtml = `
-                <pre>
-<b>✅ DATOS ENVIADOS A LA API:</b>
-
-${JSON.stringify(data, null, 2)}
-
-<b>📥 RESPUESTA DE LA API:</b>
-
-${JSON.stringify(result, null, 2)}
-                </pre>
-            `;
-
-            const debugWindow = window.open('about:blank', '_blank');
-            debugWindow.document.write(debugHtml);
-            debugWindow.document.close();
-
-            return result;
+            try {
+                const json = JSON.parse(raw);
+                console.log('📥 Respuesta JSON parseada:', json);
+                return json;
+            } catch (e) {
+                console.error('❌ Error al parsear JSON:', e, raw);
+                throw e;
+            }
         })
         .then((result) => {
             if (result.success) {
-                console.log('Datos guardados correctamente.');
+                console.log('✅ Datos guardados correctamente.');
             } else {
-                console.error('Error:', result.message);
+                console.error('❌ Error en respuesta:', result.message);
             }
         })
         .catch((error) => {
-            console.error('Error al enviar los datos:', error);
+            console.error('❌ Error al enviar los datos:', error);
         });
 }
 

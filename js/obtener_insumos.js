@@ -68,7 +68,7 @@ window.detectarInsumosPaciente = () => {
 function enviarDatosAPI(idSolicitud, hcNumber) {
     console.log("📡 Enviando datos al API...");
 
-    fetch("https://cive.consulmed.me/interface/obtener_insumos.php", {
+    fetch("https://asistentecive.consulmed.me/api/insumos/obtener.php", {
         method: "POST", headers: {
             "Content-Type": "application/json"
         }, body: JSON.stringify({

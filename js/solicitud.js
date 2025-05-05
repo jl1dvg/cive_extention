@@ -1,20 +1,24 @@
-// Función principal para añadir el evento de clic al botón de guardar
+// Función principal para añadir el evento de clic a los botones de guardar
 function agregarEventoGuardar() {
-    const btnGuardar = document.getElementById('interconsulta-btn-guardar');
+    console.log("agregarEventoGuardar ejecutado");
+    const botones = [
+        document.getElementById('interconsulta-btn-guardar'),
+        document.getElementById('botonGuardar')
+    ];
 
-    if (btnGuardar) {
-        // Prevenir duplicados de eventos
-        if (!btnGuardar.classList.contains('evento-agregado')) {
+    botones.forEach((btnGuardar) => {
+        if (btnGuardar && !btnGuardar.classList.contains('evento-agregado')) {
+            console.log(`Asignando evento a: ${btnGuardar.id}`);
             btnGuardar.classList.add('evento-agregado');
             btnGuardar.addEventListener('click', function (e) {
                 e.preventDefault(); // Prevenir envío automático
-                console.log('Botón clicado, iniciando extracción de datos...'); // Confirmación en la consola
-                extraerDatosSolicitudYEnviar(btnGuardar); // Llamada a la función de extracción y envío
+                console.log(`Botón "${btnGuardar.id}" clicado, iniciando extracción de datos...`);
+                extraerDatosSolicitudYEnviar(btnGuardar);
             });
+        } else {
+            console.log(`Botón no encontrado o ya tiene evento: ${btnGuardar?.id}`);
         }
-    } //else {
-    //console.log('Botón interconsulta-btn-guardar no encontrado en la página.');
-    //}
+    });
 }
 
 // Observador para detectar cambios en el DOM (por si el botón se carga dinámicamente)
@@ -26,7 +30,7 @@ document.addEventListener('DOMContentLoaded', agregarEventoGuardar);
 
 // Función de extracción y envío de datos
 function extraerDatosSolicitudYEnviar(btnGuardar) {
-    const url = 'https://cive.consulmed.me/interface/solicitud_procedimiento.php';
+    const url = 'https://asistentecive.consulmed.me/api/solicitudes/guardar.php';
     const data = {};
 
     const div = document.querySelector('.media-body.responsive');
@@ -81,11 +85,19 @@ function extraerDatosSolicitudYEnviar(btnGuardar) {
     // Desactivar el botón mientras se envían los datos
     if (btnGuardar) btnGuardar.disabled = true;
 
-    console.log('Datos a enviar:', data); // Verificar los datos antes de enviar
     fetch(url, {
         method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
     })
-        .then((response) => response.json())
+        .then(async (response) => {
+            const result = await response.json();
+
+            console.group('%c📤 Envío a API (Solicitud)', 'color: green; font-weight: bold;');
+            console.log('✅ Datos enviados:', data);
+            console.log('📥 Respuesta recibida:', result);
+            console.groupEnd();
+
+            return result;
+        })
         .then((result) => {
             if (result.success) {
                 console.log('Datos guardados correctamente.');
@@ -100,3 +112,6 @@ function extraerDatosSolicitudYEnviar(btnGuardar) {
             if (btnGuardar) btnGuardar.disabled = false; // Reactivar el botón después del envío
         });
 }
+
+// Exponer la función para uso externo (por ejemplo, desde content_script)
+window.extraerDatosSolicitudYEnviar = extraerDatosSolicitudYEnviar;

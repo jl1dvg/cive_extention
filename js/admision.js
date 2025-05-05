@@ -267,7 +267,7 @@ function extraerDatosYEnviarDesdeModal() {
     console.log('Datos extraídos del modal:', modalData);
 
     // URL de la API para enviar los datos
-    const url = 'https://cive.consulmed.me/interface/formulario_datos_modal.php';
+    const url = 'https://asistentecive.consulmed.me/api/prefactura/guardar.php';
     // descargarDatosComoArchivo(modalData); 👈 Esto genera el archivo .json
 
     // Enviar los datos al backend usando fetch

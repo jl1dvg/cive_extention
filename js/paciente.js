@@ -72,26 +72,34 @@
     }
 
     function enviarDatosAHC(hcNumber, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id) {
-        const url = 'https://cive.consulmed.me/interface/guardar_datos.php';
+        const url = 'https://asistentecive.consulmed.me/api/proyecciones/guardar.php';
 
         const data = {
             hcNumber, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id
         };
 
-        // window.open('about:blank', '_blank').document.write('<pre>Enviando a API:\n' + JSON.stringify(data, null, 2) + '</pre>');
+        console.log('📤 Envío a API');
+        console.log('✅ Datos enviados:', data);
 
         fetch(url, {
             method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Respuesta del servidor:', data);
-                if (data.success) {
-                    console.log('✅ Datos guardados correctamente.');
-                } else if (data.debug) {
-                    console.log('🛠 Datos recibidos en modo depuración:', data.recibido);
-                } else {
-                    console.warn('⚠️ Respuesta sin éxito:', data.message || data);
+            .then(response => response.text())
+            .then(raw => {
+                console.log('📥 Respuesta RAW:', raw);
+                try {
+                    const json = JSON.parse(raw);
+                    console.log('📥 Respuesta JSON parseada:', json);
+                    if (json.success) {
+                        console.log('✅ Datos guardados correctamente.');
+                    } else if (json.debug) {
+                        console.log('🛠 Datos recibidos en modo depuración:', json.recibido);
+                    } else {
+                        console.warn('⚠️ Respuesta sin éxito:', json.message || json);
+                    }
+                } catch (e) {
+                    console.error('❌ Error al parsear JSON:', e);
+                    console.log('❌ Respuesta inválida para JSON:', raw);
                 }
             })
             .catch(error => {
