@@ -70,32 +70,19 @@ function extraerDatosProcedimientos() {
     payload.anestesiaTiempo = extraerDatosAnestesiaFormulario();
 
     console.log("📦 Payload completo para enviar:", JSON.stringify(payload, null, 2));
-    // 🔒 Comentado SweetAlert para uso posterior
-    /*
     Swal.fire({
         icon: "question",
-        title: "¿Qué deseas hacer con los procedimientos?",
-        html: `<pre style="text-align:left;font-size:13px">${JSON.stringify(payload, null, 2)}</pre>`,
-        showDenyButton: true,
+        title: "¿Desea descargar la prefactura?",
         showCancelButton: true,
-        confirmButtonText: 'Enviar al API',
-        denyButtonText: 'Exportar a Excel',
+        confirmButtonText: 'Sí, descargar',
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            console.log("📤 Enviando al API con payload completo...");
-            enviarProcedimientosAlAPI(payload);
-        } else if (result.isDenied) {
-            console.log("📄 Exportando a Excel...");
-            // Aquí puedes colocar la función para exportar a Excel
-            exportarProcedimientosAExcel(payload.procedimientos);
+            window.open(`https://asistentecive.consulmed.me/views/billing/descargar_excel.php?form_id=${formId}`, '_blank');
         } else {
-            console.log("❌ Acción cancelada.");
+            console.log("❌ Descarga cancelada.");
         }
     });
-    */
-    console.log("📤 Enviando directamente al API billing...");
-    enviarBillingAlAPI(payload);
 }
 
 // 📦 Extraer datos de oxígeno y retornarlos como array
