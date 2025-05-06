@@ -1,3 +1,4 @@
+window.erroresInsumosNoIngresados = [];
 window.detectarInsumosPaciente = () => {
     console.log("🔍 Módulo obtener_insumos.js cargado. Esperando clic en icono de corazón...");
 
@@ -79,6 +80,8 @@ function enviarDatosAPI(idSolicitud, hcNumber) {
         .then(data => {
             if (data.success) {
                 console.log("✅ Respuesta del API:", data);
+                // Guardar duración en variable global si está disponible
+                window.duracionOxigenoGlobal = data.duracion;
 
                 if (data.insumos && (data.insumos.equipos?.length > 0 || data.insumos.anestesia?.length > 0 || data.insumos.quirurgicos?.length > 0)) {
                     mostrarAlertaInsumos(data.insumos);
@@ -111,9 +114,9 @@ function enviarDatosAPI(idSolicitud, hcNumber) {
 // 🔍 Obtener nombres de la tabla actual (columna "Nombre")
 function obtenerNombresTabla() {
     const nombres = [];
-    document.querySelectorAll('[id^="select2-hccirugiahospitalizacion-derechos-"][id$="-derecho-container"]').forEach(span => {
-        const texto = span.textContent.trim().toUpperCase();
-        const nombre = texto.split(" - ")[0]; // Tomar solo el código/nombre
+    document.querySelectorAll('#seriales-input-insumos td.list-cell__insumo').forEach(td => {
+        const texto = td.textContent.trim().toUpperCase();
+        const nombre = texto.split(" - ")[0];
         if (nombre) nombres.push(nombre);
     });
     return nombres;
@@ -145,7 +148,11 @@ function mostrarAlertaInsumos(insumos) {
     const insumosCombinados = [...(insumos.anestesia || []), ...(insumos.quirurgicos || [])];
 
     insumosCombinados.forEach(item => {
-        if (!item.codigo) return; // Solo contar si tiene código
+        if (!item.codigo) {
+            //console.warn("⚠️ Insumo sin código omitido:", item.nombre || item);
+            return;
+        }
+
         const codigo = item.codigo.trim().toUpperCase();
         const cantidad = parseInt(item.cantidad) || 0;
 
@@ -158,7 +165,8 @@ function mostrarAlertaInsumos(insumos) {
         }
     });
 
-    const insumosUnificados = Array.from(mapInsumos.values());
+    console.log("🔎 Total insumos combinados:", mapInsumos.size);
+    const insumosUnificados = Array.from(mapInsumos.values()).filter(i => i.codigo && i.codigo.trim() !== "");
 
     // 📋 Obtener códigos existentes en la tabla de insumos
     const codigosTablaAnestesia = [];
@@ -200,76 +208,86 @@ function mostrarAlertaInsumos(insumos) {
         showCancelButton: true,
         confirmButtonText: "Sí, agregar",
         cancelButtonText: "No, cancelar"
-    }).then((result) => {
+    }).then(async (result) => {
         if (result.isConfirmed) {
             console.log("✅ El usuario aceptó agregar los nuevos insumos.");
 
-            // Agregar Equipos
-            agregarInsumosATabla(nuevosEquipos.length, async () => {
-                await completarDatosEquipos(nuevosEquipos);
-                console.log("✅ Equipos agregados correctamente.");
-            });
+            await new Promise(resolve => agregarFilas("#seriales-input-derecho .js-input-plus", nuevosEquipos.length, resolve, "equipos"));
+            await new Promise(resolve => agregarFilas("#seriales-input-insumos .js-input-plus", insumosNuevos.length, resolve, "anestesia"));
+            await new Promise(resolve => agregarFilas("#seriales-input-oxigeno .js-input-plus", 1, resolve, "oxigeno"));
+            await new Promise(resolve => agregarFilas("#seriales-input-anestesia .js-input-plus", 1, resolve, "tiempoAnestesia"));
 
-            // Agregar Anestesia
-            agregarAnestesiaATabla(insumosNuevos.length, async () => {
-                await completarDatosAnestesia(insumosNuevos);
-                console.log("✅ Anestesia + quirúrgicos agregados correctamente.");
-            });
+            await completarDatosEquipos(nuevosEquipos);
+            console.log("✅ Equipos agregados correctamente.");
+
+            await completarDatosAnestesia(insumosNuevos);
+            console.log("✅ Anestesia + quirúrgicos agregados correctamente.");
+
+            await completarDatosOxigeno("911111", 0);
+            console.log("✅ Oxígeno agregado correctamente.");
+
+            await completarDatosTiempoAnestesia("999999", 0);
+            console.log("✅ Tiempo de anestesia agregado correctamente.");
+
+            if (window.erroresInsumosNoIngresados.length > 0) {
+                console.warn("❗Errores detectados durante el llenado:");
+                console.table(window.erroresInsumosNoIngresados);
+
+                const detalles = window.erroresInsumosNoIngresados
+                    .map(err => `• ${err.tipo.toUpperCase()} "${err.nombre}" (fila ${err.fila}) - ${err.error}`)
+                    .join('\n');
+
+                Swal.fire({
+                    icon: "warning",
+                    title: "Insumos no ingresados",
+                    html: `<pre style="text-align:left;font-size:13px">${detalles}</pre>`,
+                    confirmButtonText: "Cerrar"
+                });
+            } else {
+                console.log("✅ Todos los insumos fueron ingresados exitosamente.");
+            }
         } else {
             console.log("❌ El usuario canceló la acción.");
         }
     });
 }
 
-// Función para agregar los insumos en la tabla haciendo clic en el botón "+"
-function agregarInsumosATabla(cantidad, callback) {
-    const botonAgregar = document.querySelector("#seriales-input-derecho .js-input-plus");
-
+// Función utilitaria para agregar filas genéricamente
+/**
+ * Agrega filas a una tabla haciendo clic en el botón "+" una cantidad de veces.
+ * @param {string} tablaSelector - Selector CSS del botón "+" correspondiente a la tabla.
+ * @param {number} cantidad - Número de veces a hacer clic.
+ * @param {function} callback - Función a llamar al finalizar.
+ * @param {string} tipoLog - (opcional) Tipo de insumo para log.
+ */
+function agregarFilas(tablaSelector, cantidad, callback, tipoLog = "") {
+    const botonAgregar = document.querySelector(tablaSelector);
     if (!botonAgregar) {
-        console.warn("⚠️ No se encontró el botón '+' para agregar insumos.");
+        console.warn(`⚠️ No se encontró el botón '+' para agregar (${tipoLog || tablaSelector})`);
+        if (callback && typeof callback === "function") setTimeout(callback, 100);
         return;
     }
-
-    console.log(`➕ Haciendo clic en el botón "+" ${cantidad} veces...`);
-
+    if (cantidad <= 0) {
+        if (callback && typeof callback === "function") setTimeout(callback, 100);
+        return;
+    }
+    if (tipoLog) {
+        console.log(`➕ Haciendo clic en el botón "+" de ${tipoLog} ${cantidad} veces...`);
+    } else {
+        console.log(`➕ Haciendo clic en el botón "+" (${tablaSelector}) ${cantidad} veces...`);
+    }
     let clicksRealizados = 0;
-
     const interval = setInterval(() => {
         if (clicksRealizados < cantidad) {
             botonAgregar.click();
             clicksRealizados++;
         } else {
             clearInterval(interval);
-            console.log("🎯 Todos los insumos han sido agregados.");
-
-            if (callback && typeof callback === "function") {
-                setTimeout(callback, 500); // esperar un poco para que se rendericen las filas
+            if (tipoLog) {
+                console.log(`🎯 Todos los elementos de ${tipoLog} han sido agregados.`);
             }
-        }
-    }, 400); // tiempo ajustable
-}
-
-function agregarAnestesiaATabla(cantidad, callback) {
-    const botonAgregar = document.querySelector("#seriales-input-insumos .js-input-plus");
-
-    if (!botonAgregar) {
-        console.warn("⚠️ No se encontró el botón '+' para agregar anestesia.");
-        return;
-    }
-
-    console.log(`➕ Haciendo clic en el botón '+' de anestesia ${cantidad} veces...`);
-
-    let clicksRealizados = 0;
-    const interval = setInterval(() => {
-        if (clicksRealizados < cantidad) {
-            botonAgregar.click();
-            clicksRealizados++;
-        } else {
-            clearInterval(interval);
-            console.log("🎯 Todos los insumos de anestesia han sido agregados.");
-
             if (callback && typeof callback === "function") {
-                setTimeout(callback, 500); // Espera a que se rendericen las filas
+                setTimeout(callback, 500); // esperar a que se rendericen las filas
             }
         }
     }, 400);
@@ -297,12 +315,18 @@ async function completarDatosEquipos(equipos) {
 
         try {
             console.log(`🔍 Buscando y seleccionando "${nombre}" en fila ${index + 1}...`);
-            await hacerClickEnSelect2(select2ContainerId);
-            await escribirEnCampoBusqueda(nombre);  // <-- renombrado para claridad
-            await seleccionarOpcion();
+            await Select2Utils.hacerClick(select2ContainerId);
+            await Select2Utils.buscar(nombre);
+            await Select2Utils.seleccionar();
             console.log(`✅ "${nombre}" seleccionado correctamente`);
         } catch (error) {
             console.error(`❌ Error al seleccionar "${nombre}" en la fila ${index + 1}:`, error);
+            window.erroresInsumosNoIngresados.push({
+                tipo: "equipo",
+                nombre: nombre,
+                fila: index + 1,
+                error: error.toString()
+            });
         }
     }
 }
@@ -331,9 +355,9 @@ async function completarDatosAnestesia(anestesiaArray) {
             // Simula clic en el Select2 para asegurar que las opciones estén visibles
             const almacenSelectContainer = `#select2-hccirugiahospitalizacion-insumos-${filaActual}-almacen_id-container`;
             try {
-                await hacerClickEnSelect2(almacenSelectContainer);
-                await escribirEnCampoBusqueda("FACT ADMISION");
-                await seleccionarOpcion();
+                await Select2Utils.hacerClick(almacenSelectContainer);
+                await Select2Utils.buscar("FACT ADMISION");
+                await Select2Utils.seleccionar();
             } catch (error) {
                 console.warn(`⚠️ No se pudo abrir el select de almacén en fila ${filaActual}:`, error);
             }
@@ -355,9 +379,9 @@ async function completarDatosAnestesia(anestesiaArray) {
         }
 
         try {
-            await hacerClickEnSelect2(select2ContainerId);
-            await escribirEnCampoBusqueda(nombre);
-            await seleccionarOpcion();
+            await Select2Utils.hacerClick(select2ContainerId);
+            await Select2Utils.buscar(nombre);
+            await Select2Utils.seleccionar();
             const inputCantidad = document.querySelector(`#hccirugiahospitalizacion-insumos-${filaActual}-cantidad-insumos`);
             if (inputCantidad) {
                 inputCantidad.value = item.cantidad;
@@ -370,90 +394,178 @@ async function completarDatosAnestesia(anestesiaArray) {
             console.log(`✅ "${nombre}" seleccionado correctamente en anestesia`);
         } catch (error) {
             console.error(`❌ Error al seleccionar anestesia "${nombre}" en la fila ${index + 1}:`, error);
+            window.erroresInsumosNoIngresados.push({
+                tipo: "anestesia",
+                nombre: nombre,
+                fila: index + 1,
+                error: error.toString()
+            });
         }
     }
 }
 
-function escribirEnCampoBusqueda(textoBusqueda) {
-    console.log("🧪 Valor recibido en escribirEnCampoBusqueda:", textoBusqueda);
-    return new Promise((resolve, reject) => {
-        const maxIntentos = 10;
-        let intentos = 0;
+async function completarDatosOxigeno(codigoOxigeno = "911111", fila = 0) {
+    console.log("🧠 Completando datos de oxígeno en la fila...");
 
-        const intentarBuscar = () => {
-            const campo = document.querySelector("input.select2-search__field");
-            if (campo) {
-                campo.value = textoBusqueda;
-                const eventoInput = new Event("input", {bubbles: true, cancelable: true});
-                campo.dispatchEvent(eventoInput);
-                setTimeout(resolve, 300);
-            } else if (intentos < maxIntentos) {
-                intentos++;
-                setTimeout(intentarBuscar, 300);
-            } else {
-                reject("No se encontró el campo de búsqueda de Select2.");
+    const select2ContainerId = `#select2-hccirugiahospitalizacion-oxigeno-${fila}-oxigeno_id-container`;
+
+    try {
+        console.log(`🔍 Buscando y seleccionando código de oxígeno "${codigoOxigeno}" en fila ${fila}...`);
+        await Select2Utils.hacerClick(select2ContainerId);
+        await Select2Utils.buscar(codigoOxigeno);
+        await Select2Utils.seleccionar();
+
+        // Establecer duración después de seleccionar el código
+        setTimeout(() => {
+            try {
+                const duracion = window.duracionOxigenoGlobal || "01:00";
+                const [horas, minutos] = duracion.split(":").map(Number);
+                const tiempoEnHoras = horas + (minutos / 60);
+
+                const inputTiempo = document.querySelector(`#hccirugiahospitalizacion-oxigeno-${fila}-tiempo`);
+                if (inputTiempo) {
+                    inputTiempo.value = tiempoEnHoras;
+                    const eventChange = new Event("change", {bubbles: true});
+                    inputTiempo.dispatchEvent(eventChange);
+                    console.log(`⏱️ Tiempo de oxígeno establecido: ${tiempoEnHoras} horas`);
+                } else {
+                    console.warn(`⚠️ Campo de duración de oxígeno no encontrado para la fila ${fila}`);
+                }
+
+                // Añadido: establecer siempre el valor 3 en el campo de litros
+                const inputLitros = document.querySelector(`#hccirugiahospitalizacion-oxigeno-${fila}-litros`);
+                if (inputLitros) {
+                    inputLitros.value = 3;
+                    const eventChange = new Event("change", {bubbles: true});
+                    inputLitros.dispatchEvent(eventChange);
+                    console.log("💧 Litros de oxígeno establecidos en: 3");
+                } else {
+                    console.warn(`⚠️ Campo de litros de oxígeno no encontrado para la fila ${fila}`);
+                }
+            } catch (err) {
+                console.error("❌ Error al establecer duración de oxígeno:", err);
             }
-        };
+        }, 500);
 
-        intentarBuscar();
-    });
+        console.log("✅ Oxígeno por defecto agregado y configurado");
+    } catch (error) {
+        console.error(`❌ Error al completar datos de oxígeno:`, error);
+        window.erroresInsumosNoIngresados.push({
+            tipo: "oxigeno",
+            nombre: codigoOxigeno,
+            fila: fila,
+            error: error.toString()
+        });
+    }
 }
 
-// 🔘 Clic en el Select2 (abre el desplegable)
-function hacerClickEnSelect2(selector) {
-    return new Promise((resolve, reject) => {
-        const container = document.querySelector(selector);
-        if (container) {
-            const event = new MouseEvent('mousedown', {
-                view: window, bubbles: true, cancelable: true
-            });
-            container.dispatchEvent(event);
-            setTimeout(resolve, 200);
-        } else {
-            console.error(`❌ Contenedor "${selector}" no encontrado.`);
-            reject(`Contenedor "${selector}" no encontrado.`);
-        }
-    });
-}
+async function completarDatosTiempoAnestesia(codigoTiempoAnestesia = "999999", fila = 0) {
+    console.log("🧠 Completando datos de Tiempo de Anestesia en la fila...");
 
-// ⌨️ Escribir en el input de búsqueda de Select2
-function establecerBusqueda(valor) {
-    console.log("🧪 Valor recibido en establecerBusqueda:", valor);
-    return new Promise((resolve, reject) => {
-        const maxIntentos = 10;
-        let intentos = 0;
+    const select2ContainerId = `#select2-hccirugiahospitalizacion-anestesia-${fila}-anestesia-container`;
 
-        const buscarCampo = () => {
-            const campo = document.querySelector("input.select2-search__field");
-            if (campo) {
-                campo.value = valor;
-                const inputEvent = new Event("input", {bubbles: true, cancelable: true});
-                campo.dispatchEvent(inputEvent);
-                setTimeout(() => resolve(), 300);
-            } else if (intentos < maxIntentos) {
-                intentos++;
-                setTimeout(buscarCampo, 300);
-            } else {
-                reject("No se encontró el campo de búsqueda de Select2.");
+    try {
+        console.log(`🔍 Buscando y seleccionando código de Tiempo de Anestesia "${codigoTiempoAnestesia}" en fila ${fila}...`);
+        await Select2Utils.hacerClick(select2ContainerId);
+        await Select2Utils.buscar(codigoTiempoAnestesia);
+        await Select2Utils.seleccionar();
+
+        // Establecer duración después de seleccionar el código
+        setTimeout(() => {
+            try {
+                const duracion = window.duracionOxigenoGlobal || "01:00";
+                const [horas, minutos] = duracion.split(":").map(Number);
+                // Calcular el número entero de cuartos de hora (15 minutos)
+                const tiempoEnHoras = Math.round((horas * 60 + minutos) / 15);
+
+                const inputTiempo = document.querySelector(`#hccirugiahospitalizacion-anestesia-${fila}-tiempo`);
+                if (inputTiempo) {
+                    inputTiempo.value = tiempoEnHoras;
+                    const eventChange = new Event("change", {bubbles: true});
+                    inputTiempo.dispatchEvent(eventChange);
+                    console.log(`⏱️ Tiempo de Anestesia establecido: ${tiempoEnHoras} bloques de 15 minutos`);
+                } else {
+                    console.warn(`⚠️ Campo de duración de anestesia no encontrado para la fila ${fila}`);
+                }
+            } catch (err) {
+                console.error("❌ Error al establecer duración de anestesia:", err);
             }
-        };
-
-        buscarCampo();
-    });
+        }, 500);
+    } catch (error) {
+        console.error(`❌ Error al completar datos de anestesia:`, error);
+        window.erroresInsumosNoIngresados.push({
+            tipo: "tiempo_anestesia",
+            nombre: codigoTiempoAnestesia,
+            fila: fila,
+            error: error.toString()
+        });
+    }
 }
 
-// ⌨️ Simular Enter para seleccionar la opción
-function seleccionarOpcion() {
-    return new Promise((resolve, reject) => {
-        const campo = document.querySelector("input.select2-search__field");
-        if (campo) {
-            const enterEvent = new KeyboardEvent("keydown", {
-                key: "Enter", keyCode: 13, bubbles: true, cancelable: true
-            });
-            campo.dispatchEvent(enterEvent);
-            setTimeout(resolve, 300);
-        } else {
-            reject("No se encontró el campo de búsqueda para hacer Enter.");
-        }
-    });
-}
+
+// Utils agrupados para Select2
+const Select2Utils = {
+    hacerClick: function (selector) {
+        return new Promise((resolve, reject) => {
+            const container = document.querySelector(selector);
+            if (container) {
+                const event = new MouseEvent('mousedown', {
+                    view: window, bubbles: true, cancelable: true
+                });
+                container.dispatchEvent(event);
+                setTimeout(resolve, 200);
+            } else {
+                console.error(`❌ Contenedor "${selector}" no encontrado.`);
+                reject(`Contenedor "${selector}" no encontrado.`);
+            }
+        });
+    },
+
+    buscar: function (textoBusqueda) {
+        console.log("🧪 Valor recibido en buscarEnSelect2:", textoBusqueda);
+        return new Promise((resolve, reject) => {
+            const maxIntentos = 10;
+            let intentos = 0;
+
+            const intentarBuscar = () => {
+                const campo = document.querySelector("input.select2-search__field");
+                if (campo) {
+                    campo.value = textoBusqueda;
+                    const eventoInput = new Event("input", {bubbles: true, cancelable: true});
+                    campo.dispatchEvent(eventoInput);
+                    setTimeout(resolve, 300);
+                } else if (intentos < maxIntentos) {
+                    intentos++;
+                    setTimeout(intentarBuscar, 300);
+                } else {
+                    reject("No se encontró el campo de búsqueda de Select2.");
+                }
+            };
+
+            intentarBuscar();
+        });
+    },
+
+    seleccionar: function () {
+        return new Promise((resolve, reject) => {
+            const esperarOpciones = () => {
+                const opcion = document.querySelector(".select2-results__option");
+                if (opcion) {
+                    const campo = document.querySelector("input.select2-search__field");
+                    if (campo) {
+                        const enterEvent = new KeyboardEvent("keydown", {
+                            key: "Enter", keyCode: 13, bubbles: true, cancelable: true
+                        });
+                        campo.dispatchEvent(enterEvent);
+                        setTimeout(resolve, 300);
+                    } else {
+                        reject("No se encontró el campo de búsqueda para hacer Enter.");
+                    }
+                } else {
+                    setTimeout(esperarOpciones, 200);
+                }
+            };
+            esperarOpciones();
+        });
+    }
+};
