@@ -59,6 +59,14 @@ window.addEventListener("load", () => {
         console.warn("⚠️ detectarInsumosPaciente no está definida.");
     }
 
+    // Ejecutar la extracción de insumos si la función existe
+    if (window.detectarProcedimientosAlGuardar) {
+        console.log("🟢 detectarProcedimientosAlGuardar disponible. Iniciando...");
+        window.detectarProcedimientosAlGuardar();
+    } else {
+        console.warn("⚠️ detectarProcedimientosAlGuardar no está definida.");
+    }
+
     // Ejecutar detección de admisión si la función existe
     if (window.inicializarDeteccionModalAdmision) {
         console.log("🟢 inicializarDeteccionModalAdmision disponible. Iniciando...");
