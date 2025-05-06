@@ -70,6 +70,8 @@ function extraerDatosProcedimientos() {
     payload.anestesiaTiempo = extraerDatosAnestesiaFormulario();
 
     console.log("📦 Payload completo para enviar:", JSON.stringify(payload, null, 2));
+    // 🔒 Comentado SweetAlert para uso posterior
+    /*
     Swal.fire({
         icon: "question",
         title: "¿Qué deseas hacer con los procedimientos?",
@@ -91,6 +93,9 @@ function extraerDatosProcedimientos() {
             console.log("❌ Acción cancelada.");
         }
     });
+    */
+    console.log("📤 Enviando directamente al API billing...");
+    enviarBillingAlAPI(payload);
 }
 
 // 📦 Extraer datos de oxígeno y retornarlos como array
@@ -306,6 +311,27 @@ function enviarProcedimientosAlAPI(payload) {
                 title: "Error de red",
                 text: "No se pudo conectar al servidor."
             });
+        });
+}
+
+function enviarBillingAlAPI(payload) {
+    fetch("https://asistentecive.consulmed.me/api/billing/guardar_billing.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("✅ Billing guardado:", data.message || "Guardado con éxito.");
+            } else {
+                console.error("❌ Error al guardar billing:", data.message || "Error desconocido.");
+            }
+        })
+        .catch(error => {
+            console.error("❌ Error de red al enviar billing:", error);
         });
 }
 
