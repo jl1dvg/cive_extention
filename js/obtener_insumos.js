@@ -157,34 +157,35 @@ function mostrarAlertaInsumos(insumos) {
 
     // 🧪 Verificar si el oxígeno 911111 ya está presente y con los valores correctos usando setTimeout
     setTimeout(() => {
+        // --- Oxígeno ---
         const filaOxigeno = document.querySelector(`#select2-hccirugiahospitalizacion-oxigeno-0-oxigeno_id-container`);
-        let oxigenoPresente = false;
-        let oxigenoDuracionCorrecta = false;
-        let oxigenoLitrosCorrecto = false;
+        window.oxigenoPresente = false;
+        window.oxigenoDuracionCorrecta = false;
+        window.oxigenoLitrosCorrecto = false;
 
         if (filaOxigeno && filaOxigeno.textContent.toUpperCase().includes("911111")) {
-            oxigenoPresente = true;
+            window.oxigenoPresente = true;
 
             const inputTiempo = document.querySelector(`#hccirugiahospitalizacion-oxigeno-0-tiempo`);
             if (inputTiempo && inputTiempo.value !== "") {
                 const duracionApi = window.duracionOxigenoGlobal || "01:00";
                 const [h, m] = duracionApi.split(":").map(Number);
                 const tiempoEsperado = h + (m / 60);
-                oxigenoDuracionCorrecta = parseFloat(inputTiempo.value).toFixed(2) === tiempoEsperado.toFixed(2);
+                window.oxigenoDuracionCorrecta = parseFloat(inputTiempo.value).toFixed(2) === tiempoEsperado.toFixed(2);
             }
 
             const inputLitros = document.querySelector(`#hccirugiahospitalizacion-oxigeno-0-litros`);
             if (inputLitros && inputLitros.value !== "") {
-                oxigenoLitrosCorrecto = parseFloat(inputLitros.value) === 3;
+                window.oxigenoLitrosCorrecto = parseFloat(inputLitros.value) === 3;
             }
         }
 
-        if (!oxigenoPresente || !oxigenoDuracionCorrecta || !oxigenoLitrosCorrecto) {
+        if (!window.oxigenoPresente || !window.oxigenoDuracionCorrecta || !window.oxigenoLitrosCorrecto) {
             window.erroresInsumosNoIngresados.push({
                 tipo: "oxigeno",
                 nombre: "911111",
                 fila: 1,
-                error: `${!oxigenoPresente ? 'No presente' : ''}${!oxigenoPresente ? ', ' : ''}${!oxigenoDuracionCorrecta ? 'Duración incorrecta' : ''}${!oxigenoDuracionCorrecta && !oxigenoLitrosCorrecto ? ', ' : ''}${!oxigenoLitrosCorrecto ? 'Litros distinto de 3' : ''}`
+                error: `${!window.oxigenoPresente ? 'No presente' : ''}${!window.oxigenoPresente ? ', ' : ''}${!window.oxigenoDuracionCorrecta ? 'Duración incorrecta' : ''}${!window.oxigenoDuracionCorrecta && !window.oxigenoLitrosCorrecto ? ', ' : ''}${!window.oxigenoLitrosCorrecto ? 'Litros distinto de 3' : ''}`
             });
 
             const duracion = window.duracionOxigenoGlobal || "01:00";
@@ -203,6 +204,44 @@ function mostrarAlertaInsumos(insumos) {
                 inputLitros.value = 3;
                 inputLitros.dispatchEvent(new Event("change", {bubbles: true}));
                 console.log("🔄 Litros de oxígeno corregidos a 3");
+            }
+        }
+
+        // --- Tiempo de Anestesia ---
+        // Verificar si el tiempo de anestesia ya está presente con el código correcto y cuartos correctos
+        const filaAnestesia = document.querySelector(`#select2-hccirugiahospitalizacion-anestesia-0-anestesia-container`);
+        window.tiempoAnestesiaPresente = false;
+        window.tiempoAnestesiaCuartosCorrecto = false;
+
+        if (filaAnestesia && filaAnestesia.textContent.toUpperCase().includes("999999")) {
+            window.tiempoAnestesiaPresente = true;
+
+            const inputTiempoAnestesia = document.querySelector(`#hccirugiahospitalizacion-anestesia-0-tiempo`);
+            if (inputTiempoAnestesia && inputTiempoAnestesia.value !== "") {
+                const duracion = window.duracionOxigenoGlobal || "01:00";
+                const [h, m] = duracion.split(":").map(Number);
+                const tiempoEsperado = Math.round((h * 60 + m) / 15);
+                window.tiempoAnestesiaCuartosCorrecto = parseInt(inputTiempoAnestesia.value) === tiempoEsperado;
+            }
+        }
+
+        if (!window.tiempoAnestesiaPresente || !window.tiempoAnestesiaCuartosCorrecto) {
+            window.erroresInsumosNoIngresados.push({
+                tipo: "tiempo_anestesia",
+                nombre: "999999",
+                fila: 1,
+                error: `${!window.tiempoAnestesiaPresente ? 'No presente' : ''}${!window.tiempoAnestesiaPresente ? ', ' : ''}${!window.tiempoAnestesiaCuartosCorrecto ? 'Duración incorrecta' : ''}`
+            });
+
+            const duracion = window.duracionOxigenoGlobal || "01:00";
+            const [h, m] = duracion.split(":").map(Number);
+            const tiempoEsperado = Math.round((h * 60 + m) / 15);
+
+            const inputTiempoAnestesia = document.querySelector(`#hccirugiahospitalizacion-anestesia-0-tiempo`);
+            if (inputTiempoAnestesia) {
+                inputTiempoAnestesia.value = tiempoEsperado;
+                inputTiempoAnestesia.dispatchEvent(new Event("change", {bubbles: true}));
+                console.log(`🔄 Duración de anestesia corregida a ${tiempoEsperado} bloques de 15 minutos`);
             }
         }
     }, 500);
@@ -240,6 +279,22 @@ function mostrarAlertaInsumos(insumos) {
     console.log("🔎 Total insumos combinados:", mapInsumos.size);
     const insumosUnificados = Array.from(mapInsumos.values()).filter(i => i.codigo && i.codigo.trim() !== "");
 
+    // Detectar insumos presentes pero con cantidad incorrecta
+    const insumosCantidadIncorrecta = insumosUnificados.filter(item => {
+        const codigo = item.codigo;
+        const cantidadEsperada = parseInt(item.cantidad);
+        const fila = [...document.querySelectorAll('[id^="select2-hccirugiahospitalizacion-insumos-"][id$="-insumo-container"]')]
+            .findIndex(span => span.textContent.trim().toUpperCase().startsWith(codigo));
+
+        if (fila === -1) return false;
+
+        const inputCantidad = document.querySelector(`#hccirugiahospitalizacion-insumos-${fila}-cantidad-insumos`);
+        if (!inputCantidad) return false;
+
+        const cantidadActual = parseInt(inputCantidad.value || "0");
+        return cantidadActual !== cantidadEsperada;
+    });
+
     // 📋 Obtener códigos existentes en la tabla de insumos
     const codigosTablaAnestesia = [];
     document.querySelectorAll('[id^="select2-hccirugiahospitalizacion-insumos-"][id$="-insumo-container"]').forEach(span => {
@@ -262,11 +317,17 @@ function mostrarAlertaInsumos(insumos) {
     if (insumosNuevos.length > 0) {
         mensaje += `<strong>Anestesia/Quirúrgicos nuevos:</strong> ${insumosNuevos.length} elementos<br>`;
     }
-    if (!oxigenoPresente || !oxigenoDuracionCorrecta || !oxigenoLitrosCorrecto) {
+    if (insumosCantidadIncorrecta.length > 0) {
+        mensaje += `<strong>Cantidades incorrectas:</strong> ${insumosCantidadIncorrecta.length} insumos serán corregidos<br>`;
+    }
+    if (!window.oxigenoPresente || !window.oxigenoDuracionCorrecta || !window.oxigenoLitrosCorrecto) {
         mensaje += `<strong>Oxígeno:</strong> Se corregirá el valor<br>`;
     }
+    if (!window.tiempoAnestesiaPresente || !window.tiempoAnestesiaCuartosCorrecto) {
+        mensaje += `<strong>Tiempo de anestesia:</strong> Se corregirá el valor<br>`;
+    }
 
-    if (nuevosEquipos.length === 0 && insumosNuevos.length === 0) {
+    if (nuevosEquipos.length === 0 && insumosNuevos.length === 0 && insumosCantidadIncorrecta.length === 0) {
         Swal.fire({
             icon: "info",
             title: "Insumos ya existentes",
@@ -287,6 +348,24 @@ function mostrarAlertaInsumos(insumos) {
         if (result.isConfirmed) {
             console.log("✅ El usuario aceptó agregar los nuevos insumos.");
 
+            // Corregir cantidades incorrectas antes de completar datos
+            insumosCantidadIncorrecta.forEach(item => {
+                const codigo = item.codigo;
+                const cantidadEsperada = parseInt(item.cantidad);
+                const fila = [...document.querySelectorAll('[id^="select2-hccirugiahospitalizacion-insumos-"][id$="-insumo-container"]')]
+                    .findIndex(span => span.textContent.trim().toUpperCase().startsWith(codigo));
+
+                if (fila !== -1) {
+                    const inputCantidad = document.querySelector(`#hccirugiahospitalizacion-insumos-${fila}-cantidad-insumos`);
+                    if (inputCantidad) {
+                        inputCantidad.value = cantidadEsperada;
+                        const eventChange = new Event("change", {bubbles: true});
+                        inputCantidad.dispatchEvent(eventChange);
+                        console.log(`🔁 Cantidad de "${codigo}" corregida a ${cantidadEsperada} en fila ${fila}`);
+                    }
+                }
+            });
+
             await new Promise(resolve => agregarFilas("#seriales-input-derecho .js-input-plus", nuevosEquipos.length, resolve, "equipos"));
             await new Promise(resolve => agregarFilas("#seriales-input-insumos .js-input-plus", insumosNuevos.length, resolve, "anestesia"));
             await new Promise(resolve => agregarFilas("#seriales-input-oxigeno .js-input-plus", 1, resolve, "oxigeno"));
@@ -303,6 +382,17 @@ function mostrarAlertaInsumos(insumos) {
 
             await completarDatosTiempoAnestesia("999999", 0);
             console.log("✅ Tiempo de anestesia agregado correctamente.");
+
+            // Filtrar errores que realmente persisten después de correcciones
+            window.erroresInsumosNoIngresados = window.erroresInsumosNoIngresados.filter(err => {
+                if (err.tipo === "oxigeno") {
+                    return !window.oxigenoPresente || !window.oxigenoDuracionCorrecta || !window.oxigenoLitrosCorrecto;
+                }
+                if (err.tipo === "tiempo_anestesia") {
+                    return !window.tiempoAnestesiaPresente || !window.tiempoAnestesiaCuartosCorrecto;
+                }
+                return true;
+            });
 
             if (window.erroresInsumosNoIngresados.length > 0) {
                 console.warn("❗Errores detectados durante el llenado:");
@@ -397,10 +487,7 @@ async function completarDatosEquipos(equipos) {
         } catch (error) {
             console.error(`❌ Error al seleccionar "${nombre}" en la fila ${index + 1}:`, error);
             window.erroresInsumosNoIngresados.push({
-                tipo: "equipo",
-                nombre: nombre,
-                fila: index + 1,
-                error: error.toString()
+                tipo: "equipo", nombre: nombre, fila: index + 1, error: error.toString()
             });
         }
     }
@@ -470,10 +557,7 @@ async function completarDatosAnestesia(anestesiaArray) {
         } catch (error) {
             console.error(`❌ Error al seleccionar anestesia "${nombre}" en la fila ${index + 1}:`, error);
             window.erroresInsumosNoIngresados.push({
-                tipo: "anestesia",
-                nombre: nombre,
-                fila: index + 1,
-                error: error.toString()
+                tipo: "anestesia", nombre: nombre, fila: index + 1, error: error.toString()
             });
         }
     }
@@ -526,10 +610,7 @@ async function completarDatosOxigeno(codigoOxigeno = "911111", fila = 0) {
     } catch (error) {
         console.error(`❌ Error al completar datos de oxígeno:`, error);
         window.erroresInsumosNoIngresados.push({
-            tipo: "oxigeno",
-            nombre: codigoOxigeno,
-            fila: fila,
-            error: error.toString()
+            tipo: "oxigeno", nombre: codigoOxigeno, fila: fila, error: error.toString()
         });
     }
 }
@@ -569,10 +650,7 @@ async function completarDatosTiempoAnestesia(codigoTiempoAnestesia = "999999", f
     } catch (error) {
         console.error(`❌ Error al completar datos de anestesia:`, error);
         window.erroresInsumosNoIngresados.push({
-            tipo: "tiempo_anestesia",
-            nombre: codigoTiempoAnestesia,
-            fila: fila,
-            error: error.toString()
+            tipo: "tiempo_anestesia", nombre: codigoTiempoAnestesia, fila: fila, error: error.toString()
         });
     }
 }

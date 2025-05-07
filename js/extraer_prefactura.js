@@ -242,7 +242,7 @@ function extraerDatosInsumos() {
             //descuento: getValue(`#hccirugiahospitalizacion-insumos-${index}-descuento-insumos`),
             precio: getValue(`#hccirugiahospitalizacion-insumos-${index}-precio-insumos`),
             //subtotal: getValue(`#hccirugiahospitalizacion-insumos-${index}-subtotal-insumos`),
-            //iva: getValue(`#hccirugiahospitalizacion-insumos-${index}-iva-insumos`)
+            iva: getValue(`#hccirugiahospitalizacion-insumos-${index}-iva-insumos`)
         };
 
         // Descomponer campo insumo para obtener código, nombre y precio si aplica
@@ -251,12 +251,17 @@ function extraerDatosInsumos() {
             if (texto && texto.includes(" - ")) {
                 const partes = texto.split(" - ").map(p => p.trim());
                 insumo.codigo = partes[0];
-                //insumo.nombre = partes.slice(1, -1).join(" - ");
-                insumo.nombre = partes[partes.length - 1].replace(/\(.*?\)$/, "").trim();
+
+                // Eliminar etiquetas como MEDICAMENTOS o INSUMOS si están presentes
+                const nombrePartes = partes.slice(1).filter(p => !["MEDICAMENTOS", "INSUMOS"].includes(p.toUpperCase()));
+                insumo.nombre = nombrePartes.join(" - ").replace(/\(.*?\)$/, "").trim();
+
+                // IVA como booleano
+                insumo.iva = parseFloat(getValue(`#hccirugiahospitalizacion-insumos-${index}-iva-insumos`)) > 0 ? 1 : 0;
             } else {
                 insumo.codigo = "";
                 insumo.nombre = "";
-                //insumo.precioTexto = "";
+                insumo.iva = "";
             }
         })();
 
