@@ -70,6 +70,7 @@ function extraerDatosProcedimientos() {
     payload.anestesiaTiempo = extraerDatosAnestesiaFormulario();
 
     console.log("📦 Payload completo para enviar:", JSON.stringify(payload, null, 2));
+    enviarBillingAlAPI(payload);
     Swal.fire({
         icon: "question",
         title: "¿Desea descargar la prefactura?",
@@ -380,7 +381,7 @@ window.detectarProcedimientosAlGuardar = () => {
             });
         } else if (intentos >= intentosMaximos) {
             clearInterval(buscarBoton);
-            console.warn("❌ No se encontró el botón Guardar admisión.");
+            //console.warn("❌ No se encontró el botón Guardar admisión.");
         }
     }, 500);
 };

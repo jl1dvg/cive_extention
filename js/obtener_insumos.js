@@ -83,6 +83,17 @@ function enviarDatosAPI(idSolicitud, hcNumber) {
                 // Guardar duración en variable global si está disponible
                 window.duracionOxigenoGlobal = data.duracion;
 
+                // Nuevo: Verificar status distinto de 1 antes de mostrar insumos
+                if (data.status !== 1) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Protocolo no revisado",
+                        text: "Este protocolo aún no ha sido revisado. No se puede iniciar el autollenado.",
+                        confirmButtonText: "Aceptar"
+                    });
+                    return;
+                }
+
                 if (data.insumos && (data.insumos.equipos?.length > 0 || data.insumos.anestesia?.length > 0 || data.insumos.quirurgicos?.length > 0)) {
                     mostrarAlertaInsumos(data.insumos);
                 } else {
