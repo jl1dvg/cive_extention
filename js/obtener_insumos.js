@@ -138,6 +138,15 @@ function mostrarAlertaInsumos(insumos) {
     const nombresTabla = obtenerNombresTabla();
     console.log("📋 Nombres existentes en la tabla:", nombresTabla);
 
+    // Detectar también los nombres de los derechos (uso de equipos)
+    const nombresDerechosTabla = [];
+    document.querySelectorAll('[id^="select2-hccirugiahospitalizacion-derechos-"][id$="-derecho-container"]').forEach(span => {
+        const texto = span.textContent.trim().toUpperCase();
+        const nombre = texto.split(" - ")[0]; // Extraer código o nombre base
+        if (nombre) nombresDerechosTabla.push(nombre);
+    });
+    console.log("📋 Nombres de derechos ya en la tabla:", nombresDerechosTabla);
+
     const nombresAnestesiaTabla = [];
     document.querySelectorAll('[id^="select2-hccirugiahospitalizacion-insumos-"][id$="-insumo-container"]').forEach(span => {
         const texto = span.textContent.trim().toUpperCase();
@@ -146,11 +155,63 @@ function mostrarAlertaInsumos(insumos) {
     });
     console.log("📋 Nombres de anestesia ya en la tabla:", nombresAnestesiaTabla);
 
+    // 🧪 Verificar si el oxígeno 911111 ya está presente y con los valores correctos usando setTimeout
+    setTimeout(() => {
+        const filaOxigeno = document.querySelector(`#select2-hccirugiahospitalizacion-oxigeno-0-oxigeno_id-container`);
+        let oxigenoPresente = false;
+        let oxigenoDuracionCorrecta = false;
+        let oxigenoLitrosCorrecto = false;
+
+        if (filaOxigeno && filaOxigeno.textContent.toUpperCase().includes("911111")) {
+            oxigenoPresente = true;
+
+            const inputTiempo = document.querySelector(`#hccirugiahospitalizacion-oxigeno-0-tiempo`);
+            if (inputTiempo && inputTiempo.value !== "") {
+                const duracionApi = window.duracionOxigenoGlobal || "01:00";
+                const [h, m] = duracionApi.split(":").map(Number);
+                const tiempoEsperado = h + (m / 60);
+                oxigenoDuracionCorrecta = parseFloat(inputTiempo.value).toFixed(2) === tiempoEsperado.toFixed(2);
+            }
+
+            const inputLitros = document.querySelector(`#hccirugiahospitalizacion-oxigeno-0-litros`);
+            if (inputLitros && inputLitros.value !== "") {
+                oxigenoLitrosCorrecto = parseFloat(inputLitros.value) === 3;
+            }
+        }
+
+        if (!oxigenoPresente || !oxigenoDuracionCorrecta || !oxigenoLitrosCorrecto) {
+            window.erroresInsumosNoIngresados.push({
+                tipo: "oxigeno",
+                nombre: "911111",
+                fila: 1,
+                error: `${!oxigenoPresente ? 'No presente' : ''}${!oxigenoPresente ? ', ' : ''}${!oxigenoDuracionCorrecta ? 'Duración incorrecta' : ''}${!oxigenoDuracionCorrecta && !oxigenoLitrosCorrecto ? ', ' : ''}${!oxigenoLitrosCorrecto ? 'Litros distinto de 3' : ''}`
+            });
+
+            const duracion = window.duracionOxigenoGlobal || "01:00";
+            const [h, m] = duracion.split(":").map(Number);
+            const tiempoEsperado = h + (m / 60);
+
+            const inputTiempo = document.querySelector(`#hccirugiahospitalizacion-oxigeno-0-tiempo`);
+            if (inputTiempo) {
+                inputTiempo.value = tiempoEsperado;
+                inputTiempo.dispatchEvent(new Event("change", {bubbles: true}));
+                console.log(`🔄 Duración de oxígeno corregida a ${tiempoEsperado} horas`);
+            }
+
+            const inputLitros = document.querySelector(`#hccirugiahospitalizacion-oxigeno-0-litros`);
+            if (inputLitros) {
+                inputLitros.value = 3;
+                inputLitros.dispatchEvent(new Event("change", {bubbles: true}));
+                console.log("🔄 Litros de oxígeno corregidos a 3");
+            }
+        }
+    }, 500);
+
     const nuevosEquipos = (insumos.equipos || []).filter(equipo => {
         if (!equipo.codigo) return false; // Solo contar si tiene código
         const codigoAPI = equipo.codigo.trim().toUpperCase();
-        const yaExiste = nombresTabla.includes(codigoAPI);
-        console.log(`🔍 Comparando: "${codigoAPI}" con [${nombresTabla.join(", ")}] → ${yaExiste ? "❌ Ya existe" : "✅ Nuevo"}`);
+        const yaExiste = nombresTabla.includes(codigoAPI) || nombresDerechosTabla.includes(codigoAPI);
+        console.log(`🔍 Comparando: "${codigoAPI}" con [${nombresTabla.join(", ")}] y derechos [${nombresDerechosTabla.join(", ")}] → ${yaExiste ? "❌ Ya existe" : "✅ Nuevo"}`);
         return !yaExiste;
     });
 
@@ -200,6 +261,9 @@ function mostrarAlertaInsumos(insumos) {
     }
     if (insumosNuevos.length > 0) {
         mensaje += `<strong>Anestesia/Quirúrgicos nuevos:</strong> ${insumosNuevos.length} elementos<br>`;
+    }
+    if (!oxigenoPresente || !oxigenoDuracionCorrecta || !oxigenoLitrosCorrecto) {
+        mensaje += `<strong>Oxígeno:</strong> Se corregirá el valor<br>`;
     }
 
     if (nuevosEquipos.length === 0 && insumosNuevos.length === 0) {
