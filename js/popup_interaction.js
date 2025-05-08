@@ -83,75 +83,6 @@ function cargarRecetas() {
         .catch(error => console.error('Error cargando JSON de recetas:', error));
 }
 
-// Función para cargar los protocolos desde la API
-function cargarProtocolos() {
-    console.log('Intentando cargar procedimientos...');
-    const apiUrl = 'https://asistentecive.consulmed.me/api/procedimientos/listar.php'; // Cambia esto a la URL de tu API
-
-    fetch(apiUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al obtener los datos desde la API');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Datos de procedimientos cargados:', data);
-            const procedimientosData = data.procedimientos;
-            crearBotonesCategorias(procedimientosData, 'contenedorProtocolos', ejecutarProtocolos);
-        })
-        .catch(error => console.error('Error cargando procedimientos desde MySQL:', error));
-}
-
-// Función para mostrar los procedimientos según la categoría seleccionada
-function mostrarProcedimientosPorCategoria(procedimientos) {
-    const contenedorProcedimientos = document.getElementById('contenedorProcedimientos');
-    contenedorProcedimientos.innerHTML = ''; // Limpiar el contenedor
-    procedimientos.forEach(procedimiento => {
-        const col = document.createElement('div');
-        col.className = 'col-sm-4'; // Cada botón ocupará un tercio del ancho de la fila
-        const boton = document.createElement('button');
-        boton.id = `${procedimiento.id}`;
-        boton.className = 'btn btn-outline-success btn-sm'; // Estilo del botón
-        boton.textContent = `${procedimiento.cirugia}`;
-        boton.addEventListener('click', () => {
-            console.log(`Botón clickeado: ${procedimiento.cirugia}`);
-            ejecutarProtocolos(procedimiento.id);
-        });
-        col.appendChild(boton);
-        contenedorProcedimientos.appendChild(col);
-    });
-
-    mostrarSeccion('procedimientos'); // Mostrar la sección correspondiente
-}
-
-// Función para ejecutar los protocolos según el ID del procedimiento
-function ejecutarProtocolos(id) {
-    const apiUrl = 'https://asistentecive.consulmed.me/api/procedimientos/listar.php'; // URL de la API
-
-    fetch(apiUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al obtener los datos desde la API');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const item = data.procedimientos.find(d => d.id === id);
-            if (!item) throw new Error('ID no encontrado en la base de datos');
-
-            console.log("Item cargado:", item);
-
-            if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
-                chrome.runtime.sendMessage({action: "ejecutarProtocolo", item: item});
-            } else {
-                console.error("El contexto de la extensión no es válido. Intentando nuevamente en 1 segundo...");
-                setTimeout(() => ejecutarProtocolos(id), 1000);
-            }
-        })
-        .catch(error => console.error('Error en la ejecución de protocolo:', error));
-}
-
 function mostrarRecetasPorCategoria(recetas) {
     const contenedorRecetas = document.getElementById('contenedorRecetas');
     contenedorRecetas.innerHTML = ''; // Limpiar el contenedor
@@ -170,26 +101,6 @@ function mostrarRecetasPorCategoria(recetas) {
         contenedorRecetas.appendChild(col);
     });
     mostrarSeccion('recetas');
-}
-
-function crearBotonesCategorias(procedimientos, contenedorId) {
-    const categorias = [...new Set(procedimientos.map(procedimiento => procedimiento.categoria))];
-    const contenedorBotones = document.getElementById(contenedorId);
-    contenedorBotones.innerHTML = ''; // Limpiar el contenedor
-    categorias.forEach(categoria => {
-        const col = document.createElement('div');
-        col.className = 'col-sm-4';
-        const boton = document.createElement('button');
-        boton.className = 'btn btn-outline-primary btn-sm';
-        boton.textContent = categoria;
-        boton.addEventListener('click', () => {
-            console.log(`Categoría clickeada: ${categoria}`);
-            const procedimientosCategoria = procedimientos.filter(procedimiento => procedimiento.categoria === categoria);
-            mostrarProcedimientosPorCategoria(procedimientosCategoria);
-        });
-        col.appendChild(boton);
-        contenedorBotones.appendChild(col);
-    });
 }
 
 function crearRecetasCategorias(recetas, contenedorId) {
@@ -235,6 +146,109 @@ function ejecutarReceta(id) {
             }
         })
         .catch(error => console.error('Error en la ejecución de receta:', error));
+}
+
+// Función para cargar los protocolos desde la API
+
+function obtenerAfiliacion() {
+    const afiliacionElement = document.querySelector('.media-body p span b');
+    if (afiliacionElement) {
+        return afiliacionElement.innerText.trim().toUpperCase();
+    }
+    return '';
+}
+
+// Función para cargar los protocolos desde la API
+function cargarProtocolos() {
+    const afiliacion = obtenerAfiliacion(); // ahora está dentro
+    console.log('Intentando cargar procedimientos...');
+    console.log(afiliacion);
+    const apiUrl = `https://asistentecive.consulmed.me/api/procedimientos/listar.php?afiliacion=${encodeURIComponent(afiliacion)}`;
+
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener los datos desde la API');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Datos de procedimientos cargados:', data);
+            const procedimientosData = data.procedimientos;
+            crearBotonesCategorias(procedimientosData, 'contenedorProtocolos', ejecutarProtocolos);
+        })
+        .catch(error => console.error('Error cargando procedimientos desde MySQL:', error));
+}
+
+function crearBotonesCategorias(procedimientos, contenedorId) {
+    const categorias = [...new Set(procedimientos.map(procedimiento => procedimiento.categoria))];
+    const contenedorBotones = document.getElementById(contenedorId);
+    contenedorBotones.innerHTML = ''; // Limpiar el contenedor
+    categorias.forEach(categoria => {
+        const col = document.createElement('div');
+        col.className = 'col-sm-4';
+        const boton = document.createElement('button');
+        boton.className = 'btn btn-outline-primary btn-sm';
+        boton.textContent = categoria;
+        boton.addEventListener('click', () => {
+            console.log(`Categoría clickeada: ${categoria}`);
+            const procedimientosCategoria = procedimientos.filter(procedimiento => procedimiento.categoria === categoria);
+            mostrarProcedimientosPorCategoria(procedimientosCategoria);
+        });
+        col.appendChild(boton);
+        contenedorBotones.appendChild(col);
+    });
+}
+
+// Función para mostrar los procedimientos según la categoría seleccionada
+function mostrarProcedimientosPorCategoria(procedimientos) {
+    const contenedorProcedimientos = document.getElementById('contenedorProcedimientos');
+    contenedorProcedimientos.innerHTML = ''; // Limpiar el contenedor
+    procedimientos.forEach(procedimiento => {
+        const col = document.createElement('div');
+        col.className = 'col-sm-4'; // Cada botón ocupará un tercio del ancho de la fila
+        const boton = document.createElement('button');
+        boton.id = `${procedimiento.id}`;
+        boton.className = 'btn btn-outline-success btn-sm'; // Estilo del botón
+        boton.textContent = `${procedimiento.cirugia}`;
+        boton.addEventListener('click', () => {
+            console.log(`Botón clickeado: ${procedimiento.cirugia}`);
+            ejecutarProtocolos(procedimiento.id);
+        });
+        col.appendChild(boton);
+        contenedorProcedimientos.appendChild(col);
+    });
+
+    mostrarSeccion('procedimientos'); // Mostrar la sección correspondiente
+}
+
+// Función para ejecutar los protocolos según el ID del procedimiento
+function ejecutarProtocolos(id) {
+    const afiliacion = obtenerAfiliacion(); // ahora está dentro
+    console.log(afiliacion);
+    const apiUrl = `https://asistentecive.consulmed.me/api/procedimientos/listar.php?afiliacion=${encodeURIComponent(afiliacion)}`;
+
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener los datos desde la API');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const item = data.procedimientos.find(d => d.id === id);
+            if (!item) throw new Error('ID no encontrado en la base de datos');
+
+            console.log("Item cargado:", item);
+
+            if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
+                chrome.runtime.sendMessage({action: "ejecutarProtocolo", item: item});
+            } else {
+                console.error("El contexto de la extensión no es válido. Intentando nuevamente en 1 segundo...");
+                setTimeout(() => ejecutarProtocolos(id), 1000);
+            }
+        })
+        .catch(error => console.error('Error en la ejecución de protocolo:', error));
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
