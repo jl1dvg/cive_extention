@@ -402,13 +402,31 @@ function mostrarAlertaInsumos(insumos) {
                     .map(err => `• ${err.tipo.toUpperCase()} "${err.nombre}" (fila ${err.fila}) - ${err.error}`)
                     .join('\n');
 
+                const insumosFaltantes = window.erroresInsumosNoIngresados
+                    .filter(err => err.tipo === 'anestesia' || err.tipo === 'equipo')
+                    .map(err => `<li><strong>${err.tipo.toUpperCase()}</strong>: ${err.nombre} (fila ${err.fila})</li>`)
+                    .join('');
+
+                let htmlFinal = `<pre style="text-align:left;font-size:13px">${detalles}</pre>`;
+
+                if (insumosFaltantes) {
+                    htmlFinal += `<hr><p><strong>❗Insumos no ingresados que deben ser agregados manualmente:</strong></p><ul>${insumosFaltantes}</ul>`;
+                }
+
                 Swal.fire({
                     icon: "warning",
                     title: "Insumos no ingresados",
-                    html: `<pre style="text-align:left;font-size:13px">${detalles}</pre>`,
+                    html: htmlFinal,
                     confirmButtonText: "Cerrar"
                 });
             } else {
+                // Mostrar alerta positiva cuando no hay errores tras autollenado
+                Swal.fire({
+                    icon: "success",
+                    title: "Autollenado completo",
+                    text: "✅ Todos los insumos fueron ingresados y verificados correctamente.",
+                    confirmButtonText: "Cerrar"
+                });
                 console.log("✅ Todos los insumos fueron ingresados exitosamente.");
             }
         } else {
@@ -483,6 +501,18 @@ async function completarDatosEquipos(equipos) {
             await Select2Utils.hacerClick(select2ContainerId);
             await Select2Utils.buscar(nombre);
             await Select2Utils.seleccionar();
+            // Validación de selección efectiva
+            const contenedorSeleccion = document.querySelector(select2ContainerId);
+            if (!contenedorSeleccion || !contenedorSeleccion.textContent.trim().toUpperCase().includes(nombre)) {
+                console.warn(`⚠️ El equipo "${nombre}" no fue realmente seleccionado en fila ${index + 1}`);
+                window.erroresInsumosNoIngresados.push({
+                    tipo: "equipo",
+                    nombre: nombre,
+                    fila: index + 1,
+                    error: "No se pudo seleccionar correctamente en el Select2"
+                });
+                continue;
+            }
             console.log(`✅ "${nombre}" seleccionado correctamente`);
         } catch (error) {
             console.error(`❌ Error al seleccionar "${nombre}" en la fila ${index + 1}:`, error);
@@ -511,39 +541,23 @@ async function completarDatosAnestesia(anestesiaArray) {
 
         const filaActual = filaDestino + index;
         const select2ContainerId = `#select2-hccirugiahospitalizacion-insumos-${filaActual}-insumo-container`;
-        // 🏪 Establecer almacén antes de seleccionar insumo
-        const almacenSelect = document.querySelector(`#hccirugiahospitalizacion-insumos-${filaActual}-almacen_id`);
-        if (almacenSelect) {
-            // Simula clic en el Select2 para asegurar que las opciones estén visibles
-            const almacenSelectContainer = `#select2-hccirugiahospitalizacion-insumos-${filaActual}-almacen_id-container`;
-            try {
-                await Select2Utils.hacerClick(almacenSelectContainer);
-                await Select2Utils.buscar("FACT ADMISION");
-                await Select2Utils.seleccionar();
-            } catch (error) {
-                console.warn(`⚠️ No se pudo abrir el select de almacén en fila ${filaActual}:`, error);
-            }
-
-            // Espera breve antes de acceder a las opciones del select
-            await new Promise(r => setTimeout(r, 300));
-
-            const option = Array.from(almacenSelect.options).find(opt => opt.textContent.trim().toUpperCase() === 'FACT ADMISION');
-            if (option) {
-                almacenSelect.value = option.value;
-                const changeEvent = new Event("change", {bubbles: true});
-                almacenSelect.dispatchEvent(changeEvent);
-                console.log(`🏪 Almacén "FACT ADMISION" seleccionado para fila ${filaActual}`);
-            } else {
-                console.warn(`⚠️ No se encontró opción "FACT ADMISION" para la fila ${filaActual}`);
-            }
-        } else {
-            console.warn(`⚠️ No se encontró el select de almacén para la fila ${filaActual}`);
-        }
 
         try {
             await Select2Utils.hacerClick(select2ContainerId);
             await Select2Utils.buscar(nombre);
             await Select2Utils.seleccionar();
+            // Validación de selección efectiva
+            const contenedorSeleccion = document.querySelector(select2ContainerId);
+            if (!contenedorSeleccion || !contenedorSeleccion.textContent.trim().toUpperCase().includes(nombre)) {
+                console.warn(`⚠️ El insumo "${nombre}" no fue realmente seleccionado en fila ${index + 1}`);
+                window.erroresInsumosNoIngresados.push({
+                    tipo: "anestesia",
+                    nombre: nombre,
+                    fila: index + 1,
+                    error: "No se pudo seleccionar correctamente en el Select2"
+                });
+                continue;
+            }
             const inputCantidad = document.querySelector(`#hccirugiahospitalizacion-insumos-${filaActual}-cantidad-insumos`);
             if (inputCantidad) {
                 inputCantidad.value = item.cantidad;
@@ -573,7 +587,18 @@ async function completarDatosOxigeno(codigoOxigeno = "911111", fila = 0) {
         await Select2Utils.hacerClick(select2ContainerId);
         await Select2Utils.buscar(codigoOxigeno);
         await Select2Utils.seleccionar();
-
+        // Validación de selección efectiva
+        const contenedorSeleccion = document.querySelector(select2ContainerId);
+        if (!contenedorSeleccion || !contenedorSeleccion.textContent.trim().toUpperCase().includes(codigoOxigeno)) {
+            console.warn(`⚠️ El oxígeno "${codigoOxigeno}" no fue realmente seleccionado en fila ${fila + 1}`);
+            window.erroresInsumosNoIngresados.push({
+                tipo: "oxigeno",
+                nombre: codigoOxigeno,
+                fila: fila + 1,
+                error: "No se pudo seleccionar correctamente en el Select2"
+            });
+            return;
+        }
         // Establecer duración después de seleccionar el código
         setTimeout(() => {
             try {
@@ -625,7 +650,18 @@ async function completarDatosTiempoAnestesia(codigoTiempoAnestesia = "999999", f
         await Select2Utils.hacerClick(select2ContainerId);
         await Select2Utils.buscar(codigoTiempoAnestesia);
         await Select2Utils.seleccionar();
-
+        // Validación de selección efectiva
+        const contenedorSeleccion = document.querySelector(select2ContainerId);
+        if (!contenedorSeleccion || !contenedorSeleccion.textContent.trim().toUpperCase().includes(codigoTiempoAnestesia)) {
+            console.warn(`⚠️ El Tiempo de Anestesia "${codigoTiempoAnestesia}" no fue realmente seleccionado en fila ${fila + 1}`);
+            window.erroresInsumosNoIngresados.push({
+                tipo: "tiempo_anestesia",
+                nombre: codigoTiempoAnestesia,
+                fila: fila + 1,
+                error: "No se pudo seleccionar correctamente en el Select2"
+            });
+            return;
+        }
         // Establecer duración después de seleccionar el código
         setTimeout(() => {
             try {
