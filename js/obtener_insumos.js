@@ -1,66 +1,79 @@
 window.erroresInsumosNoIngresados = [];
 window.detectarInsumosPaciente = () => {
+    // Validación de URL permitida
+    const urlPermitidas = [
+        'http://cive.ddns.net:8085/documentacion/doc-documento',
+        'http://192.168.1.13:8085/documentacion/doc-documento'
+    ];
+    if (!urlPermitidas.some(url => window.location.href.startsWith(url))) {
+        console.log("🚫 URL no permitida. Script detenido.");
+        return;
+    }
+
     console.log("🔍 Módulo obtener_insumos.js cargado. Esperando clic en icono de corazón...");
 
     setTimeout(() => {
         document.querySelectorAll('td[data-col-seq="14"] a').forEach(heartIcon => {
-            heartIcon.addEventListener("click", (event) => {
-                event.preventDefault();
+            if (!heartIcon.dataset.listenerAdded) {
+                heartIcon.addEventListener("click", (event) => {
+                    event.preventDefault();
 
-                const fila = heartIcon.closest("tr");
-                const textoProcedimiento = fila?.querySelector('td[data-col-seq="8"]')?.textContent?.trim()?.toUpperCase();
+                    const fila = heartIcon.closest("tr");
+                    const textoProcedimiento = fila?.querySelector('td[data-col-seq="8"]')?.textContent?.trim()?.toUpperCase();
 
-                if (!textoProcedimiento || !textoProcedimiento.startsWith("CIRUGIAS")) {
-                    console.log("⚠️ Procedimiento no quirúrgico. No se ejecutará la lógica de insumos.");
-                    return;
-                }
-
-                console.log("❤️ Icono de corazón clickeado. Esperando que se abra el modal...");
-
-                // Esperar a que el modal esté visible
-                let intentos = 0;
-                const maxIntentos = 10;
-
-                const esperarModal = setInterval(() => {
-                    const modal = document.querySelector('.modal.show, .modal[style*="display: block"], .modal[aria-hidden="false"]');
-
-                    if (modal) {
-                        console.log("🟢 Modal detectado. Extrayendo datos...");
-                        clearInterval(esperarModal);
-
-                        // Extraer idSolicitud desde los enlaces con "imprimir-cotizacion"
-                        let idSolicitud = null;
-                        document.querySelectorAll('a[href*="imprimir-cotizacion"]').forEach(link => {
-                            const urlParams = new URLSearchParams(new URL(link.href, window.location.origin).search);
-                            if (urlParams.has("idSolicitud")) {
-                                idSolicitud = urlParams.get("idSolicitud");
-                            }
-                        });
-
-                        // Extraer el número de historia clínica
-                        const hcInput = document.querySelector('input#numero-historia-clinica');
-                        let hcNumber = hcInput ? hcInput.value : null;
-
-                        if (idSolicitud && hcNumber) {
-                            console.log(`✅ Datos detectados:
-                            - idSolicitud: ${idSolicitud}
-                            - hcNumber: ${hcNumber}`);
-
-                            // Llamar a la función para enviar los datos al API
-                            enviarDatosAPI(idSolicitud, hcNumber);
-                        } else {
-                            console.warn("⚠️ No se encontraron todos los datos necesarios.");
-                        }
-                    } else {
-                        console.log(`⏳ Intentando detectar modal... (${intentos + 1}/${maxIntentos})`);
-                        intentos++;
-                        if (intentos >= maxIntentos) {
-                            console.warn("⚠️ No se detectó el modal después de varios intentos.");
-                            clearInterval(esperarModal);
-                        }
+                    if (!textoProcedimiento || !textoProcedimiento.startsWith("CIRUGIAS")) {
+                        console.log("⚠️ Procedimiento no quirúrgico. No se ejecutará la lógica de insumos.");
+                        return;
                     }
-                }, 500);
-            });
+
+                    console.log("❤️ Icono de corazón clickeado. Esperando que se abra el modal...");
+
+                    // Esperar a que el modal esté visible
+                    let intentos = 0;
+                    const maxIntentos = 10;
+
+                    const esperarModal = setInterval(() => {
+                        const modal = document.querySelector('.modal.show, .modal[style*="display: block"], .modal[aria-hidden="false"]');
+
+                        if (modal) {
+                            console.log("🟢 Modal detectado. Extrayendo datos...");
+                            clearInterval(esperarModal);
+
+                            // Extraer idSolicitud desde los enlaces con "imprimir-cotizacion"
+                            let idSolicitud = null;
+                            document.querySelectorAll('a[href*="imprimir-cotizacion"]').forEach(link => {
+                                const urlParams = new URLSearchParams(new URL(link.href, window.location.origin).search);
+                                if (urlParams.has("idSolicitud")) {
+                                    idSolicitud = urlParams.get("idSolicitud");
+                                }
+                            });
+
+                            // Extraer el número de historia clínica
+                            const hcInput = document.querySelector('input#numero-historia-clinica');
+                            let hcNumber = hcInput ? hcInput.value : null;
+
+                            if (idSolicitud && hcNumber) {
+                                console.log(`✅ Datos detectados:
+                                - idSolicitud: ${idSolicitud}
+                                - hcNumber: ${hcNumber}`);
+
+                                // Llamar a la función para enviar los datos al API
+                                enviarDatosAPI(idSolicitud, hcNumber);
+                            } else {
+                                console.warn("⚠️ No se encontraron todos los datos necesarios.");
+                            }
+                        } else {
+                            console.log(`⏳ Intentando detectar modal... (${intentos + 1}/${maxIntentos})`);
+                            intentos++;
+                            if (intentos >= maxIntentos) {
+                                console.warn("⚠️ No se detectó el modal después de varios intentos.");
+                                clearInterval(esperarModal);
+                            }
+                        }
+                    }, 500);
+                });
+                heartIcon.dataset.listenerAdded = "true";
+            }
         });
     }, 1000);
 };
@@ -417,7 +430,55 @@ function mostrarAlertaInsumos(insumos) {
                     icon: "warning",
                     title: "Insumos no ingresados",
                     html: htmlFinal,
-                    confirmButtonText: "Cerrar"
+                    showCancelButton: true,
+                    confirmButtonText: "Reintentar",
+                    cancelButtonText: "Cerrar"
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        console.log("♻️ Reintentando inserción de insumos fallidos...");
+
+                        const erroresActuales = [...window.erroresInsumosNoIngresados];
+                        window.erroresInsumosNoIngresados = [];
+
+                        for (const error of erroresActuales) {
+                            if (error.tipo === "oxigeno") {
+                                await completarDatosOxigeno(error.nombre, error.fila - 1);
+                            } else if (error.tipo === "tiempo_anestesia") {
+                                await completarDatosTiempoAnestesia(error.nombre, error.fila - 1);
+                            } else if (error.tipo === "anestesia") {
+                                // Añadir explícitamente una fila antes de intentar nuevamente
+                                await new Promise(resolve => agregarFilas("#seriales-input-insumos .js-input-plus", 1, resolve, "anestesia"));
+                                await completarDatosAnestesia([{
+                                    codigo: error.nombre,
+                                    cantidad: 1
+                                }]);
+                            } else if (error.tipo === "equipo") {
+                                // Añadir explícitamente una fila antes de intentar nuevamente
+                                await new Promise(resolve => agregarFilas("#seriales-input-derecho .js-input-plus", 1, resolve, "equipos"));
+                                await completarDatosEquipos([{
+                                    codigo: error.nombre
+                                }]);
+                            }
+                        }
+
+                        if (window.erroresInsumosNoIngresados.length > 0) {
+                            console.warn("⚠️ Algunos insumos siguen sin poder agregarse:", window.erroresInsumosNoIngresados);
+                            Swal.fire({
+                                icon: "error",
+                                title: "Algunos insumos aún no se pudieron agregar",
+                                text: "Verifica manualmente los insumos que quedaron pendientes.",
+                                confirmButtonText: "Aceptar"
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: "success",
+                                title: "¡Todos los insumos fueron agregados!",
+                                confirmButtonText: "Cerrar"
+                            });
+                        }
+                    } else {
+                        console.log("❌ El usuario canceló el reintento.");
+                    }
                 });
             } else {
                 // Mostrar alerta positiva cuando no hay errores tras autollenado

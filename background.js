@@ -23,7 +23,7 @@ chrome.commands.onCommand.addListener((command) => {
                             console.error('ejecutarExamenes no está definida.');
                         }
                     },
-                    args: ['octm']
+                    args: ['angio'] // Aquí puedes pasar el ID del examen o cualquier
                 });
             });
         });
