@@ -255,11 +255,3 @@ function extraerDatosYEnviar() {
         });
 }
 
-// Comprobar si el botón "Guardar Toda la Consulta" existe antes de añadir el listener
-const botonGuardar = document.querySelector('#botonGuardar');
-if (botonGuardar) {
-    botonGuardar.addEventListener('click', function (e) {
-        e.preventDefault(); // Evita el envío tradicional del formulario
-        extraerDatosYEnviar(); // Llama a la función para enviar los datos
-    });
-}

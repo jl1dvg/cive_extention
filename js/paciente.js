@@ -58,6 +58,15 @@
             const enlace = fila.querySelector('td[data-col-seq="13"]');
             const form_id = enlace?.getAttribute('onclick')?.match(/id=(\d+)/)?.[1] || null;
 
+            const estadoSpan = fila.querySelector('td[data-col-seq="17"] span.badge');
+            const backgroundColor = estadoSpan ? window.getComputedStyle(estadoSpan).backgroundColor : '';
+            let estadoPaciente = 'desconocido';
+            if (backgroundColor === 'rgb(0, 128, 0)' || backgroundColor.includes('green')) {
+                estadoPaciente = 'no_admitido';
+            } else {
+                estadoPaciente = 'admitido';
+            }
+
             let fechaCaducidad = fila.querySelector('td[data-col-seq="16"]')?.textContent.trim();
             if (!fechaCaducidad || fechaCaducidad === '(no definido)') {
                 fechaCaducidad = null;
@@ -66,48 +75,66 @@
             const {lname, lname2, fname, mname} = descomponerNombreCompleto(patientName);
 
             if (identificacion && lname && fname && form_id) {
-                enviarDatosAHC(identificacion, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id);
+                enviarDatosAHC(identificacion, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id, estadoPaciente);
             }
         });
     }
 
-    function enviarDatosAHC(hcNumber, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id) {
+    function enviarDatosAHC(hcNumber, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id, estadoPaciente) {
         const url = 'https://asistentecive.consulmed.me/api/proyecciones/guardar.php';
 
         const data = {
             hcNumber, lname, lname2, fname, mname, afiliacion, doctor, procedimiento_proyectado, fechaCaducidad, form_id
         };
 
-        console.log('📤 Envío a API');
+        console.log('📤 Envío a API vía Beacon');
         console.log('✅ Datos enviados:', data);
 
-        fetch(url, {
-            method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
-        })
-            .then(response => response.text())
-            .then(raw => {
-                console.log('📥 Respuesta RAW:', raw);
-                try {
-                    const json = JSON.parse(raw);
-                    console.log('📥 Respuesta JSON parseada:', json);
-                    if (json.success) {
-                        console.log('✅ Datos guardados correctamente.');
-                    } else if (json.debug) {
-                        console.log('🛠 Datos recibidos en modo depuración:', json.recibido);
-                    } else {
-                        console.warn('⚠️ Respuesta sin éxito:', json.message || json);
-                    }
-                } catch (e) {
-                    console.error('❌ Error al parsear JSON:', e);
-                    console.log('❌ Respuesta inválida para JSON:', raw);
-                }
-            })
-            .catch(error => {
-                console.error('Error al enviar los datos:', error);
-                if (error instanceof TypeError) {
-                    console.error("Tipo de error detectado. ¿Problema de conexión?");
-                }
-            });
+        localStorage.setItem('logAHC', JSON.stringify({
+            estadoPaciente,
+            timestamp: new Date().toISOString()
+        }));
+
+        try {
+            const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+            const enviado = navigator.sendBeacon(url, blob);
+
+            if (!enviado) {
+                console.warn('⚠️ No se pudo enviar con beacon. Ejecutando fallback con fetch...');
+                fetch(url, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.text())
+                    .then(raw => {
+                        console.log('📥 Fallback fetch - respuesta RAW:', raw);
+                        try {
+                            const json = JSON.parse(raw);
+                            console.log('📥 Fallback fetch - respuesta JSON:', json);
+                            localStorage.setItem('logAHC', JSON.stringify({
+                                success: json.success,
+                                message: json.message,
+                                estadoPaciente,
+                                timestamp: new Date().toISOString()
+                            }));
+                            if (json.success) {
+                                console.log('✅ Datos guardados correctamente.');
+                            } else {
+                                console.warn('⚠️ Respuesta sin éxito:', json.message || json);
+                            }
+                        } catch (e) {
+                            console.error('❌ Error al parsear JSON del fallback:', e);
+                            console.log('❌ Respuesta inválida para JSON:', raw);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('❌ Error en el fallback fetch:', error);
+                    });
+            }
+        } catch (e) {
+            console.error('❌ Error al usar sendBeacon:', e);
+        }
     }
 
     // Asignar las funciones al objeto `window` para que sean accesibles globalmente

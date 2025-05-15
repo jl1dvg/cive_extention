@@ -1,3 +1,18 @@
+window.guardarTodaLaConsulta = function () {
+    console.log("🟢 Iniciando guardado unificado de la consulta...");
+
+    if (window.extraerDatosYEnviar) {
+        window.extraerDatosYEnviar();
+    }
+
+    if (window.extraerDatosSolicitudYEnviar) {
+        const botonGuardar = document.querySelector("#botonGuardar");
+        if (botonGuardar) {
+            window.extraerDatosSolicitudYEnviar(botonGuardar);
+        }
+    }
+};
+
 window.addEventListener("load", () => {
     if (window.inicializarUI) window.inicializarUI();
     if (window.habilitarArrastre) window.habilitarArrastre();
@@ -19,36 +34,12 @@ window.addEventListener("load", () => {
         console.warn("⚠️ registrarCambiosEnCampos no está definido.");
     }
 
-    // Asegurar que la función existe antes de asignar el evento al botón
-    if (window.extraerDatosYEnviar) {
-        console.log("extraerDatosYEnviar disponible, esperando interacción del usuario.");
-
-        const botonGuardar = document.querySelector("#botonGuardar");
-        if (botonGuardar) {
-            botonGuardar.addEventListener("click", (e) => {
-                e.preventDefault(); // Evita el envío automático del formulario
-                console.log("Botón 'Guardar Toda la Consulta' presionado. Enviando datos...");
-                window.extraerDatosYEnviar();
-            });
-        }
-    } else {
-        console.warn("⚠️ extraerDatosYEnviar no está definida en el contexto global.");
-    }
-
-    // Asegurar que la función existe antes de asignar el evento al botón
-    if (window.extraerDatosSolicitudYEnviar) {
-        console.log("extraerDatosSolicitudYEnviar disponible, esperando interacción del usuario.");
-
-        const botonGuardar = document.querySelector("#botonGuardar");
-        if (botonGuardar) {
-            botonGuardar.addEventListener("click", (e) => {
-                e.preventDefault();
-                console.log("Botón 'Guardar Toda la Consulta' presionado. Enviando datos...");
-                window.extraerDatosSolicitudYEnviar(botonGuardar); // <== AQUÍ
-            });
-        }
-    } else {
-        console.warn("⚠️ extraerDatosSolicitudYEnviar no está definida en el contexto global."); // <== CORREGIDO
+    const botonGuardar = document.querySelector("#botonGuardar");
+    if (botonGuardar && window.guardarTodaLaConsulta) {
+        botonGuardar.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.guardarTodaLaConsulta();
+        });
     }
 
     // Ejecutar detección de insumos si la función existe
@@ -73,5 +64,26 @@ window.addEventListener("load", () => {
         window.inicializarDeteccionModalAdmision();
     } else {
         console.warn("⚠️ inicializarDeteccionModalAdmision no está definida.");
+    }
+
+    // Mostrar resultado de envío previo si está disponible
+    const log = localStorage.getItem('logAHC');
+    if (log) {
+        try {
+            const datos = JSON.parse(log);
+            console.log('📦 Resultado del envío anterior:', datos);
+            localStorage.removeItem('logAHC');
+            if (datos.estadoPaciente === 'no_admitido') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Paciente no admitido. No deberías escribir en la historia clínica.',
+                    text: '⚠️ Este paciente aún no ha llegado.',
+                    confirmButtonText: 'Entendido',
+                    timer: 10000
+                });
+            }
+        } catch (e) {
+            console.error('❌ Error al parsear logAHC:', e);
+        }
     }
 });

@@ -133,7 +133,7 @@ function registrarCambiosEnCampos() {
                 });
             }
         } else {
-            console.info(`Campo ${key} no encontrado o no es obligatorio.`);
+            //console.info(`Campo ${key} no encontrado o no es obligatorio.`);
         }
     });
     // Procesar apellidos y nombres en campos separados
