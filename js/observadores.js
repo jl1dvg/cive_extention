@@ -251,11 +251,17 @@
 
     // Evita múltiples ejecuciones innecesarias
     let ultimaPaginaProcesada = null;
+    let ultimaClaveMostrarTodos = null;
 
     function observarTablaPorAtenderSiCambio() {
-        const paginaActual = new URLSearchParams(window.location.search).get('por-atender-page');
-        if (paginaActual !== ultimaPaginaProcesada) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paginaActual = urlParams.get('por-atender-page');
+        const claveMostrarTodos = Array.from(urlParams).find(([k, v]) => k.includes('_tog') && v === 'all');
+        const claveActual = claveMostrarTodos ? claveMostrarTodos[0] : null;
+
+        if (paginaActual !== ultimaPaginaProcesada || claveActual !== ultimaClaveMostrarTodos) {
             ultimaPaginaProcesada = paginaActual;
+            ultimaClaveMostrarTodos = claveActual;
             setTimeout(() => observarPacientesPorAtender(), 500);
         }
     }
