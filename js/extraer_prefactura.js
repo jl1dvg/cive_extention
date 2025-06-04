@@ -1,3 +1,5 @@
+let origenGuardado = null;
+
 // 📦 Extraer datos de la tabla de procedimientos y mostrarlos como JSON
 function extraerDatosProcedimientos() {
     const filas = document.querySelectorAll('#seriales-input-procedimientos .multiple-input-list__item');
@@ -71,19 +73,21 @@ function extraerDatosProcedimientos() {
 
     console.log("📦 Payload completo para enviar:", JSON.stringify(payload, null, 2));
     enviarBillingAlAPI(payload);
-    Swal.fire({
-        icon: "question",
-        title: "¿Desea descargar la prefactura?",
-        showCancelButton: true,
-        confirmButtonText: 'Sí, descargar',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.open(`https://asistentecive.consulmed.me/views/billing/descargar_excel.php?form_id=${formId}`, '_blank');
-        } else {
-            console.log("❌ Descarga cancelada.");
-        }
-    });
+    if (origenGuardado !== 'terminar') {
+        Swal.fire({
+            icon: "question",
+            title: "¿Desea descargar la prefactura?",
+            showCancelButton: true,
+            confirmButtonText: 'Sí, descargar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.open(`https://asistentecive.consulmed.me/views/billing/descargar_excel.php?form_id=${formId}`, '_blank');
+            } else {
+                console.log("❌ Descarga cancelada.");
+            }
+        });
+    }
 }
 
 // 📦 Extraer datos de oxígeno y retornarlos como array
@@ -371,12 +375,14 @@ window.detectarProcedimientosAlGuardar = () => {
                     - hcNumber: ${hcNumber}
                     - formId: ${formId}`);
 
+                    origenGuardado = 'guardar';
                     extraerDatosProcedimientos(); // Esto mostrará también el SweetAlert
 
                     // Luego continuamos con el evento original
                     setTimeout(() => {
                         clon.setAttribute("disabled", true); // Evita doble clic
                         btnGuardar.click(); // Disparo original si hace falta
+                        origenGuardado = null;
                     }, 300);
                 } else {
                     console.warn("⚠️ No se pudieron capturar los datos antes de que se cierre el modal.");

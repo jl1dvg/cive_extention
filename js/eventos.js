@@ -3,13 +3,6 @@ window.inicializarEventos = function () {
 
     const eventos = [
         {
-            id: "btnExamenes", evento: () => {
-                console.log("Botón Exámenes clickeado");
-                mostrarSeccion("examenes");
-                cargarExamenes();
-            }
-        },
-        {
             id: "btnProtocolos", evento: () => {
                 console.log("Botón Protocolos clickeado");
                 mostrarSeccion("protocolos");
@@ -84,6 +77,16 @@ window.inicializarEventos = function () {
             }
         }
     ];
+
+    if (window.configCIVE.ES_LOCAL) {
+        eventos.push({
+            id: "btnExamenes", evento: () => {
+                console.log("Botón Exámenes clickeado");
+                mostrarSeccion("examenes");
+                cargarExamenes();
+            }
+        });
+    }
 
     eventos.forEach(({id, evento}) => {
         const btn = document.getElementById(id);

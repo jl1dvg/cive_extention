@@ -1,9 +1,51 @@
 function ejecutarProtocoloEnPagina(item) {
+    const LOG_PREFIX = '[CIVE EXT]';
+    const MODO_DEBUG_VISUAL = true; // Cambiar a false para desactivar visualización
+    const MODO_LOG_COMPACTO = true;
+
+    function validarItem(item) {
+        if (!item || typeof item !== 'object') {
+            throw new Error('El item no está definido o no es un objeto.');
+        }
+
+        const camposObligatorios = ['id', 'membrete', 'dieresis', 'exposicion', 'hallazgo', 'operatorio'];
+        const faltantes = camposObligatorios.filter(campo => !item[campo]);
+
+        if (faltantes.length > 0) {
+            throw new Error(`Faltan los siguientes campos obligatorios en item: ${faltantes.join(', ')}`);
+        }
+
+        if (!Array.isArray(item.codigos) || item.codigos.length === 0) {
+            throw new Error('El array de códigos está vacío o no es válido.');
+        }
+
+        if (!Array.isArray(item.diagnosticos)) {
+            console.warn(`${LOG_PREFIX} Diagnósticos no es un arreglo válido, se continuará pero puede faltar información.`);
+        }
+
+        if (typeof item.anestesia !== 'string') {
+            throw new Error('El campo "anestesia" debe estar presente y ser una cadena.');
+        }
+    }
+
 // Verificar que el item tenga la estructura esperada
-    console.log('Item recibido en ejecutarProtocoloEnPagina:', item);
+    try {
+        validarItem(item);
+    } catch (error) {
+        console.error(`${LOG_PREFIX} Error en la validación del item:`, error.message);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error en los datos',
+            text: error.message,
+            confirmButtonText: 'Entendido'
+        });
+        return;
+    }
+
+    console.log(`${LOG_PREFIX} Item recibido en ejecutarProtocoloEnPagina:`, item);
 
     if (!item || typeof item !== 'object' || !item.codigos || !Array.isArray(item.codigos)) {
-        console.error('El item recibido no tiene la estructura esperada.', item);
+        console.error(`${LOG_PREFIX} El item recibido no tiene la estructura esperada.`, item);
         return;
     }
 
@@ -12,21 +54,76 @@ function ejecutarProtocoloEnPagina(item) {
         return new Promise((resolve, reject) => {
             const textArea = document.querySelector(selector);
             if (textArea) {
-                console.log(`Llenando el campo de texto "${selector}" con "${valor}"`);
+                const campo = selector.replace('#consultasubsecuente-', '').replace('#', '');
+                if (MODO_LOG_COMPACTO) {
+                    console.log(`${LOG_PREFIX} [${campo}] = "${valor}"`);
+                } else {
+                    console.log(`${LOG_PREFIX} Llenando el campo de texto "${selector}" con "${valor}"`);
+                }
                 textArea.value = valor;
+                resaltarElemento(textArea, 'blue');
+                // Si el campo es el pie de página, hacerlo de solo lectura
+                if (selector === '#consultasubsecuente-piepagina') {
+                    textArea.readOnly = true;
+                }
                 setTimeout(resolve, 100); // Añadir un retraso para asegurar que el valor se establezca
             } else {
-                console.error(`El campo de texto "${selector}" no se encontró.`);
+                console.error(`${LOG_PREFIX} El campo de texto "${selector}" no se encontró.`);
                 reject(`El campo de texto "${selector}" no se encontró.`);
             }
         });
+    }
+
+    function resaltarElemento(elemento, color = 'orange') {
+        if (!MODO_DEBUG_VISUAL || !elemento) return;
+
+        const bordeOriginal = elemento.style.outline;
+        elemento.style.outline = `2px solid ${color}`;
+        elemento.scrollIntoView({behavior: 'smooth', block: 'center'});
+
+        setTimeout(() => {
+            elemento.style.outline = bordeOriginal;
+        }, 1000);
+    }
+
+    // Nueva función retry para reintentos
+    function retry(fn, maxRetries = 3, delay = 300) {
+        return new Promise((resolve, reject) => {
+            let attempt = 0;
+            const tryExecute = () => {
+                fn()
+                    .then(resolve)
+                    .catch((error) => {
+                        attempt++;
+                        if (attempt < maxRetries) {
+                            console.warn(`${LOG_PREFIX} Reintentando (${attempt}/${maxRetries})...`);
+                            setTimeout(tryExecute, delay);
+                        } else {
+                            reject(error);
+                        }
+                    });
+            };
+            tryExecute();
+        });
+    }
+
+    function buscarYSeleccionar(selector, valor) {
+        return retry(() => hacerClickEnSelect2(selector), 3, 300)
+            .then(() => establecerBusqueda(selector, valor))
+            .then(() => seleccionarOpcion());
+    }
+
+    function abrirYBuscarSelect2(selector, valor) {
+        return retry(() => hacerClickEnSelect2(selector), 3, 300)
+            .then(() => establecerBusqueda(selector, valor));
     }
 
     function hacerClickEnBoton(selector, numeroDeClicks) {
         return new Promise((resolve, reject) => {
             const botonPlus = document.querySelector(selector);
             if (botonPlus) {
-                console.log(`Haciendo clic en el botón "${selector}" ${numeroDeClicks} veces`);
+                console.log(`${LOG_PREFIX} Haciendo clic en el botón "${selector}" ${numeroDeClicks} veces`);
+                resaltarElemento(botonPlus, 'green');
                 let clicks = 0;
 
                 function clickBoton() {
@@ -41,7 +138,7 @@ function ejecutarProtocoloEnPagina(item) {
 
                 clickBoton();
             } else {
-                console.error(`El botón "${selector}" no se encontró.`);
+                console.error(`${LOG_PREFIX} El botón "${selector}" no se encontró.`);
                 reject(`El botón "${selector}" no se encontró.`);
             }
         });
@@ -51,14 +148,15 @@ function ejecutarProtocoloEnPagina(item) {
         return new Promise((resolve, reject) => {
             const tecnicoContainer = document.querySelector(selector);
             if (tecnicoContainer) {
-                console.log(`Haciendo clic en el contenedor: ${selector}`);
+                console.log(`${LOG_PREFIX} Haciendo clic en el contenedor: ${selector}`);
+                resaltarElemento(tecnicoContainer, 'purple');
                 const event = new MouseEvent('mousedown', {
                     view: window, bubbles: true, cancelable: true
                 });
                 tecnicoContainer.dispatchEvent(event);
                 setTimeout(resolve, 100); // Añadir un retraso para asegurar que el menú se despliegue
             } else {
-                console.error(`El contenedor "${selector}" no se encontró.`);
+                console.error(`${LOG_PREFIX} El contenedor "${selector}" no se encontró.`);
                 reject(`El contenedor "${selector}" no se encontró.`);
             }
         });
@@ -72,16 +170,16 @@ function ejecutarProtocoloEnPagina(item) {
             const searchForField = () => {
                 const searchField = document.querySelector('input.select2-search__field');
                 if (!searchField) {
-                    console.log(`Intento ${attempts + 1}: no se encontró el campo de búsqueda. Retentando...`);
+                    console.log(`${LOG_PREFIX} Intento ${attempts + 1}: no se encontró el campo de búsqueda. Reintentando...`);
                     attempts++;
                     if (attempts < maxAttempts) {
                         hacerClickEnSelect2(selector).then(() => setTimeout(searchForField, 500)).catch(error => reject(error));
                     } else {
-                        console.error('El campo de búsqueda del Select2 no se encontró.');
+                        console.error(`${LOG_PREFIX} El campo de búsqueda del Select2 no se encontró.`);
                         reject('El campo de búsqueda del Select2 no se encontró.');
                     }
                 } else {
-                    console.log('Estableciendo búsqueda:', valor);
+                    console.log(`${LOG_PREFIX} Estableciendo búsqueda:`, valor);
                     searchField.value = valor;
                     const inputEvent = new Event('input', {bubbles: true, cancelable: true});
                     searchField.dispatchEvent(inputEvent);
@@ -97,19 +195,20 @@ function ejecutarProtocoloEnPagina(item) {
         return new Promise((resolve, reject) => {
             // Verificar que el selector existe y es accesible antes de intentar realizar operaciones
             if (document.querySelector('input.select2-search__field') === null) {
-                console.error('El campo de búsqueda select2-search__field no existe en el DOM.');
+                console.error(`${LOG_PREFIX} El campo de búsqueda select2-search__field no existe en el DOM.`);
                 return;
             }
             const searchField = document.querySelector('input.select2-search__field');
             if (searchField) {
-                console.log('Seleccionando opción');
+                console.log(`${LOG_PREFIX} Seleccionando opción`);
+                resaltarElemento(searchField, 'red');
                 const enterEvent = new KeyboardEvent('keydown', {
                     key: 'Enter', keyCode: 13, bubbles: true, cancelable: true
                 });
                 searchField.dispatchEvent(enterEvent);
                 setTimeout(resolve, 200); // Añadir un retraso para asegurar que la opción se seleccione
             } else {
-                console.error('El campo de búsqueda del Select2 no se encontró para seleccionar la opción.');
+                console.error(`${LOG_PREFIX} El campo de búsqueda del Select2 no se encontró para seleccionar la opción.`);
                 reject('El campo de búsqueda del Select2 no se encontró para seleccionar la opción.');
             }
         });
@@ -158,65 +257,6 @@ function ejecutarProtocoloEnPagina(item) {
             }
         });
     }
-
-    /*function llenarCampoCantidad(selector, cantidad, tabCount = 0) {
-        return new Promise((resolve, reject) => {
-            const campoCantidad = document.querySelector(selector);
-            if (campoCantidad) {
-                console.log(`Llenando el campo cantidad con el valor: ${cantidad}`);
-                campoCantidad.focus();
-                campoCantidad.value = cantidad;
-                campoCantidad.dispatchEvent(new Event('input', {bubbles: true}));
-                campoCantidad.dispatchEvent(new Event('change', {bubbles: true}));
-
-                // Simular la tecla TAB la cantidad de veces especificada
-                let tabsPressed = 0;
-                const pressTab = () => {
-                    if (tabsPressed < tabCount) {
-                        const tabEvent = new KeyboardEvent('keydown', {
-                            key: 'Tab',
-                            keyCode: 9,
-                            code: 'Tab',
-                            which: 9,
-                            bubbles: true,
-                            cancelable: true
-                        });
-                        document.activeElement.dispatchEvent(tabEvent);
-
-                        const tabEventPress = new KeyboardEvent('keypress', {
-                            key: 'Tab',
-                            keyCode: 9,
-                            code: 'Tab',
-                            which: 9,
-                            bubbles: true,
-                            cancelable: true
-                        });
-                        document.activeElement.dispatchEvent(tabEventPress);
-
-                        const tabEventUp = new KeyboardEvent('keyup', {
-                            key: 'Tab',
-                            keyCode: 9,
-                            code: 'Tab',
-                            which: 9,
-                            bubbles: true,
-                            cancelable: true
-                        });
-                        document.activeElement.dispatchEvent(tabEventUp);
-
-                        tabsPressed++;
-                        setTimeout(pressTab, 100); // Asegurar que el evento se despacha correctamente
-                    } else {
-                        campoCantidad.blur();
-                        resolve();
-                    }
-                };
-                pressTab();
-            } else {
-                console.error('El campo cantidad no se encontró.');
-                reject('El campo cantidad no se encontró.');
-            }
-        });
-    }*/
 
     const ejecutarAcciones = (item) => {
         if (!item || !item.membrete || !item.dieresis) {
@@ -288,118 +328,34 @@ function ejecutarProtocoloEnPagina(item) {
     const ojoATratar = obtenerOjoATratar();
     console.log(ojoATratar);
 
-    function ejecutarCodigos(item, ojo) {
-        console.log(ojoATratar);
-        return item.codigos.reduce((promise, codigo) => {
+    // Función genérica para select2 con lateralidad
+    function ejecutarSelect2ConLateralidad(lista, campoNombre = 'nombre') {
+        if (!Array.isArray(lista)) return Promise.resolve();
+
+        return lista.reduce((promise, item) => {
             return promise.then(() => {
-                return hacerClickEnSelect2(codigo.selector)
-                    .then(() => establecerBusqueda(codigo.selector, codigo.nombre))
-                    .then(() => seleccionarOpcion())
-                    .then(() => hacerClickEnSelect2(codigo.lateralidad))
-                    .then(() => establecerBusqueda(codigo.lateralidad, ojo))
-                    .then(() => seleccionarOpcion())
-                    .catch(error => console.error(`Error procesando código ${codigo.nombre}:`, error));
+                return buscarYSeleccionar(item.selector, item[campoNombre])
+                    .then(() => item.definitivo !== undefined ? hacerClickEnPresuntivo(item.definitivo, 1) : Promise.resolve())
+                    .then(() => buscarYSeleccionar(item.lateralidad, ojoATratar.sigla))
+                    .catch(error => console.error(`Error procesando item ${item[campoNombre]}:`, error));
             });
-        }, Promise.resolve()); // Inicializa con una promesa resuelta
+        }, Promise.resolve());
+    }
+
+    function ejecutarCodigos(item, ojo) {
+        return ejecutarSelect2ConLateralidad(item.codigos);
     }
 
     function ejecutarDiagnosticos(item, ojo) {
-        if (!Array.isArray(item.diagnosticos)) return Promise.resolve();
-
-        return item.diagnosticos.reduce((promise, diagnostico) => {
-            return promise.then(() => {
-                return hacerClickEnSelect2(diagnostico.selector)
-                    .then(() => establecerBusqueda(diagnostico.selector, diagnostico.nombre))
-                    .then(() => seleccionarOpcion())
-                    .then(() => hacerClickEnPresuntivo(diagnostico.definitivo, 1))
-                    .then(() => hacerClickEnSelect2(diagnostico.lateralidad))
-                    .then(() => establecerBusqueda(diagnostico.lateralidad, ojo))
-                    .then(() => seleccionarOpcion())
-                    .catch(error => console.error(`Error procesando código ${diagnostico.nombre}:`, error));
-            });
-        }, Promise.resolve()); // Inicializa con una promesa resuelta
+        return ejecutarSelect2ConLateralidad(item.diagnosticos);
     }
-
-    /*function ejecutarRecetas(item) {
-        if (!Array.isArray(item.recetas)) return Promise.resolve();
-
-        return hacerClickEnBoton('#prescripcion', 1)
-            .then(() => hacerClickEnBoton('#recetas-input .list-cell__button .js-input-plus', item.recetaCount))
-            .then(() => esperarElemento(`#select2-recetas-recetasadd-0-producto_id-container`)) // Solo se ejecuta una vez
-            .then(() => {
-                // Iterar sobre cada receta
-                return item.recetas.reduce((promise, receta) => {
-                    return promise.then(() => {
-                        // Manejar el producto
-                        return hacerClickEnSelect2(`#select2-recetas-recetasadd-${receta.id}-producto_id-container`)
-                            .then(() => establecerBusqueda(`#select2-recetas-recetasadd-${receta.id}-producto_id-container`, receta.nombre))
-                            .then(() => seleccionarOpcion());
-                    });
-                }, Promise.resolve()); // Inicializa con una promesa resuelta
-            })
-            .then(() => {
-                // Ahora manejar las vías
-                return item.recetas.reduce((promise, receta) => {
-                    return promise.then(() => {
-                        return hacerClickEnSelect2(`#select2-recetas-recetasadd-${receta.id}-vias-container`)
-                            .then(() => establecerBusqueda(`#select2-recetas-recetasadd-${receta.id}-vias-container`, receta.via))
-                            .then(() => seleccionarOpcion());
-                    });
-                }, Promise.resolve()); // Inicializa con una promesa resuelta
-            })
-            .then(() => {
-                // Ahora manejar las unidades
-                return item.recetas.reduce((promise, receta) => {
-                    return promise.then(() => {
-                        return hacerClickEnSelect2(`#select2-recetas-recetasadd-${receta.id}-unidad_id-container`)
-                            .then(() => establecerBusqueda(`#select2-recetas-recetasadd-${receta.id}-unidad_id-container`, receta.unidad))
-                            .then(() => seleccionarOpcion());
-                    });
-                }, Promise.resolve()); // Inicializa con una promesa resuelta
-            })
-            .then(() => {
-                // Ahora manejar las pautas
-                return item.recetas.reduce((promise, receta) => {
-                    return promise.then(() => {
-                        return hacerClickEnSelect2(`#select2-recetas-recetasadd-${receta.id}-pauta-container`)
-                            .then(() => establecerBusqueda(`#select2-recetas-recetasadd-${receta.id}-pauta-container`, receta.pauta))
-                            .then(() => seleccionarOpcion());
-                    });
-                }, Promise.resolve()); // Inicializa con una promesa resuelta
-            })
-            .then(() => {
-                // Ahora manejar las cantidades
-                return item.recetas.reduce((promise, receta) => {
-                    return promise.then(() => {
-                        return llenarCampoCantidad(`#recetas-recetasadd-${receta.id}-cantidad`, receta.cantidad, 2)
-                    });
-                }, Promise.resolve()); // Inicializa con una promesa resuelta
-            })
-            .then(() => {
-                // Ahora manejar las total_farmacia
-                return item.recetas.reduce((promise, receta) => {
-                    return promise.then(() => {
-                        return llenarCampoTexto(`#recetas-recetasadd-${receta.id}-total_farmacia`, receta.totalFarmacia)
-                    });
-                }, Promise.resolve()); // Inicializa con una promesa resuelta
-            })
-            .then(() => {
-                // Ahora manejar las observaciones
-                return item.recetas.reduce((promise, receta) => {
-                    return promise.then(() => {
-                        return llenarCampoTexto(`#recetas-recetasadd-${receta.id}-observaciones`, receta.observaciones)
-                    });
-                }, Promise.resolve()); // Inicializa con una promesa resuelta
-            });
-    }
-*/
 
     function capturarNombreUsuario() {
         const nombreUsuarioElement = document.querySelector('.dropdown.user.user-menu .hidden-xs');
         if (nombreUsuarioElement) {
             return nombreUsuarioElement.textContent.trim();
         } else {
-            console.error('No se encontró el nombre del usuario.');
+            console.error(`${LOG_PREFIX} No se encontró el nombre del usuario.`);
             return 'Nombre no encontrado';
         }
     }
@@ -421,17 +377,17 @@ function ejecutarProtocoloEnPagina(item) {
                 return 'Nombre no encontrado';
             }
         } else {
-            console.error('No se encontró el nombre del médico.');
+            console.error(`${LOG_PREFIX} No se encontró el nombre del médico.`);
             return 'Nombre no encontrado';
         }
     }
 
 // Ejemplo de uso:
     const nombreCompleto = obtenerNombreMedicoSeleccionado('completo');
-    console.log('Nombre completo del médico:', nombreCompleto);
+    console.log(`${LOG_PREFIX} Nombre completo del médico:`, nombreCompleto);
 
     const apellidosMedico = obtenerNombreMedicoSeleccionado('apellidos');
-    console.log('Apellidos del médico:', apellidosMedico);
+    console.log(`${LOG_PREFIX} Apellidos del médico:`, apellidosMedico);
 
     function esperarElemento(selector) {
         return new Promise((resolve, reject) => {
@@ -493,7 +449,7 @@ function ejecutarProtocoloEnPagina(item) {
 
             // Verificar que la hora de inicio tenga el formato correcto (hh:mm)
             if (!/^\d{2}:\d{2}$/.test(horaInicio)) {
-                console.error('La hora de inicio no está en el formato correcto (hh:mm).');
+                console.error(`${LOG_PREFIX} La hora de inicio no está en el formato correcto (hh:mm).`);
                 return;
             }
 
@@ -501,20 +457,20 @@ function ejecutarProtocoloEnPagina(item) {
             const horasASumar = item && item.horas !== undefined ? parseFloat(item.horas) : 2;
 
             // Depuración para verificar los valores
-            console.log('Item recibido:', item);
-            console.log('Horas encontradas en item:', item ? item.horas : 'No especificado (usando valor por defecto: 2)');
+            console.log(`${LOG_PREFIX} Item recibido:`, item);
+            console.log(`${LOG_PREFIX} Horas encontradas en item:`, item ? item.horas : 'No especificado (usando valor por defecto: 2)');
 
             // Calcular la nueva hora de fin
             const nuevaHoraFin = sumarHoras(horaInicio, horasASumar);
 
             if (nuevaHoraFin) {
                 campoHoraFin.value = nuevaHoraFin; // Asignar la nueva hora de fin
-                console.log(`La nueva hora de fin es: ${nuevaHoraFin}`);
+                console.log(`${LOG_PREFIX} La nueva hora de fin es: ${nuevaHoraFin}`);
             } else {
-                console.error('Error al sumar horas a la hora de inicio.');
+                console.error(`${LOG_PREFIX} Error al sumar horas a la hora de inicio.`);
             }
         } else {
-            console.error('No se encontraron los campos de hora de inicio o de fin.');
+            console.error(`${LOG_PREFIX} No se encontraron los campos de hora de inicio o de fin.`);
         }
     }
 
@@ -530,33 +486,16 @@ Se indica al paciente que debe acudir a una consulta de control en las próximas
 
         return item.tecnicos.reduce((promise, tecnico) => {
             return promise.then(() => {
-                return hacerClickEnSelect2(tecnico.selector)
-                    .then(() => establecerBusqueda(tecnico.selector, tecnico.funcion))
+                return abrirYBuscarSelect2(tecnico.selector, tecnico.funcion)
                     .then(() => seleccionarOpcion())
-                    .then(() => hacerClickEnSelect2(tecnico.trabajador))
                     .then(() => {
-                        if (tecnico.nombre === 'cirujano_principal') {
-                            return establecerBusqueda(tecnico.trabajador, nombreCirujano);
-                        } else {
-                            return establecerBusqueda(tecnico.trabajador, tecnico.nombre);
-                        }
+                        const valor = (tecnico.nombre === 'cirujano_principal') ? nombreCirujano : tecnico.nombre;
+                        return abrirYBuscarSelect2(tecnico.trabajador, valor);
                     })
                     .then(() => seleccionarOpcion())
                     .catch(error => console.error(`Error procesando técnico ${tecnico.nombre}:`, error));
             });
         }, Promise.resolve()); // Inicializa con una promesa resuelta
-    }
-
-    function destacarBotonSubida() {
-        const botonSubida = document.querySelector('#consultasubsecuente-fotoupload');
-        if (botonSubida) {
-            botonSubida.style.backgroundColor = '#f88';  // Cambia el color de fondo para llamar la atención
-            botonSubida.style.transition = 'background-color 0.5s';  // Transición suave del color
-            console.log('Por favor, haga clic en el botón de subida de archivos para continuar y revisar el ojo y diagnósticos correctos.');
-            alert('Por favor, haga clic en el botón de subida de archivos para continuar.');  // Mensaje para el usuario
-        } else {
-            console.error('El botón de subida de archivos no se encontró.');
-        }
     }
 
 
@@ -566,8 +505,7 @@ Se indica al paciente que debe acudir a una consulta de control en las próximas
         .then(() => llenarCampoTexto('#consultasubsecuente-datoscirugia', textoDictado))
         .then(() => seleccionarRadioNo())
         .then(() => actualizarHoraFin(item))
-        .then(() => hacerClickEnSelect2('#select2-consultasubsecuente-anestesia_id-container'))
-        .then(() => establecerBusqueda('#select2-consultasubsecuente-anestesia_id-container', item.anestesia))
+        .then(() => abrirYBuscarSelect2('#select2-consultasubsecuente-anestesia_id-container', item.anestesia))
         .then(() => seleccionarOpcion())
         .then(() => ejecutarDiagnosticos(item, ojoATratar.sigla))
         .then(() => hacerClickEnPresuntivo('.form-group.field-proyectada .cbx-container .cbx', 2))
@@ -582,9 +520,16 @@ Se indica al paciente que debe acudir a una consulta de control en las próximas
         .then(() => esperarElemento('#docsolicitudprocedimientos-observacion_consulta'))
         .then(() => llenarCampoTexto('#docsolicitudprocedimientos-observacion_consulta', observaciones))
         .then(() => hacerClickEnBoton('#consultaActual', 1))
-        .then(() => destacarBotonSubida())  // Asegúrate de que el selector sea correcto
-        .then(() => console.log('Clic simulado correctamente.'))
-        .catch(error => console.error('Error en la ejecución de acciones:', error));
+        .then(() => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Proceso completado',
+                text: 'Todos los campos se han llenado correctamente.',
+                confirmButtonText: 'Aceptar'
+            });
+        })
+        .then(() => console.log(`${LOG_PREFIX} Clic simulado correctamente.`))
+        .catch(error => console.error(`${LOG_PREFIX} Error en la ejecución de acciones:`, error));
 }
 
 

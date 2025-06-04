@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Asistente CIVE",
-  "version": "6.1.2",
+  "version": "6.1.4",
   "description": "Descripción de mi extensión",
   "permissions": [
     "activeTab",
@@ -48,7 +48,6 @@
         "js/consulta.js",
         "js/ui.js",
         "js/drag.js",
-        "js/paciente.js",
         "js/eventos.js",
         "js/observadores.js",
         "js/protocolos.js",
@@ -95,9 +94,9 @@
         "http://127.0.0.1:8085/*"
       ],
       "js": [
+        "js/config.js",
         "js/ui.js",
         "js/drag.js",
-        "js/paciente.js",
         "js/eventos.js",
         "js/observadores.js",
         "js/protocolos.js",

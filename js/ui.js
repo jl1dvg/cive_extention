@@ -18,6 +18,10 @@ window.inicializarUI = function () {
     // Agregar el botón al documento
     document.body.appendChild(button);
 
+    const botonExamenesHTML = window.configCIVE.ES_LOCAL
+        ? `<div id="btnExamenes" class="grid-item"><i class="fas fa-notes-medical"></i> Exámenes</div>`
+        : '';
+
     // Crear el contenedor del popup flotante
     const popup = document.createElement("div");
     popup.id = "floatingPopup";
@@ -32,7 +36,7 @@ window.inicializarUI = function () {
             </div>
             <div id="inicio" class="section active">
                 <div class="grid-container">
-                    <div id="btnExamenes" class="grid-item"><i class="fas fa-notes-medical"></i> Exámenes</div>
+                    ${botonExamenesHTML}
                     <div id="btnProtocolos" class="grid-item"><i class="fas fa-file-alt"></i> Protocolos</div>
                     <div id="btnConsulta" class="grid-item"><i class="fas fa-user-md"></i> Consulta</div>
             <div id="btnRecetas" class="grid-item">

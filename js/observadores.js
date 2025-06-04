@@ -55,12 +55,7 @@
             const intervaloSpan = tiempoTd?.querySelector('span');
             const tiempoTexto = intervaloSpan?.textContent.trim();
 
-            if (
-                servicioTd?.textContent.trim() === 'OPT OPTOMETRIA' &&
-                horaCitaTd && afiliacionTd && tiempoTd &&
-                intervaloSpan && tiempoTexto &&
-                backgroundColor === 'red'
-            ) {
+            if (servicioTd?.textContent.trim() === 'OPT OPTOMETRIA' && horaCitaTd && afiliacionTd && tiempoTd && intervaloSpan && tiempoTexto && backgroundColor === 'red') {
                 const excluirAfiliaciones = ['CONTRIBUYENTE VOLUNTARIO', 'CONYUGE', 'CONYUGE PENSIONISTA', 'ISSFA', 'ISSPOL', 'MSP', 'SEGURO CAMPESINO', 'SEGURO CAMPESINO JUBILADO', 'SEGURO GENERAL', 'SEGURO GENERAL JUBILADO', 'SEGURO GENERAL POR MONTEPIO', 'SEGURO GENERAL TIEMPO PARCIAL'];
                 const afiliacion = afiliacionTd.textContent.trim();
                 const prioridad = excluirAfiliaciones.includes(afiliacion) ? 2 : 1;
@@ -85,9 +80,7 @@
 
         const top3 = pacientes.slice(0, 3).map((p, i) => {
             let iconoEstado = '❔';
-            if (p.estado === 'ATENDIDO') iconoEstado = '✅';
-            else if (p.estado === 'AGENDADO') iconoEstado = '⚠️';
-            else if (['EN CONSULTA', 'LLAMADO'].includes(p.estado)) iconoEstado = '🕐';
+            if (p.estado === 'ATENDIDO') iconoEstado = '✅'; else if (p.estado === 'AGENDADO') iconoEstado = '⚠️'; else if (['EN CONSULTA', 'LLAMADO'].includes(p.estado)) iconoEstado = '🕐';
 
             return `${i + 1}. ${p.nombre} (Prioridad ${p.prioridad}, Espera: ${Math.floor(p.tiempoEsperaSeg / 60)} min, Estado: ${iconoEstado} ${p.estado})`;
         });
@@ -177,6 +170,102 @@
         }, 250);
     }
 
+    function observarPacientesPorAtender() {
+        const selectorTabla = '#crud-datatable-por-atender table.kv-grid-table';
+        const tabla = document.querySelector(selectorTabla);
+        if (!tabla) return;
+
+        const filas = tabla.querySelectorAll('tbody tr[data-key]');
+        const pacientes = [];
+        const fechaBusqueda = new URLSearchParams(window.location.search).get('DocSolicitudProcedimientosDoctorSearch[fechaBusqueda]') || '';
+
+        filas.forEach(fila => {
+            const columnas = fila.querySelectorAll('td');
+            if (columnas.length < 16) {
+                console.warn("⛔ Fila con columnas insuficientes:", fila);
+                return;
+            }
+
+            const paciente = {
+                id: columnas[4]?.textContent.trim(),
+                doctor: columnas[5]?.textContent.trim(),
+                hora: columnas[6]?.textContent.trim(),
+                nombre: columnas[7]?.textContent.trim(),
+                identificacion: columnas[8]?.textContent.trim(),
+                afiliacion: columnas[10]?.textContent.trim(),
+                procedimiento: columnas[12]?.textContent.trim(),
+                estado: columnas[14]?.textContent.trim(),
+                fechaCaducidad: columnas[15]?.textContent.trim()
+            };
+
+            console.log("🧪 Datos extraídos:", paciente);
+
+            if (!paciente.id || !paciente.identificacion || !paciente.procedimiento) {
+                console.warn("⛔ Faltan datos clave, omitiendo fila:", paciente);
+                return;
+            }
+
+            const partesNombre = paciente.nombre.split(/\s+/);
+            const datosNombre = {
+                fname: partesNombre[0] || '',
+                mname: partesNombre[1] || '',
+                lname: partesNombre[2] || '',
+                lname2: partesNombre.slice(3).join(' ') || ''
+            };
+
+            pacientes.push({
+                hcNumber: paciente.identificacion,
+                form_id: paciente.id,
+                procedimiento_proyectado: paciente.procedimiento,
+                fname: datosNombre.fname,
+                mname: datosNombre.mname,
+                lname: datosNombre.lname,
+                lname2: datosNombre.lname2,
+                doctor: paciente.doctor,
+                hora: paciente.hora,
+                afiliacion: paciente.afiliacion,
+                estado: paciente.estado,
+                fecha: fechaBusqueda,
+                fechaCaducidad: paciente.fechaCaducidad,
+                nombre_completo: paciente.nombre
+            });
+        });
+
+        if (pacientes.length > 0) {
+            fetch('https://asistentecive.consulmed.me/api/proyecciones/guardar.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(pacientes)
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('✅ Sincronización exitosa:', data);
+            })
+            .catch(err => {
+                console.error('❌ Error en la sincronización', err);
+            });
+        }
+    }
+
+    // Evita múltiples ejecuciones innecesarias
+    let ultimaPaginaProcesada = null;
+
+    function observarTablaPorAtenderSiCambio() {
+        const paginaActual = new URLSearchParams(window.location.search).get('por-atender-page');
+        if (paginaActual !== ultimaPaginaProcesada) {
+            ultimaPaginaProcesada = paginaActual;
+            setTimeout(() => observarPacientesPorAtender(), 500);
+        }
+    }
+
+    // Observador principal para detectar cambios en la tabla de por atender
+    const observadorPorAtender = new MutationObserver((mutations) => {
+        const tabla = document.querySelector('#crud-datatable-por-atender table.kv-grid-table');
+        if (tabla) observarTablaPorAtenderSiCambio();
+    });
+
     const estilo = document.createElement('style');
     estilo.innerHTML = `
     .llegado-particular {
@@ -194,4 +283,10 @@
     window.observarCambiosEnTablaYPaginacion = observarCambiosEnTablaYPaginacion;
     window.iniciarObservadores = iniciarObservadores;
 
+    const contenedorGeneral = document.body;
+    if (contenedorGeneral) {
+        observadorPorAtender.observe(contenedorGeneral, {
+            childList: true, subtree: true
+        });
+    }
 })();
