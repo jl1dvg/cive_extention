@@ -239,30 +239,35 @@
                 },
                 body: JSON.stringify(pacientes)
             })
-            .then(res => res.json())
-            .then(data => {
-                console.log('✅ Sincronización exitosa:', data);
-            })
-            .catch(err => {
-                console.error('❌ Error en la sincronización', err);
-            });
+                .then(res => res.json())
+                .then(data => {
+                    console.log('✅ Sincronización exitosa:', data);
+                })
+                .catch(err => {
+                    console.error('❌ Error en la sincronización', err);
+                });
         }
     }
 
-    // Evita múltiples ejecuciones innecesarias
-    let ultimaPaginaProcesada = null;
-    let ultimaClaveMostrarTodos = null;
+    // Inicializar variable global para evitar bucles infinitos al seleccionar "ver todo"
+    window._ultimaClaveProcesada = null;
 
     function observarTablaPorAtenderSiCambio() {
         const urlParams = new URLSearchParams(window.location.search);
-        const paginaActual = urlParams.get('por-atender-page');
+        const paginaActual = urlParams.get('por-atender-page') || '1'; // tratar sin parámetro como página 1
         const claveMostrarTodos = Array.from(urlParams).find(([k, v]) => k.includes('_tog') && v === 'all');
         const claveActual = claveMostrarTodos ? claveMostrarTodos[0] : null;
 
-        if (paginaActual !== ultimaPaginaProcesada || claveActual !== ultimaClaveMostrarTodos) {
-            ultimaPaginaProcesada = paginaActual;
-            ultimaClaveMostrarTodos = claveActual;
-            setTimeout(() => observarPacientesPorAtender(), 500);
+        const claveCombinada = `p${paginaActual}_all${claveActual ? '_yes' : '_no'}`;
+
+        if (claveCombinada !== window._ultimaClaveProcesada) {
+            window._ultimaClaveProcesada = claveCombinada;
+            setTimeout(() => {
+                // Esperar a que la tabla esté actualizada antes de sincronizar
+                requestAnimationFrame(() => {
+                    observarPacientesPorAtender();
+                });
+            }, 500);
         }
     }
 
@@ -291,6 +296,8 @@
 
     const contenedorGeneral = document.body;
     if (contenedorGeneral) {
+        // Inicialización de la variable global justo antes de iniciar la observación
+        window._ultimaClaveProcesada = null;
         observadorPorAtender.observe(contenedorGeneral, {
             childList: true, subtree: true
         });

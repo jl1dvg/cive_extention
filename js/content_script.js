@@ -87,4 +87,11 @@ window.addEventListener("load", () => {
             console.error('❌ Error al parsear logAHC:', e);
         }
     }
+
+    if (window.detectarConfirmacionAsistencia) {
+        console.log("🟢 detectarConfirmacionAsistencia disponible. Iniciando...");
+        window.detectarConfirmacionAsistencia();
+    } else {
+        console.warn("⚠️ detectarConfirmacionAsistencia no está definida.");
+    }
 });

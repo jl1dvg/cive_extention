@@ -36,6 +36,7 @@ window.inicializarDeteccionModalAdmision = () => {
 // Ejecutar al cargar la página
 window.addEventListener('DOMContentLoaded', () => {
     inicializarDeteccionModalAdmision();
+    detectarConfirmacionAsistencia();
 });
 
 // Inicializamos modalData con los campos del formulario principal y del modal
@@ -298,4 +299,37 @@ function extraerDatosYEnviarDesdeModal() {
 function inicializarFormularioAdmision() {
     registrarCambiosEnCampos(); // Captura en tiempo real lo que se llena
     attachSaveButtonListener(); // La extracción final se hace al hacer clic en guardar
+}
+
+function detectarConfirmacionAsistencia() {
+    document.querySelectorAll('button[id^="button-confirmar-"]').forEach(boton => {
+        boton.addEventListener('click', (e) => {
+            const idTexto = boton.id.replace('button-confirmar-', '');
+            const id = parseInt(idTexto, 10);
+            if (!isNaN(id)) {
+                const icono = boton.querySelector('.glyphicon');
+                if (icono && icono.classList.contains('glyphicon-thumbs-down')) {
+                    console.log(`🟡 Confirmando llegada para ID: ${id}`);
+                    fetch('https://asistentecive.consulmed.me/api/proyecciones/llegada.php', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: new URLSearchParams({form_id: id})
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log('✅ Confirmación de llegada enviada correctamente.');
+                            } else {
+                                console.log('❌ Error al confirmar llegada:', data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.log('❌ Error al enviar la solicitud de llegada:', error.message);
+                        });
+                } else {
+                    console.log(`🔵 Botón clickeado pero el icono no indica llegada (no es thumbs-up). ID: ${id}`);
+                }
+            }
+        });
+    });
 }

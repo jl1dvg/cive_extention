@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Asistente CIVE",
-  "version": "6.1.4",
+  "version": "6.1.7",
   "description": "Descripción de mi extensión",
   "permissions": [
     "activeTab",
@@ -51,6 +51,7 @@
         "js/eventos.js",
         "js/observadores.js",
         "js/protocolos.js",
+        "js/paciente.js",
         "js/admision.js",
         "js/obtener_insumos.js",
         "js/extraer_prefactura.js",
@@ -91,7 +92,9 @@
         "https://cive.ddns.net/*",
         "http://192.168.1.13:8085/*",
         "http://localhost:8085/*",
-        "http://127.0.0.1:8085/*"
+        "http://127.0.0.1:8085/*",
+        "http://192.168.1.13:8085/historia-automatica*",
+        "http://cive.ddns.net:8085/historia-automatica*"
       ],
       "js": [
         "js/config.js",
@@ -100,6 +103,7 @@
         "js/eventos.js",
         "js/observadores.js",
         "js/protocolos.js",
+        "js/paciente.js",
         "js/admision.js",
         "js/obtener_insumos.js",
         "js/extraer_prefactura.js",
@@ -111,7 +115,8 @@
         "js/solicitud.js",
         "js/content_script.js",
         "js/assets/sweetalert2.all.min.js"
-      ]
+      ],
+      "run_at": "document_end"
     }
   ]
 }
