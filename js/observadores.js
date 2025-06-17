@@ -196,8 +196,21 @@
 
         const filas = tabla.querySelectorAll('tbody tr[data-key]');
         const pacientes = [];
-        const fechaBusqueda = new URLSearchParams(window.location.search).get('DocSolicitudProcedimientosDoctorSearch[fechaBusqueda]') || '';
+        let fechaBusqueda = new URLSearchParams(window.location.search).get('DocSolicitudProcedimientosDoctorSearch[fechaBusqueda]');
+        if (!fechaBusqueda) {
+            // Busca el valor del input de fecha si no está en la URL
+            const inputFecha = document.querySelector('#docsolicitudprocedimientosdoctorsearch-fechabusqueda');
+            if (inputFecha && inputFecha.value) {
+                fechaBusqueda = inputFecha.value.trim();
+                console.log('🗓️ Fecha extraída del input:', fechaBusqueda);
+            }
+        }
 
+        // Si sigue sin fecha, muestra un warning y NO envíes datos
+        if (!fechaBusqueda) {
+            alert('No se pudo determinar la fecha de la agenda. Selecciona una fecha antes de sincronizar.');
+            return;
+        }
         filas.forEach(fila => {
             const celdas = fila.querySelectorAll('td');
             // Ajusta los nombres de clave según los textos reales en el thead (minúsculas y espacios normalizados)
