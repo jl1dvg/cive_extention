@@ -35,6 +35,7 @@
     }
 
     function mostrarNotificacionPrioridadOptometria() {
+        const columnMap = obtenerColumnMap();
         const tabla = document.querySelector('table.kv-grid-table');
         if (!tabla) return;
 
@@ -42,10 +43,11 @@
         const pacientes = [];
 
         filas.forEach(fila => {
-            const servicioTd = fila.querySelector('td[data-col-seq="6"]');
-            const horaCitaTd = fila.querySelector('td[data-col-seq="7"]');
-            const afiliacionTd = fila.querySelector('td[data-col-seq="11"]');
-            const tiempoTd = fila.querySelector('td[data-col-seq="17"]');
+            const celdas = fila.querySelectorAll('td');
+            const servicioTd = celdas[columnMap["procedimiento"]];
+            const horaCitaTd = celdas[columnMap["hora cita"]];
+            const afiliacionTd = celdas[columnMap["afiliacion"]];
+            const tiempoTd = celdas[columnMap["estado solicitud"]];
 
             if (!tiempoTd) return;
 
@@ -67,7 +69,7 @@
                     prioridad,
                     tiempoEsperaSeg,
                     horaCita: horaCitaTd.textContent.trim(),
-                    nombre: fila.querySelector('td[data-col-seq="8"]')?.textContent.trim() || 'Desconocido',
+                    nombre: celdas[columnMap["nombre completo"]]?.textContent.trim() || 'Desconocido',
                     estado: 'EN ESPERA'
                 });
             }
@@ -170,32 +172,45 @@
         }, 250);
     }
 
+    function obtenerColumnMap() {
+        const map = {};
+        const ths = document.querySelectorAll('#crud-datatable-por-atender thead tr th');
+
+        ths.forEach((th, index) => {
+            const texto = th.textContent.trim().toLowerCase().replace(/[\n\r]+/g, ' ').replace(/\s+/g, ' ');
+            if (texto && !map[texto]) {
+                map[texto] = index;
+            }
+        });
+
+        console.log("🔍 Mapeo de columnas detectado:", map);
+        return map;
+    }
+
     function observarPacientesPorAtender() {
         const selectorTabla = '#crud-datatable-por-atender table.kv-grid-table';
         const tabla = document.querySelector(selectorTabla);
         if (!tabla) return;
+
+        const columnMap = obtenerColumnMap();
 
         const filas = tabla.querySelectorAll('tbody tr[data-key]');
         const pacientes = [];
         const fechaBusqueda = new URLSearchParams(window.location.search).get('DocSolicitudProcedimientosDoctorSearch[fechaBusqueda]') || '';
 
         filas.forEach(fila => {
-            const columnas = fila.querySelectorAll('td');
-            if (columnas.length < 16) {
-                console.warn("⛔ Fila con columnas insuficientes:", fila);
-                return;
-            }
-
+            const celdas = fila.querySelectorAll('td');
+            // Ajusta los nombres de clave según los textos reales en el thead (minúsculas y espacios normalizados)
             const paciente = {
-                id: columnas[4]?.textContent.trim(),
-                doctor: columnas[5]?.textContent.trim(),
-                hora: columnas[6]?.textContent.trim(),
-                nombre: columnas[7]?.textContent.trim(),
-                identificacion: columnas[8]?.textContent.trim(),
-                afiliacion: columnas[10]?.textContent.trim(),
-                procedimiento: columnas[12]?.textContent.trim(),
-                estado: columnas[14]?.textContent.trim(),
-                fechaCaducidad: columnas[15]?.textContent.trim()
+                id: celdas[columnMap["id"]]?.textContent.trim() || '',
+                doctor: celdas[columnMap["doctor"]]?.textContent.trim() || '',
+                hora: celdas[columnMap["hora"]]?.textContent.trim() || '',
+                nombre: celdas[columnMap["paciente"]]?.textContent.trim() || '',
+                identificacion: celdas[columnMap["identificación"]]?.textContent.trim() || '',
+                afiliacion: celdas[columnMap["afiliación"]]?.textContent.trim() || '',
+                procedimiento: celdas[columnMap["procedimiento"]]?.textContent.trim() || '',
+                estado: celdas[columnMap["estado"]]?.textContent.trim() || '',
+                fechaCaducidad: celdas[columnMap["fecha caducidad"]]?.textContent.trim() || ''
             };
 
             console.log("🧪 Datos extraídos:", paciente);
@@ -207,10 +222,10 @@
 
             const partesNombre = paciente.nombre.split(/\s+/);
             const datosNombre = {
-                fname: partesNombre[0] || '',
-                mname: partesNombre[1] || '',
-                lname: partesNombre[2] || '',
-                lname2: partesNombre.slice(3).join(' ') || ''
+                lname: partesNombre[0] || '',
+                lname2: partesNombre[1] || '',
+                fname: partesNombre[2] || '',
+                mname2: partesNombre.slice(3).join(' ') || ''
             };
 
             pacientes.push({
