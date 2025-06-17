@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Asistente CIVE",
-  "version": "6.1.7",
+  "version": "6.1.8",
   "description": "Descripción de mi extensión",
   "permissions": [
     "activeTab",
