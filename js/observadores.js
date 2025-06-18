@@ -35,6 +35,36 @@
     }
 
     function mostrarNotificacionPrioridadOptometria() {
+
+        // Nueva función: marcar filas en atención optometría
+        async function actualizarEstadoAtencionOptometria() {
+            const tabla = document.querySelector('table.kv-grid-table');
+            if (!tabla) return;
+
+            const fechaHoy = new Date().toISOString().split('T')[0];
+
+            try {
+                const respuesta = await fetch(`https://asistentecive.consulmed.me/api/proyecciones/estado_optometria.php?fecha=${fechaHoy}`);
+                const pacientesEnAtencion = await respuesta.json();
+                console.log('📋 Pacientes en atención OPTOMETRIA hoy:', pacientesEnAtencion);
+
+                const filas = tabla.querySelectorAll('tbody tr');
+                filas.forEach((fila) => {
+                    const formIdTd = fila.querySelector('td[data-col-seq="5"]');
+                    if (formIdTd) {
+                        const formId = formIdTd.textContent.trim();
+                        if (pacientesEnAtencion.includes(formId)) {
+                            fila.classList.add('atendiendo-optometria');
+                        } else {
+                            fila.classList.remove('atendiendo-optometria');
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error al actualizar el estado de atención en optometría:', error);
+            }
+        }
+
         const columnMap = obtenerColumnMap();
         const tabla = document.querySelector('table.kv-grid-table');
         if (!tabla) return;
@@ -168,6 +198,7 @@
                 observarCambiosEnTablaYPaginacion();
                 actualizarColorFilasPorTiempoYAfiliacion();
                 mostrarNotificacionPrioridadOptometria();
+                actualizarEstadoAtencionOptometria();
             }
         }, 250);
     }
@@ -313,6 +344,11 @@
 
     .espera-prolongada-particular {
         background-color: #FF6347 !important; /* Color para más de 30 min */
+    }
+
+    .atendiendo-optometria {
+        background-color: #4CAF50 !important; /* Color verde indicando atención activa */
+        color: white !important;
     }
 `;
     document.head.appendChild(estilo);

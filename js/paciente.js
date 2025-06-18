@@ -112,19 +112,22 @@
                                     console.log(`🟡 Confirmando llegada para ID: ${paciente.form_id}`);
                                     fetch('https://asistentecive.consulmed.me/api/proyecciones/optometria.php', {
                                         method: 'POST',
-                                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                                        body: new URLSearchParams({form_id: paciente.form_id})
+                                        headers: {'Content-Type': 'application/json'},
+                                        body: JSON.stringify({
+                                            form_id: paciente.form_id,
+                                            estado: 'iniciar_atencion'
+                                        })
                                     })
                                         .then(response => response.json())
                                         .then(data => {
                                             if (data.success) {
-                                                console.log('✅ Confirmación de llegada enviada correctamente.');
+                                                console.log('✅ Estado actualizado a "en proceso" correctamente.');
                                             } else {
-                                                console.log('❌ Error al confirmar llegada:', data.message);
+                                                console.error('❌ Error al actualizar el estado:', data.message);
                                             }
                                         })
                                         .catch(error => {
-                                            console.log('❌ Error al enviar la solicitud de llegada:', error.message);
+                                            console.error('❌ Error al enviar la solicitud:', error.message);
                                         });
                                 }
                             });
@@ -132,6 +135,56 @@
                             console.warn("⚠️ SweetAlert no está disponible. Verifica que se haya cargado correctamente.");
                         }
                     }, 500);
+
+                    document.getElementById('botonGuardar')?.addEventListener('click', function (event) {
+                        event.preventDefault(); // Evita el envío inmediato del formulario
+
+                        Swal.fire({
+                            title: 'Atención finalizada en Optometría',
+                            text: 'Selecciona una opción:',
+                            icon: 'question',
+                            showCancelButton: true,
+                            showDenyButton: true,
+                            confirmButtonText: 'Terminé y dilatar',
+                            denyButtonText: 'Terminé',
+                            cancelButtonText: 'No he terminado',
+                            reverseButtons: true,
+                        }).then((result) => {
+                            let estadoOptometria;
+
+                            if (result.isConfirmed) {
+                                estadoOptometria = 'terminado_dilatar';
+                            } else if (result.isDenied) {
+                                estadoOptometria = 'terminado_sin_dilatar';
+                            } else {
+                                Swal.fire('Continuar atención', 'Puedes seguir trabajando en la consulta.', 'info');
+                                return; // No continuar si elige seguir trabajando
+                            }
+
+                            fetch('https://asistentecive.consulmed.me/api/proyecciones/optometria.php', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({
+                                    form_id: paciente.form_id,
+                                    estado: estadoOptometria
+                                })
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire('Éxito', 'La información fue actualizada correctamente.', 'success').then(() => {
+                                            event.target.closest('form').submit();
+                                        });
+                                    } else {
+                                        Swal.fire('Error', 'No se pudo enviar la información correctamente.', 'error');
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire('Error', 'Error de red o servidor.', 'error');
+                                    console.error('Error:', error);
+                                });
+                        });
+                    });
                 }
             }
         }
