@@ -34,36 +34,54 @@
         });
     }
 
-    function mostrarNotificacionPrioridadOptometria() {
+    // Nueva función: marcar filas en atención optometría
+    async function actualizarEstadoAtencionOptometria() {
+        const tabla = document.querySelector('table.kv-grid-table');
+        if (!tabla) return;
 
-        // Nueva función: marcar filas en atención optometría
-        async function actualizarEstadoAtencionOptometria() {
-            const tabla = document.querySelector('table.kv-grid-table');
-            if (!tabla) return;
+        const fechaHoy = new Date().toISOString().split('T')[0];
 
-            const fechaHoy = new Date().toISOString().split('T')[0];
+        try {
+            const respuesta = await fetch(`https://asistentecive.consulmed.me/api/proyecciones/estado_optometria.php?fecha=${fechaHoy}`);
+            const pacientesEnAtencion = await respuesta.json();
+            // Normalizar los IDs recibidos del API a strings limpias
+            const pacientesFormIds = pacientesEnAtencion.map(id => id.toString().trim());
+            console.log('📋 Pacientes en atención OPTOMETRIA hoy:', pacientesEnAtencion);
 
-            try {
-                const respuesta = await fetch(`https://asistentecive.consulmed.me/api/proyecciones/estado_optometria.php?fecha=${fechaHoy}`);
-                const pacientesEnAtencion = await respuesta.json();
-                console.log('📋 Pacientes en atención OPTOMETRIA hoy:', pacientesEnAtencion);
+            const filas = tabla.querySelectorAll('tbody tr');
+            filas.forEach((fila) => {
+                const formIdTd = fila.querySelector('td[data-col-seq="5"]');
+                if (formIdTd) {
+                    const formId = formIdTd.textContent.trim();
+                    if (pacientesFormIds.includes(formId.toString().trim())) {
+                        fila.classList.add('atendiendo-optometria');
+                        // Cambios solicitados:
+                        fila.title = 'Paciente actualmente en atención en optometría';
 
-                const filas = tabla.querySelectorAll('tbody tr');
-                filas.forEach((fila) => {
-                    const formIdTd = fila.querySelector('td[data-col-seq="5"]');
-                    if (formIdTd) {
-                        const formId = formIdTd.textContent.trim();
-                        if (pacientesEnAtencion.includes(formId)) {
-                            fila.classList.add('atendiendo-optometria');
-                        } else {
-                            fila.classList.remove('atendiendo-optometria');
+                        const primeraCelda = fila.querySelector('td');
+                        if (primeraCelda && !primeraCelda.querySelector('.icono-optometria')) {
+                            const icono = document.createElement('span');
+                            icono.classList.add('glyphicon', 'glyphicon-eye-open', 'icono-optometria');
+                            icono.style.marginLeft = '5px';
+                            icono.style.color = '#007bff';
+                            icono.title = 'Paciente en atención en optometría';
+                            primeraCelda.appendChild(icono);
                         }
+                    } else {
+                        fila.classList.remove('atendiendo-optometria');
+                        // Cambios solicitados:
+                        fila.removeAttribute('title');
+                        const iconoExistente = fila.querySelector('.icono-optometria');
+                        if (iconoExistente) iconoExistente.remove();
                     }
-                });
-            } catch (error) {
-                console.error('Error al actualizar el estado de atención en optometría:', error);
-            }
+                }
+            });
+        } catch (error) {
+            console.error('Error al actualizar el estado de atención en optometría:', error);
         }
+    }
+
+    function mostrarNotificacionPrioridadOptometria() {
 
         const columnMap = obtenerColumnMap();
         const tabla = document.querySelector('table.kv-grid-table');
@@ -347,8 +365,12 @@
     }
 
     .atendiendo-optometria {
-        background-color: #4CAF50 !important; /* Color verde indicando atención activa */
-        color: white !important;
+        background-color: #add8e6 !important; /* Azul claro */
+        color: black !important;
+    }
+    .icono-optometria {
+        font-size: 14px;
+        vertical-align: middle;
     }
 `;
     document.head.appendChild(estilo);
