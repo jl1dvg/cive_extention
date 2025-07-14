@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Asistente CIVE",
-  "version": "6.2.1",
+  "version": "6.2.2",
   "description": "Descripción de mi extensión",
   "permissions": [
     "activeTab",
@@ -50,6 +50,7 @@
         "js/drag.js",
         "js/eventos.js",
         "js/observadores.js",
+        "js/ocudx.js",
         "js/protocolos.js",
         "js/paciente.js",
         "js/admision.js",
@@ -74,7 +75,9 @@
         "js/angio/angio.html",
         "js/angio/angio.css",
         "data/examenes.json",
-        "data/procedimientos.json"
+        "data/procedimientos.json",
+        "js/assets/toastr.min.js",
+        "js/assets/toastr.min.css"
       ],
       "matches": [
         "http://cive.ddns.net/*",
@@ -88,6 +91,7 @@
   "content_scripts": [
     {
       "matches": [
+        "http://127.0.0.1:5005/*",
         "http://cive.ddns.net/*",
         "https://cive.ddns.net/*",
         "http://192.168.1.13:8085/*",
@@ -102,6 +106,7 @@
         "js/drag.js",
         "js/eventos.js",
         "js/observadores.js",
+        "js/ocudx.js",
         "js/protocolos.js",
         "js/paciente.js",
         "js/admision.js",

@@ -1,10 +1,114 @@
+// Utils agrupados para Select2
+const Select2Utils = {
+    hacerClick: function (selector) {
+        return new Promise((resolve, reject) => {
+            const container = document.querySelector(selector);
+            if (container) {
+                const event = new MouseEvent('mousedown', {
+                    view: window, bubbles: true, cancelable: true
+                });
+                container.dispatchEvent(event);
+                setTimeout(resolve, 200);
+            } else {
+                console.error(`❌ Contenedor "${selector}" no encontrado.`);
+                reject(`Contenedor "${selector}" no encontrado.`);
+            }
+        });
+    },
+
+    buscar: function (textoBusqueda) {
+        console.log("🧪 Valor recibido en buscarEnSelect2:", textoBusqueda);
+        return new Promise((resolve, reject) => {
+            const maxIntentos = 10;
+            let intentos = 0;
+
+            const intentarBuscar = () => {
+                const campo = document.querySelector("input.select2-search__field");
+                if (campo) {
+                    campo.value = textoBusqueda;
+                    const eventoInput = new Event("input", {bubbles: true, cancelable: true});
+                    campo.dispatchEvent(eventoInput);
+                    setTimeout(resolve, 300);
+                } else if (intentos < maxIntentos) {
+                    intentos++;
+                    setTimeout(intentarBuscar, 300);
+                } else {
+                    reject("No se encontró el campo de búsqueda de Select2.");
+                }
+            };
+
+            intentarBuscar();
+        });
+    },
+
+    seleccionar: function () {
+        return new Promise((resolve, reject) => {
+            const esperarOpciones = () => {
+                const opcion = document.querySelector(".select2-results__option");
+                if (opcion) {
+                    const campo = document.querySelector("input.select2-search__field");
+                    if (campo) {
+                        const enterEvent = new KeyboardEvent("keydown", {
+                            key: "Enter", keyCode: 13, bubbles: true, cancelable: true
+                        });
+                        campo.dispatchEvent(enterEvent);
+                        setTimeout(resolve, 300);
+                    } else {
+                        reject("No se encontró el campo de búsqueda para hacer Enter.");
+                    }
+                } else {
+                    setTimeout(esperarOpciones, 200);
+                }
+            };
+            esperarOpciones();
+        });
+    }
+};
+
+// Utilidad: convertir duración tipo "HH:MM" a cuartos de hora (15 minutos)
+function convertirDuracionACuartos(duracionStr) {
+    const [horas, minutos] = duracionStr.split(':').map(Number);
+    return Math.round((horas * 60 + minutos) / 15);
+}
+
+// Nueva función utilitaria para calcular cuartos desde duración en formato HH:mm
+function calcularCuartosDesdeDuracion(duracionStr) {
+    const [horasStr, minutosStr] = duracionStr.split(":");
+    const horas = parseInt(horasStr, 10);
+    const minutos = parseInt(minutosStr, 10);
+    const totalMinutos = horas * 60 + minutos;
+    const cuartos = Math.round(totalMinutos / 15); // Cada cuarto = 15 minutos
+    return cuartos;
+}
+
+// Nueva función utilitaria para lógica de anestesia según afiliación y código de cirugía
+function generarTiempoAnestesia(afiliacion, codigoCirugia, duracion = "01:00") {
+    const afiliacionNormalizada = afiliacion.trim().toUpperCase();
+    const codigo = (codigoCirugia || "").trim();
+    const CUARTOS = calcularCuartosDesdeDuracion(duracion);
+
+    console.log("🟡 DEBUG afiliacionNormalizada:", afiliacionNormalizada);
+    console.log("🟡 DEBUG codigoCirugia detectado:", codigo);
+    console.log("🟡 DEBUG cuartos calculados:", CUARTOS);
+
+    if (afiliacionNormalizada === "ISSFA" && codigo === "66984") {
+        return [{codigo: "999999", cantidad: CUARTOS}];
+    } else if (afiliacionNormalizada === "ISSFA") {
+        const cantidad99149 = CUARTOS >= 2 ? 1 : CUARTOS;
+        const cantidad99150 = CUARTOS > 2 ? CUARTOS - 2 : 0;
+        const result = [];
+        if (cantidad99149 > 0) result.push({codigo: "99149", cantidad: cantidad99149});
+        if (cantidad99150 > 0) result.push({codigo: "99150", cantidad: cantidad99150});
+        return result;
+    } else {
+        return [{codigo: "999999", cantidad: CUARTOS}];
+    }
+}
+
 window.erroresInsumosNoIngresados = [];
 window.detectarInsumosPaciente = () => {
     // Validación de URL permitida
-    const urlPermitidas = [
-        'http://cive.ddns.net:8085/documentacion/doc-documento',
-        'http://192.168.1.13:8085/documentacion/doc-documento'
-    ];
+    const urlPermitidas = ['http://cive.ddns.net:8085/documentacion/doc-documento', 'http://192.168.1.13:8085/documentacion/doc-documento'];
     if (!urlPermitidas.some(url => window.location.href.startsWith(url))) {
         console.log("🚫 URL no permitida. Script detenido.");
         return;
@@ -20,6 +124,8 @@ window.detectarInsumosPaciente = () => {
 
                     const fila = heartIcon.closest("tr");
                     const textoProcedimiento = fila?.querySelector('td[data-col-seq="8"]')?.textContent?.trim()?.toUpperCase();
+                    console.log("🟢 DEBUG textoProcedimiento capturado:", textoProcedimiento);
+                    window.textoProcedimientoGlobal = textoProcedimiento;
 
                     if (!textoProcedimiento || !textoProcedimiento.startsWith("CIRUGIAS")) {
                         console.log("⚠️ Procedimiento no quirúrgico. No se ejecutará la lógica de insumos.");
@@ -91,10 +197,30 @@ function enviarDatosAPI(idSolicitud, hcNumber) {
     })
         .then(response => response.json())
         .then(data => {
+            // Obtener y normalizar afiliación inmediatamente después de recibir la respuesta de la API
+            const afiliacion = data.afiliacion || "";
+            const afiliacionNormalizada = afiliacion.trim().toUpperCase();
+            console.log("Afiliación detectada:", afiliacionNormalizada);
+
             if (data.success) {
                 console.log("✅ Respuesta del API:", data);
                 // Guardar duración en variable global si está disponible
                 window.duracionOxigenoGlobal = data.duracion;
+
+                // --- Nueva lógica para definir tiempoAnestesia según afiliación y código usando la función utilitaria ---
+                // Asegurarse de que textoProcedimiento esté disponible en este scope:
+                // Si no está definido, intenta obtenerlo como en el listener del heartIcon
+                let textoProcedimiento = window.textoProcedimientoGlobal;
+                if (!textoProcedimiento) {
+                    // Busca la fila seleccionada del modal si es posible
+                    const filaSeleccionada = document.querySelector('tr.selected');
+                    textoProcedimiento = filaSeleccionada?.querySelector('td[data-col-seq="8"]')?.textContent?.trim()?.toUpperCase();
+                    window.textoProcedimientoGlobal = textoProcedimiento;
+                }
+                const matchCodigo = textoProcedimiento?.match(/CIRUGIAS\s*-\s*(\d+)/);
+                const codigoCirugia = matchCodigo ? matchCodigo[1] : "";
+                window.tiempoAnestesiaGlobal = generarTiempoAnestesia(afiliacion, codigoCirugia, window.duracionOxigenoGlobal || "01:00");
+                console.log("✅ Tiempo de anestesia definido:", window.tiempoAnestesiaGlobal);
 
                 // Nuevo: Verificar status distinto de 1 antes de mostrar insumos
                 if (data.status !== 1) {
@@ -108,6 +234,7 @@ function enviarDatosAPI(idSolicitud, hcNumber) {
                 }
 
                 if (data.insumos && (data.insumos.equipos?.length > 0 || data.insumos.anestesia?.length > 0 || data.insumos.quirurgicos?.length > 0)) {
+                    // Si necesitas usar afiliacion o afiliacionNormalizada, hazlo dentro de este bloque
                     mostrarAlertaInsumos(data.insumos);
                 } else {
                     Swal.fire({
@@ -221,23 +348,31 @@ function mostrarAlertaInsumos(insumos) {
         }
 
         // --- Tiempo de Anestesia ---
-        // Verificar si el tiempo de anestesia ya está presente con el código correcto y cuartos correctos
-        const filaAnestesia = document.querySelector(`#select2-hccirugiahospitalizacion-anestesia-0-anestesia-container`);
-        window.tiempoAnestesiaPresente = false;
-        window.tiempoAnestesiaCuartosCorrecto = false;
+        // Nueva lógica: Asignar correctamente los cuartos según los códigos 99149 y 99150 sin sobrescribir toda la duración en un solo campo
+        const duracion = window.duracionOxigenoGlobal || "01:00";
+        const CUARTOS = calcularCuartosDesdeDuracion(duracion);
+        const cantidad99149 = Math.min(CUARTOS, 2);
+        const cantidad99150 = CUARTOS > 2 ? CUARTOS - 2 : 0;
 
-        if (filaAnestesia && filaAnestesia.textContent.toUpperCase().includes("999999")) {
-            window.tiempoAnestesiaPresente = true;
+        const anestesiaFila1Codigo = document.querySelector(`#select2-hccirugiahospitalizacion-anestesia-0-anestesia-container`)?.textContent.trim();
+        const anestesiaFila2Codigo = document.querySelector(`#select2-hccirugiahospitalizacion-anestesia-1-anestesia-container`)?.textContent.trim();
 
-            const inputTiempoAnestesia = document.querySelector(`#hccirugiahospitalizacion-anestesia-0-tiempo`);
-            if (inputTiempoAnestesia && inputTiempoAnestesia.value !== "") {
-                const duracion = window.duracionOxigenoGlobal || "01:00";
-                const [h, m] = duracion.split(":").map(Number);
-                const tiempoEsperado = Math.round((h * 60 + m) / 15);
-                window.tiempoAnestesiaCuartosCorrecto = parseInt(inputTiempoAnestesia.value) === tiempoEsperado;
-            }
+        const anestesiaFila1Tiempo = document.querySelector(`#hccirugiahospitalizacion-anestesia-0-tiempo`);
+        const anestesiaFila2Tiempo = document.querySelector(`#hccirugiahospitalizacion-anestesia-1-tiempo`);
+
+        // Asegurar que el código 99149 tenga hasta 2 cuartos
+        if (anestesiaFila1Codigo === "99149" && anestesiaFila1Tiempo) {
+            anestesiaFila1Tiempo.value = cantidad99149;
+            anestesiaFila1Tiempo.dispatchEvent(new Event("change", {bubbles: true}));
+            console.log(`🔄 Tiempo 99149 corregido a ${cantidad99149}`);
         }
 
+        // Asegurar que el código 99150 tenga el resto de los cuartos
+        if (anestesiaFila2Codigo === "99150" && anestesiaFila2Tiempo) {
+            anestesiaFila2Tiempo.value = cantidad99150;
+            anestesiaFila2Tiempo.dispatchEvent(new Event("change", {bubbles: true}));
+            console.log(`🔄 Tiempo 99150 corregido a ${cantidad99150}`);
+        }
         if (!window.tiempoAnestesiaPresente || !window.tiempoAnestesiaCuartosCorrecto) {
             window.erroresInsumosNoIngresados.push({
                 tipo: "tiempo_anestesia",
@@ -247,14 +382,13 @@ function mostrarAlertaInsumos(insumos) {
             });
 
             const duracion = window.duracionOxigenoGlobal || "01:00";
-            const [h, m] = duracion.split(":").map(Number);
-            const tiempoEsperado = Math.round((h * 60 + m) / 15);
+            const CUARTOS = calcularCuartosDesdeDuracion(duracion);
 
             const inputTiempoAnestesia = document.querySelector(`#hccirugiahospitalizacion-anestesia-0-tiempo`);
             if (inputTiempoAnestesia) {
-                inputTiempoAnestesia.value = tiempoEsperado;
+                inputTiempoAnestesia.value = CUARTOS;
                 inputTiempoAnestesia.dispatchEvent(new Event("change", {bubbles: true}));
-                console.log(`🔄 Duración de anestesia corregida a ${tiempoEsperado} bloques de 15 minutos`);
+                console.log(`🔄 Duración de anestesia corregida a ${CUARTOS} bloques de 15 minutos`);
             }
         }
     }, 500);
@@ -382,7 +516,7 @@ function mostrarAlertaInsumos(insumos) {
             await new Promise(resolve => agregarFilas("#seriales-input-derecho .js-input-plus", nuevosEquipos.length, resolve, "equipos"));
             await new Promise(resolve => agregarFilas("#seriales-input-insumos .js-input-plus", insumosNuevos.length, resolve, "anestesia"));
             await new Promise(resolve => agregarFilas("#seriales-input-oxigeno .js-input-plus", 1, resolve, "oxigeno"));
-            await new Promise(resolve => agregarFilas("#seriales-input-anestesia .js-input-plus", 1, resolve, "tiempoAnestesia"));
+            await new Promise(resolve => agregarFilas("#seriales-input-anestesia .js-input-plus", window.tiempoAnestesiaGlobal.length, resolve, "tiempoAnestesia"));
 
             await completarDatosEquipos(nuevosEquipos);
             console.log("✅ Equipos agregados correctamente.");
@@ -393,8 +527,21 @@ function mostrarAlertaInsumos(insumos) {
             await completarDatosOxigeno("911111", 0);
             console.log("✅ Oxígeno agregado correctamente.");
 
-            await completarDatosTiempoAnestesia("999999", 0);
-            console.log("✅ Tiempo de anestesia agregado correctamente.");
+            // Nueva lógica: Asegurar filas y asignar SOLO los códigos definidos en tiempoAnestesiaGlobal
+            const filasAnestesia = document.querySelectorAll("#seriales-input-anestesia .multiple-input-list__item");
+            const filasAnestesiaExistentes = filasAnestesia.length;
+            let filasNecesarias = window.tiempoAnestesiaGlobal.length;
+
+            // Si hay filas insuficientes, agregar las necesarias
+            if (filasAnestesiaExistentes < filasNecesarias) {
+                await new Promise(resolve => agregarFilas("#seriales-input-anestesia .js-input-plus", filasNecesarias - filasAnestesiaExistentes, resolve, "tiempoAnestesia"));
+            }
+
+            // Insertar SOLO los códigos definidos en tiempoAnestesiaGlobal
+            for (let i = 0; i < window.tiempoAnestesiaGlobal.length; i++) {
+                const item = window.tiempoAnestesiaGlobal[i];
+                await completarDatosTiempoAnestesia(item.codigo, item.cantidad, i);
+            }
 
             // Filtrar errores que realmente persisten después de correcciones
             window.erroresInsumosNoIngresados = window.erroresInsumosNoIngresados.filter(err => {
@@ -449,8 +596,7 @@ function mostrarAlertaInsumos(insumos) {
                                 // Añadir explícitamente una fila antes de intentar nuevamente
                                 await new Promise(resolve => agregarFilas("#seriales-input-insumos .js-input-plus", 1, resolve, "anestesia"));
                                 await completarDatosAnestesia([{
-                                    codigo: error.nombre,
-                                    cantidad: 1
+                                    codigo: error.nombre, cantidad: 1
                                 }]);
                             } else if (error.tipo === "equipo") {
                                 // Añadir explícitamente una fila antes de intentar nuevamente
@@ -701,121 +847,42 @@ async function completarDatosOxigeno(codigoOxigeno = "911111", fila = 0) {
     }
 }
 
-async function completarDatosTiempoAnestesia(codigoTiempoAnestesia = "999999", fila = 0) {
-    console.log("🧠 Completando datos de Tiempo de Anestesia en la fila...");
-
+async function completarDatosTiempoAnestesia(codigoTiempoAnestesia = "999999", cantidadAsignar = 1, fila = 0) {
     const select2ContainerId = `#select2-hccirugiahospitalizacion-anestesia-${fila}-anestesia-container`;
 
     try {
-        console.log(`🔍 Buscando y seleccionando código de Tiempo de Anestesia "${codigoTiempoAnestesia}" en fila ${fila}...`);
+        console.log(`🔍 Buscando y seleccionando código "${codigoTiempoAnestesia}" en fila ${fila}...`);
         await Select2Utils.hacerClick(select2ContainerId);
         await Select2Utils.buscar(codigoTiempoAnestesia);
         await Select2Utils.seleccionar();
-        // Validación de selección efectiva
+
         const contenedorSeleccion = document.querySelector(select2ContainerId);
-        if (!contenedorSeleccion || !contenedorSeleccion.textContent.trim().toUpperCase().includes(codigoTiempoAnestesia)) {
-            console.warn(`⚠️ El Tiempo de Anestesia "${codigoTiempoAnestesia}" no fue realmente seleccionado en fila ${fila + 1}`);
+        if (!contenedorSeleccion || !contenedorSeleccion.textContent.trim().includes(codigoTiempoAnestesia)) {
+            console.warn(`⚠️ El código "${codigoTiempoAnestesia}" no fue realmente seleccionado en fila ${fila + 1}`);
             window.erroresInsumosNoIngresados.push({
                 tipo: "tiempo_anestesia",
                 nombre: codigoTiempoAnestesia,
                 fila: fila + 1,
-                error: "No se pudo seleccionar correctamente en el Select2"
+                error: "No seleccionado correctamente en Select2"
             });
             return;
         }
-        // Establecer duración después de seleccionar el código
-        setTimeout(() => {
-            try {
-                const duracion = window.duracionOxigenoGlobal || "01:00";
-                const [horas, minutos] = duracion.split(":").map(Number);
-                // Calcular el número entero de cuartos de hora (15 minutos)
-                const tiempoEnHoras = Math.round((horas * 60 + minutos) / 15);
 
-                const inputTiempo = document.querySelector(`#hccirugiahospitalizacion-anestesia-${fila}-tiempo`);
-                if (inputTiempo) {
-                    inputTiempo.value = tiempoEnHoras;
-                    const eventChange = new Event("change", {bubbles: true});
-                    inputTiempo.dispatchEvent(eventChange);
-                    console.log(`⏱️ Tiempo de Anestesia establecido: ${tiempoEnHoras} bloques de 15 minutos`);
-                } else {
-                    console.warn(`⚠️ Campo de duración de anestesia no encontrado para la fila ${fila}`);
-                }
-            } catch (err) {
-                console.error("❌ Error al establecer duración de anestesia:", err);
-            }
-        }, 500);
+        const inputTiempo = document.querySelector(`#hccirugiahospitalizacion-anestesia-${fila}-tiempo`);
+        if (inputTiempo) {
+            inputTiempo.value = cantidadAsignar;
+            inputTiempo.dispatchEvent(new Event("change", {bubbles: true}));
+            console.log(`⏱️ Tiempo de Anestesia (${codigoTiempoAnestesia}) establecido: ${cantidadAsignar} bloques de 15 minutos`);
+        }
     } catch (error) {
-        console.error(`❌ Error al completar datos de anestesia:`, error);
+        console.error(`❌ Error al completar anestesia:`, error);
         window.erroresInsumosNoIngresados.push({
-            tipo: "tiempo_anestesia", nombre: codigoTiempoAnestesia, fila: fila, error: error.toString()
+            tipo: "tiempo_anestesia",
+            nombre: codigoTiempoAnestesia,
+            fila: fila,
+            error: error.toString()
         });
     }
 }
 
 
-// Utils agrupados para Select2
-const Select2Utils = {
-    hacerClick: function (selector) {
-        return new Promise((resolve, reject) => {
-            const container = document.querySelector(selector);
-            if (container) {
-                const event = new MouseEvent('mousedown', {
-                    view: window, bubbles: true, cancelable: true
-                });
-                container.dispatchEvent(event);
-                setTimeout(resolve, 200);
-            } else {
-                console.error(`❌ Contenedor "${selector}" no encontrado.`);
-                reject(`Contenedor "${selector}" no encontrado.`);
-            }
-        });
-    },
-
-    buscar: function (textoBusqueda) {
-        console.log("🧪 Valor recibido en buscarEnSelect2:", textoBusqueda);
-        return new Promise((resolve, reject) => {
-            const maxIntentos = 10;
-            let intentos = 0;
-
-            const intentarBuscar = () => {
-                const campo = document.querySelector("input.select2-search__field");
-                if (campo) {
-                    campo.value = textoBusqueda;
-                    const eventoInput = new Event("input", {bubbles: true, cancelable: true});
-                    campo.dispatchEvent(eventoInput);
-                    setTimeout(resolve, 300);
-                } else if (intentos < maxIntentos) {
-                    intentos++;
-                    setTimeout(intentarBuscar, 300);
-                } else {
-                    reject("No se encontró el campo de búsqueda de Select2.");
-                }
-            };
-
-            intentarBuscar();
-        });
-    },
-
-    seleccionar: function () {
-        return new Promise((resolve, reject) => {
-            const esperarOpciones = () => {
-                const opcion = document.querySelector(".select2-results__option");
-                if (opcion) {
-                    const campo = document.querySelector("input.select2-search__field");
-                    if (campo) {
-                        const enterEvent = new KeyboardEvent("keydown", {
-                            key: "Enter", keyCode: 13, bubbles: true, cancelable: true
-                        });
-                        campo.dispatchEvent(enterEvent);
-                        setTimeout(resolve, 300);
-                    } else {
-                        reject("No se encontró el campo de búsqueda para hacer Enter.");
-                    }
-                } else {
-                    setTimeout(esperarOpciones, 200);
-                }
-            };
-            esperarOpciones();
-        });
-    }
-};
