@@ -48,7 +48,7 @@ function extraerDatosProcedimientos() {
     });
 
     // Obtener hcNumber y formId antes del log
-    const hcNumber = document.querySelector('#numero-historia-clinica')?.value || null;
+    const hcNumber = document.querySelector('#numero-historia-clinica')?.value.trim() || null;
 
     let formId = null;
     document.querySelectorAll('a[href*="imprimir-cotizacion"]').forEach(link => {

@@ -1,4 +1,22 @@
 function ejecutarProtocoloEnPagina(item) {
+    const SELECTORS = {
+        membrete: '#consultasubsecuente-membrete',
+        piepagina: '#consultasubsecuente-piepagina',
+        dieresis: '#consultasubsecuente-dieresis',
+        exposicion: '#consultasubsecuente-exposicion',
+        hallazgo: '#consultasubsecuente-hallazgo',
+        operatorio: '#consultasubsecuente-operatorio',
+        hallazgopostquirurgico: '#consultasubsecuente-hallazgopostquirurgico',
+        drenajes: '#consultasubsecuente-drenajes',
+        sangrado: '#consultasubsecuente-sangrado',
+        complicaciones: '#consultasubsecuente-complicaciones',
+        complicacionesoperatorio: '#consultasubsecuente-complicacionesoperatorio',
+        perdidasanguineat: '#consultasubsecuente-perdidasanguineat',
+        datosCirugia: '#consultasubsecuente-datoscirugia',
+        anestesia: '#select2-consultasubsecuente-anestesia_id-container',
+        nombreAnestesia: '#consultasubsecuente-nombreanestesia',
+        observaciones: '#docsolicitudprocedimientos-observacion_consulta'
+    };
     const LOG_PREFIX = '[CIVE EXT]';
     const MODO_DEBUG_VISUAL = true; // Cambiar a false para desactivar visualización
     const MODO_LOG_COMPACTO = true;
@@ -63,10 +81,19 @@ function ejecutarProtocoloEnPagina(item) {
                 textArea.value = valor;
                 resaltarElemento(textArea, 'blue');
                 // Si el campo es el pie de página, hacerlo de solo lectura
-                if (selector === '#consultasubsecuente-piepagina') {
+                if (selector === SELECTORS.piepagina) {
                     textArea.readOnly = true;
                 }
-                setTimeout(resolve, 100); // Añadir un retraso para asegurar que el valor se establezca
+                // Refuerzo: establecer readOnly para piepagina siempre después de llenar
+                if (selector === SELECTORS.piepagina) {
+                    setTimeout(() => {
+                        textArea.readOnly = true;
+                    }, 120);
+                }
+                setTimeout(() => {
+                    // Como refuerzo general, podríamos establecer readOnly en todos los campos aquí si se quisiera.
+                    resolve();
+                }, 100); // Añadir un retraso para asegurar que el valor se establezca
             } else {
                 console.error(`${LOG_PREFIX} El campo de texto "${selector}" no se encontró.`);
                 reject(`El campo de texto "${selector}" no se encontró.`);
@@ -97,7 +124,7 @@ function ejecutarProtocoloEnPagina(item) {
                         attempt++;
                         if (attempt < maxRetries) {
                             console.warn(`${LOG_PREFIX} Reintentando (${attempt}/${maxRetries})...`);
-                            setTimeout(tryExecute, delay);
+                            setTimeout(tryExecute, delay * Math.pow(2, attempt));
                         } else {
                             reject(error);
                         }
@@ -265,19 +292,23 @@ function ejecutarProtocoloEnPagina(item) {
         }
         // Llenar campos de texto
         return Promise.all([
-            llenarCampoTexto('#consultasubsecuente-membrete', `${item.membrete} en ${ojoATratar.descripcion}`),
-            llenarCampoTexto('#consultasubsecuente-piepagina', `${item.id}`),
-            llenarCampoTexto('#consultasubsecuente-dieresis', item.dieresis),
-            llenarCampoTexto('#consultasubsecuente-exposicion', item.exposicion),
-            llenarCampoTexto('#consultasubsecuente-hallazgo', item.hallazgo),
-            llenarCampoTexto('#consultasubsecuente-operatorio', item.operatorio),
-            llenarCampoTexto('#consultasubsecuente-hallazgopostquirurgico', 'Paciente orientado en las tres esferas y presenta un parche oclusivo en el ojo operado, conforme a las indicaciones postoperatorias. Constantes vitales dentro de los parámetros normales. No se observan complicaciones inmediatas.'),
-            llenarCampoTexto('#consultasubsecuente-drenajes', 'No'),
-            llenarCampoTexto('#consultasubsecuente-sangrado', 'No'),
-            llenarCampoTexto('#consultasubsecuente-complicaciones', 'No'),
+            llenarCampoTexto(SELECTORS.membrete, `${item.membrete} en ${ojoATratar.descripcion}`),
+            llenarCampoTexto(SELECTORS.piepagina, `${item.id}`).then(() => {
+                // Refuerzo: asegúrate de que el campo quede como solo lectura tras llenarlo
+                const piepaginaField = document.querySelector(SELECTORS.piepagina);
+                if (piepaginaField) piepaginaField.readOnly = true;
+            }),
+            llenarCampoTexto(SELECTORS.dieresis, item.dieresis),
+            llenarCampoTexto(SELECTORS.exposicion, item.exposicion),
+            llenarCampoTexto(SELECTORS.hallazgo, item.hallazgo),
+            llenarCampoTexto(SELECTORS.operatorio, item.operatorio),
+            llenarCampoTexto(SELECTORS.hallazgopostquirurgico, 'Paciente orientado en las tres esferas y presenta un parche oclusivo en el ojo operado, conforme a las indicaciones postoperatorias. Constantes vitales dentro de los parámetros normales. No se observan complicaciones inmediatas.'),
+            llenarCampoTexto(SELECTORS.drenajes, 'No'),
+            llenarCampoTexto(SELECTORS.sangrado, 'No'),
+            llenarCampoTexto(SELECTORS.complicaciones, 'No'),
             llenarCampoTexto('#consultasubsecuente-heridas', 'No'),
-            llenarCampoTexto('#consultasubsecuente-complicacionesoperatorio', item.complicacionesoperatorio),
-            llenarCampoTexto('#consultasubsecuente-perdidasanguineat', item.perdidasanguineat),
+            llenarCampoTexto(SELECTORS.complicacionesoperatorio, item.complicacionesoperatorio),
+            llenarCampoTexto(SELECTORS.perdidasanguineat, item.perdidasanguineat),
             hacerClickEnBoton('#trabajadorprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus', item.staffCount),
             hacerClickEnBoton('#procedimientoprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus', item.codigoCount),
             hacerClickEnBoton('#diagnosticossub11111 .list-cell__button .js-input-plus', item.diagnosticoCount)
@@ -285,21 +316,33 @@ function ejecutarProtocoloEnPagina(item) {
     };
 
     function obtenerOjoATratar() {
-        // Función auxiliar para buscar texto en un contenedor y retornar las siglas y descripción del ojo
+        // Primero, intentar leer del select2 de lateralidad (campo de la UI)
+        const lateralidadSpan = document.querySelector('#select2-consultasubsecuente-procedimientoprotocolo-0-lateralidadprocedimiento-container');
+        if (lateralidadSpan) {
+            const texto = lateralidadSpan.getAttribute('title');
+            if (texto === 'DERECHO') {
+                return {sigla: 'DERECHO', descripcion: 'OJO DERECHO'};
+            } else if (texto === 'IZQUIERDO') {
+                return {sigla: 'IZQUIERDO', descripcion: 'OJO IZQUIERDO'};
+            } else if (texto === 'AMBOS OJOS') {
+                return {sigla: 'AMBOS OJOS', descripcion: 'AMBOS OJOS'};
+            }
+        }
+
+        // Si no se encuentra en el select2, buscar en las notas del doctor primero
         function buscarOjoEnTexto(texto) {
             const textoUpper = texto.toUpperCase();
             if (textoUpper.includes("OJO DERECHO")) {
-                return {sigla: "OD", descripcion: "OJO DERECHO"};
+                return {sigla: "DERECHO", descripcion: "OJO DERECHO"};
             } else if (textoUpper.includes("OJO IZQUIERDO")) {
-                return {sigla: "OI", descripcion: "OJO IZQUIERDO"};
+                return {sigla: "IZQUIERDO", descripcion: "OJO IZQUIERDO"};
             } else if (textoUpper.includes("AMBOS OJOS")) {
-                return {sigla: "AO", descripcion: "AMBOS OJOS"};
+                return {sigla: "AMBOS OJOS", descripcion: "AMBOS OJOS"};
             } else {
                 return null; // Retorna null si no encuentra nada
             }
         }
 
-        // Buscar en las notas del doctor primero
         const notasDoctorElement = document.querySelector("div[style*='text-align:justify;'] div[style*='margin-right:30px;margin-left:30px;']");
         if (notasDoctorElement) {
             const resultado = buscarOjoEnTexto(notasDoctorElement.textContent);
@@ -499,27 +542,31 @@ Se indica al paciente que debe acudir a una consulta de control en las próximas
     }
 
 
-    ejecutarAcciones(item)
-        .then(() => ejecutarTecnicos(item, apellidosMedico))
-        .then(() => ejecutarCodigos(item, ojoATratar.sigla))
-        .then(() => llenarCampoTexto('#consultasubsecuente-datoscirugia', textoDictado))
-        .then(() => seleccionarRadioNo())
-        .then(() => actualizarHoraFin(item))
-        .then(() => abrirYBuscarSelect2('#select2-consultasubsecuente-anestesia_id-container', item.anestesia))
-        .then(() => seleccionarOpcion())
-        .then(() => ejecutarDiagnosticos(item, ojoATratar.sigla))
-        .then(() => hacerClickEnPresuntivo('.form-group.field-proyectada .cbx-container .cbx', 2))
-        .then(() => hacerClickEnPresuntivo('.form-group.field-termsChkbx .cbx-container .cbx', 1))
-        .then(() => {
-            if (item.anestesia === 'OTROS') {
-                return llenarCampoTexto('#consultasubsecuente-nombreanestesia', 'TOPICA');
-            } else {
-                return Promise.resolve(); // Si no es 'OTROS', pasar al siguiente paso
-            }
-        })
-        .then(() => esperarElemento('#docsolicitudprocedimientos-observacion_consulta'))
-        .then(() => llenarCampoTexto('#docsolicitudprocedimientos-observacion_consulta', observaciones))
-        .then(() => hacerClickEnBoton('#consultaActual', 1))
+    function ejecutarFaseInicial(item, apellidosMedico) {
+        return ejecutarAcciones(item)
+            .then(() => ejecutarTecnicos(item, apellidosMedico))
+            .then(() => ejecutarCodigos(item, ojoATratar.sigla))
+            .then(() => llenarCampoTexto(SELECTORS.datosCirugia, textoDictado));
+    }
+
+    function ejecutarFaseFinal(item) {
+        return seleccionarRadioNo()
+            .then(() => actualizarHoraFin(item))
+            .then(() => abrirYBuscarSelect2(SELECTORS.anestesia, item.anestesia))
+            .then(() => seleccionarOpcion())
+            .then(() => ejecutarDiagnosticos(item, ojoATratar.sigla))
+            .then(() => hacerClickEnPresuntivo('.form-group.field-proyectada .cbx-container .cbx', 2))
+            .then(() => hacerClickEnPresuntivo('.form-group.field-termsChkbx .cbx-container .cbx', 1))
+            .then(() => item.anestesia === 'OTROS'
+                ? llenarCampoTexto(SELECTORS.nombreAnestesia, 'TOPICA')
+                : Promise.resolve())
+            .then(() => esperarElemento(SELECTORS.observaciones))
+            .then(() => llenarCampoTexto(SELECTORS.observaciones, observaciones))
+            .then(() => hacerClickEnBoton('#consultaActual', 1));
+    }
+
+    ejecutarFaseInicial(item, apellidosMedico)
+        .then(() => ejecutarFaseFinal(item))
         .then(() => {
             Swal.fire({
                 icon: 'success',
@@ -531,6 +578,15 @@ Se indica al paciente que debe acudir a una consulta de control en las próximas
         .then(() => console.log(`${LOG_PREFIX} Clic simulado correctamente.`))
         .catch(error => console.error(`${LOG_PREFIX} Error en la ejecución de acciones:`, error));
 }
+
+// Forzar campo piepagina como solo lectura al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    const piepagina = document.querySelector('#consultasubsecuente-piepagina');
+    if (piepagina) {
+        piepagina.readOnly = true;
+        console.log('[CIVE EXT] Campo piepagina marcado como solo lectura al cargar.');
+    }
+});
 
 
 

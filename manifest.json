@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Asistente CIVE",
-  "version": "6.2.2",
+  "version": "6.2.5",
   "description": "Descripción de mi extensión",
   "permissions": [
     "activeTab",
@@ -50,7 +50,6 @@
         "js/drag.js",
         "js/eventos.js",
         "js/observadores.js",
-        "js/ocudx.js",
         "js/protocolos.js",
         "js/paciente.js",
         "js/admision.js",
@@ -106,7 +105,6 @@
         "js/drag.js",
         "js/eventos.js",
         "js/observadores.js",
-        "js/ocudx.js",
         "js/protocolos.js",
         "js/paciente.js",
         "js/admision.js",

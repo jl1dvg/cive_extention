@@ -94,4 +94,11 @@ window.addEventListener("load", () => {
     } else {
         console.warn("⚠️ detectarConfirmacionAsistencia no está definida.");
     }
+
+    //if (window.iniciarAnalisisOcuDx) {
+    //    console.log("🧠 iniciarAnalisisOcuDx disponible. Ejecutando...");
+    //    window.iniciarAnalisisOcuDx();
+    //} else {
+    //    console.warn("⚠️ iniciarAnalisisOcuDx no está definida.");
+    //}
 });

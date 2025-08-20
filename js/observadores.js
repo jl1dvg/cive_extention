@@ -1,4 +1,8 @@
+// Variables globales para pacientes de optometría y prioritarios
+let pacientesOptometriaHoy = [];
+let pacientesPrioritarios = [];
 (function () {
+
     function actualizarColorFilasPorTiempoYAfiliacion() {
         const tabla = document.querySelector('table.kv-grid-table');
         if (!tabla) return;
@@ -36,6 +40,10 @@
 
     // Nueva función: marcar filas en atención optometría
     async function actualizarEstadoAtencionOptometria() {
+        if (window.__bloqueoActualizacionOpto) return;
+        window.__bloqueoActualizacionOpto = true;
+        setTimeout(() => window.__bloqueoActualizacionOpto = false, 10000); // Bloqueo de 10s
+
         const tabla = document.querySelector('table.kv-grid-table');
         if (!tabla) return;
 
@@ -81,128 +89,55 @@
         }
     }
 
-    function mostrarNotificacionPrioridadOptometria() {
-
-        const columnMap = obtenerColumnMap();
-        const tabla = document.querySelector('table.kv-grid-table');
-        if (!tabla) return;
-
-        const filas = Array.from(tabla.querySelectorAll('tbody tr'));
-        const pacientes = [];
-
-        filas.forEach(fila => {
-            const celdas = fila.querySelectorAll('td');
-            const servicioTd = celdas[columnMap["procedimiento"]];
-            const horaCitaTd = celdas[columnMap["hora cita"]];
-            const afiliacionTd = celdas[columnMap["afiliacion"]];
-            const tiempoTd = celdas[columnMap["estado solicitud"]];
-
-            if (!tiempoTd) return;
-
-            const badgeSpan = tiempoTd?.querySelector('span.badge');
-            const backgroundColor = badgeSpan && badgeSpan.style ? badgeSpan.style.backgroundColor : '';
-
-            const intervaloSpan = tiempoTd?.querySelector('span');
-            const tiempoTexto = intervaloSpan?.textContent.trim();
-
-            if (servicioTd?.textContent.trim() === 'OPT OPTOMETRIA' && horaCitaTd && afiliacionTd && tiempoTd && intervaloSpan && tiempoTexto && backgroundColor === 'red') {
-                const excluirAfiliaciones = ['CONTRIBUYENTE VOLUNTARIO', 'CONYUGE', 'CONYUGE PENSIONISTA', 'ISSFA', 'ISSPOL', 'MSP', 'SEGURO CAMPESINO', 'SEGURO CAMPESINO JUBILADO', 'SEGURO GENERAL', 'SEGURO GENERAL JUBILADO', 'SEGURO GENERAL POR MONTEPIO', 'SEGURO GENERAL TIEMPO PARCIAL'];
-                const afiliacion = afiliacionTd.textContent.trim();
-                const prioridad = excluirAfiliaciones.includes(afiliacion) ? 2 : 1;
-                const [h, m, s] = tiempoTexto.split(':').map(Number);
-                const tiempoEsperaSeg = h * 3600 + m * 60 + s;
-
-                pacientes.push({
-                    fila,
-                    prioridad,
-                    tiempoEsperaSeg,
-                    horaCita: horaCitaTd.textContent.trim(),
-                    nombre: celdas[columnMap["nombre completo"]]?.textContent.trim() || 'Desconocido',
-                    estado: 'EN ESPERA'
-                });
-            }
-        });
-
-        pacientes.sort((a, b) => {
-            if (a.prioridad !== b.prioridad) return a.prioridad - b.prioridad;
-            return a.horaCita.localeCompare(b.horaCita) || b.tiempoEsperaSeg - a.tiempoEsperaSeg;
-        });
-
-        const top3 = pacientes.slice(0, 3).map((p, i) => {
-            let iconoEstado = '❔';
-            if (p.estado === 'ATENDIDO') iconoEstado = '✅'; else if (p.estado === 'AGENDADO') iconoEstado = '⚠️'; else if (['EN CONSULTA', 'LLAMADO'].includes(p.estado)) iconoEstado = '🕐';
-
-            return `${i + 1}. ${p.nombre} (Prioridad ${p.prioridad}, Espera: ${Math.floor(p.tiempoEsperaSeg / 60)} min, Estado: ${iconoEstado} ${p.estado})`;
-        });
-
-        if (top3.length > 0) {
-            const notificacionExistente = document.getElementById('notificacion-prioridad-optometria');
-            if (notificacionExistente) notificacionExistente.remove();
-
-            const notificacion = document.createElement('div');
-            notificacion.id = 'notificacion-prioridad-optometria';
-            notificacion.style.position = 'fixed';
-            notificacion.style.top = '20px';
-            notificacion.style.right = '20px';
-            notificacion.style.backgroundColor = '#ffffff';
-            notificacion.style.color = '#2c3e50';
-            notificacion.style.padding = '15px 20px';
-            notificacion.style.borderLeft = '5px solid #e74c3c';
-            notificacion.style.borderRadius = '8px';
-            notificacion.style.zIndex = 9999;
-            notificacion.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
-            notificacion.style.maxWidth = '300px';
-            notificacion.style.fontFamily = 'sans-serif';
-            notificacion.style.transition = 'opacity 0.5s ease-in-out';
-
-            let contenido = `<strong>🩺 ${top3.length} pacientes en espera</strong><br><br>`;
-            pacientes.slice(0, 3).forEach(p => {
-                contenido += `
-                    <div style="margin-bottom: 10px;">
-                        <strong>${p.nombre}</strong><br>
-                        ⏱️ Espera: ${Math.floor(p.tiempoEsperaSeg / 60)} min<br>
-                        🕒 Cita: ${p.horaCita}<br>
-                        🏷️ ${p.prioridad === 1 ? 'Particular' : 'Otro'}
-                    </div>
-                `;
-            });
-
-            // Botón de cierre manual
-            const botonCerrar = document.createElement('button');
-            botonCerrar.textContent = '×';
-            botonCerrar.style.position = 'absolute';
-            botonCerrar.style.top = '5px';
-            botonCerrar.style.right = '10px';
-            botonCerrar.style.background = 'transparent';
-            botonCerrar.style.border = 'none';
-            botonCerrar.style.fontSize = '18px';
-            botonCerrar.style.cursor = 'pointer';
-            botonCerrar.onclick = () => {
-                window._notificacionCerradaManualmente = true;
-                notificacion.remove();
-            };
-
-            notificacion.innerHTML = contenido;
-
-            if (window._notificacionCerradaManualmente) return;
-
-            notificacion.appendChild(botonCerrar);
-            document.body.appendChild(notificacion);
-
-            setTimeout(() => {
-                notificacion.remove();
-                window._notificacionCerradaManualmente = false;
-            }, 15000);
+    function mostrarNotificacionPrioridadOptometria(listaPacientes, pacientesOptometriaHoy) {
+        // Define la variable lista con el valor correcto para evitar ReferenceError
+        const lista = pacientesPrioritarios;
+        if (!Array.isArray(listaPacientes) || !Array.isArray(pacientesOptometriaHoy)) {
+            console.warn('⚠️ Lista de pacientes prioritarios no válida:', listaPacientes);
+            return;
         }
+
+        lista.forEach((p) => {
+            if (!p || !p.nombre) return; // Asegura que el paciente tenga datos válidos
+
+            const alerta = document.createElement("div");
+            alerta.className =
+                "myadmin-alert myadmin-alert-img myadmin-alert-click alert-warning myadmin-alert-bottom alertbottom2";
+            alerta.style.display = "block";
+            alerta.style.position = "fixed";
+            alerta.style.bottom = "0";
+            alerta.style.left = "0";
+            alerta.style.width = "100%";
+            alerta.style.zIndex = "9999";
+            alerta.innerHTML = `
+      <img src="https://cdn-icons-png.flaticon.com/512/2920/2920050.png" class="img" alt="img" style="width:40px; height:40px;">
+      <a href="#" class="closed" onclick="this.parentElement.remove()">×</a>
+      <h4>Paciente en atención OPTOMETRÍA</h4>
+      <b>${p.nombre}</b> está siendo atendido.
+    `;
+
+            document.body.appendChild(alerta);
+            setTimeout(() => {
+                alerta.remove();
+            }, 10000); // Desaparece tras 10 segundos
+        });
     }
+
+    // Variable global para controlar el bloqueo de notificación
+    let _bloqueoNotificacion = false;
 
     function observarCambiosEnTablaYPaginacion() {
         const contenedorTabla = document.querySelector('.kv-grid-container');
         if (!contenedorTabla) return;
-
         const observer = new MutationObserver(() => {
-            actualizarColorFilasPorTiempoYAfiliacion();
-            mostrarNotificacionPrioridadOptometria();
+            if (_bloqueoNotificacion) return;
+            _bloqueoNotificacion = true;
+
+            setTimeout(() => {
+                actualizarColorFilasPorTiempoYAfiliacion();
+                mostrarNotificacionPrioridadOptometria(pacientesPrioritarios, pacientesOptometriaHoy);
+                _bloqueoNotificacion = false;
+            }, 500);
         });
 
         observer.observe(contenedorTabla, {childList: true, subtree: true});
@@ -215,7 +150,7 @@
                 clearInterval(intervalo);
                 observarCambiosEnTablaYPaginacion();
                 actualizarColorFilasPorTiempoYAfiliacion();
-                mostrarNotificacionPrioridadOptometria();
+                mostrarNotificacionPrioridadOptometria(pacientesPrioritarios, pacientesOptometriaHoy);
                 actualizarEstadoAtencionOptometria();
             }
         }, 250);
@@ -232,6 +167,12 @@
             }
         });
 
+        // Prevenir ejecución repetida
+        if (window.__mapeoYaEjecutado) return;
+        window.__mapeoYaEjecutado = true;
+        setTimeout(() => {
+            window.__mapeoYaEjecutado = false;
+        }, 10000); // Espera 10s antes de permitir otro mapeo
         console.log("🔍 Mapeo de columnas detectado:", map);
         return map;
     }
@@ -308,6 +249,11 @@
             });
         });
 
+        pacientes.forEach(p => {
+            if (!p || !p.id) return;
+            // continuar lógica...
+        });
+
         if (pacientes.length > 0) {
             fetch('https://asistentecive.consulmed.me/api/proyecciones/guardar.php', {
                 method: 'POST',
@@ -319,6 +265,11 @@
                 .then(res => res.json())
                 .then(data => {
                     console.log('✅ Sincronización exitosa:', data);
+                    // Asignar pacientesOptometriaHoy y pacientesPrioritarios tras sincronización
+                    if (data && Array.isArray(data.detalles)) {
+                        pacientesOptometriaHoy = data.detalles.map(p => p.id);
+                        pacientesPrioritarios = data.detalles.filter(p => p.afiliacion === 'PRIORITARIO').map(p => p.id);
+                    }
                 })
                 .catch(err => {
                     console.error('❌ Error en la sincronización', err);
@@ -328,6 +279,15 @@
 
     // Inicializar variable global para evitar bucles infinitos al seleccionar "ver todo"
     window._ultimaClaveProcesada = null;
+
+    // --- localStorage parseo seguro para 'professional' ---
+    let professional = localStorage.getItem("professional");
+    try {
+        professional = professional ? JSON.parse(professional) : null;
+    } catch (e) {
+        console.warn("Error al parsear 'professional':", e);
+        professional = null;
+    }
 
     function observarTablaPorAtenderSiCambio() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -354,6 +314,7 @@
         if (tabla) observarTablaPorAtenderSiCambio();
     });
 
+    // Incluir estilos para notificación
     const estilo = document.createElement('style');
     estilo.innerHTML = `
     .llegado-particular {
@@ -372,7 +333,67 @@
         font-size: 14px;
         vertical-align: middle;
     }
-`;
+    /* Notificación estilos básicos para .myadmin-alert y .alertbottom2 si no existen */
+    .myadmin-alert {
+        position: fixed;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: none;
+        border-radius: 0;
+        z-index: 9999;
+        background: #fff8e1;
+        color: #8a6d3b;
+        border: 1px solid #faebcc;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+        padding: 20px 30px 20px 70px;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        font-size: 15px;
+        transition: opacity 0.4s;
+    }
+    .myadmin-alert-img .img {
+        position: absolute;
+        left: 25px;
+        top: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+    .myadmin-alert h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 17px;
+        font-weight: bold;
+    }
+    .myadmin-alert .closed {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        color: #a94442;
+        font-size: 22px;
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+        line-height: 1;
+    }
+    .myadmin-alert-bottom.alertbottom2 {
+        bottom: 40px;
+        top: auto;
+    }
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0%);
+            opacity: 1;
+        }
+    }
+    .slide-up {
+        animation: slideUp 0.5s ease-out;
+    }
+    `;
     document.head.appendChild(estilo);
 
     // Asignar funciones a `window` para que sean accesibles globalmente

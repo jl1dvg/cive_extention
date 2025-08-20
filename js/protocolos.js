@@ -43,6 +43,18 @@ function extraerDatosYEnviar() {
         // Extraer valores de los textareas
         data.membrete = document.querySelector('#consultasubsecuente-membrete')?.value.trim() || '';
         data.procedimiento_id = document.querySelector('#consultasubsecuente-piepagina')?.value.trim() || '';
+        const piePaginaInput = document.querySelector('#consultasubsecuente-piepagina');
+        if (!data.procedimiento_id && piePaginaInput) {
+            piePaginaInput.style.border = '2px solid red';
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo obligatorio',
+                text: 'El ID del procedimiento (#consultasubsecuente-piepagina) no puede estar vacío.',
+                confirmButtonText: 'Aceptar'
+            });
+            if (btnGuardar) btnGuardar.disabled = false;
+            return;
+        }
         data.dieresis = document.querySelector('#consultasubsecuente-dieresis')?.value.trim() || '';
         data.exposicion = document.querySelector('#consultasubsecuente-exposicion')?.value.trim() || '';
         data.hallazgo = document.querySelector('#consultasubsecuente-hallazgo')?.value.trim() || '';
@@ -245,9 +257,20 @@ function extraerDatosYEnviar() {
         })
         .then((result) => {
             if (result.success) {
-                console.log('✅ Datos guardados correctamente.');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Guardado exitoso',
+                    text: result.message || 'Datos guardados correctamente.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
             } else {
-                console.error('❌ Error en respuesta:', result.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al guardar',
+                    text: result.message || 'Ha ocurrido un error inesperado.',
+                    confirmButtonText: 'Entendido'
+                });
             }
         })
         .catch((error) => {
