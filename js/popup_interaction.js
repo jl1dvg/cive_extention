@@ -1,3 +1,55 @@
+// ==== Helpers para contexto de extensión (MV3) ====
+function isExtensionContextActive() {
+    try {
+        return !!(typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id);
+    } catch (e) {
+        return false;
+    }
+}
+
+function safeGetURL(pathRelativo) {
+    // Si el contexto de la extensión está activo, usa la ruta interna del paquete
+    if (isExtensionContextActive()) {
+        try {
+            return chrome.runtime.getURL(pathRelativo);
+        } catch (e) {
+            console.warn('getURL falló, usando fallback remoto:', e);
+        }
+    }
+    // Fallback remoto (repositorio público) para cuando el contexto se invalida (navegación, recarga del popup, etc.)
+    return `https://raw.githubusercontent.com/jl1dvg/cive_extention/main/${pathRelativo}`;
+}
+
+function safeSendMessage(message, {reintentos = 3, delayMs = 500} = {}) {
+    return new Promise((resolve, reject) => {
+        const intentar = (intento) => {
+            if (!isExtensionContextActive()) {
+                if (intento >= reintentos) {
+                    return reject(new Error('Extension context invalidated (sendMessage).'));
+                }
+                return setTimeout(() => intentar(intento + 1), delayMs);
+            }
+            try {
+                chrome.runtime.sendMessage(message, (response) => {
+                    const err = chrome.runtime && chrome.runtime.lastError ? chrome.runtime.lastError : null;
+                    if (err) {
+                        if (intento < reintentos) return setTimeout(() => intentar(intento + 1), delayMs);
+                        return reject(new Error(err.message || 'sendMessage error'));
+                    }
+                    resolve(response);
+                });
+            } catch (e) {
+                if (intento < reintentos) return setTimeout(() => intentar(intento + 1), delayMs);
+                reject(e);
+            }
+        };
+        intentar(0);
+    });
+}
+
+// ==== Fin helpers ====
+
+
 // Función para mostrar la sección correspondiente
 function mostrarSeccion(seccionId) {
     console.log(`Mostrando sección: ${seccionId}`);
@@ -22,7 +74,7 @@ function cargarJSON(url) {
 // Función para cargar los exámenes desde el JSON
 function cargarExamenes() {
     console.log('Intentando cargar exámenes...');
-    cargarJSON(chrome.runtime.getURL('data/examenes.json'))
+    cargarJSON(safeGetURL('data/examenes.json'))
         .then(data => {
             console.log('Datos de exámenes cargados:', data);
             const procedimientosData = data.examenes;
@@ -58,7 +110,7 @@ function crearBotonesProcedimientos(procedimientos, contenedorId, clickHandler) 
 // Función para ejecutar el examen seleccionado
 function ejecutarExamenes(id) {
     console.log(`Ejecutando examen con ID: ${id}`);
-    cargarJSON(chrome.runtime.getURL('data/examenes.json'))
+    cargarJSON(safeGetURL('data/examenes.json'))
         .then(data => {
             const item = data.examenes.find(d => d.id === id);
             if (!item) throw new Error('ID no encontrado en el JSON');
@@ -124,26 +176,17 @@ function crearRecetasCategorias(recetas, contenedorId) {
 }
 
 function ejecutarReceta(id) {
-    const jsonUrl = 'https://raw.githubusercontent.com/jl1dvg/cive_extention/main/data/recetas.json';
-
-    cargarJSON(jsonUrl)
+    const urlPreferida = safeGetURL('data/recetas.json');
+    cargarJSON(urlPreferida)
         .then(data => {
             const item = data.receta.find(d => d.id === id);
             if (!item) throw new Error('ID no encontrado en el JSON');
 
-            console.log("Item cargado:", item);
-
-            // Verificar que el item tenga todas las propiedades necesarias
+            console.log('Item cargado:', item);
             if (!item || typeof item !== 'object') {
                 throw new Error('El item cargado no tiene la estructura esperada.');
             }
-
-            if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
-                chrome.runtime.sendMessage({action: "ejecutarReceta", item: item});
-            } else {
-                console.error("El contexto de la extensión no es válido. Intentando nuevamente en 1 segundo...");
-                setTimeout(() => ejecutarReceta(id), 1000);
-            }
+            return safeSendMessage({action: 'ejecutarReceta', item});
         })
         .catch(error => console.error('Error en la ejecución de receta:', error));
 }
@@ -164,6 +207,10 @@ function cargarProtocolos() {
     console.log('Intentando cargar procedimientos...');
     console.log(afiliacion);
     const apiUrl = `https://asistentecive.consulmed.me/api/procedimientos/listar.php?afiliacion=${encodeURIComponent(afiliacion)}`;
+
+    if (!isExtensionContextActive()) {
+        console.warn('Aviso: el contexto de la extensión no está activo; fetch a API continuará de todos modos.');
+    }
 
     fetch(apiUrl)
         .then(response => {
@@ -241,12 +288,10 @@ function ejecutarProtocolos(id) {
 
             console.log("Item cargado:", item);
 
-            if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
-                chrome.runtime.sendMessage({action: "ejecutarProtocolo", item: item});
-            } else {
-                console.error("El contexto de la extensión no es válido. Intentando nuevamente en 1 segundo...");
-                setTimeout(() => ejecutarProtocolos(id), 1000);
-            }
+            safeSendMessage({action: 'ejecutarProtocolo', item})
+                .catch(err => {
+                    console.error('No se pudo enviar el mensaje al background:', err);
+                });
         })
         .catch(error => console.error('Error en la ejecución de protocolo:', error));
 }

@@ -1,3 +1,75 @@
+// ===== Auditar campos de Consulta/Optometría =====
+
+// === Utils de normalización/limpieza ===
+function isSelectPlaceholder(txt) {
+    if (!txt) return false;
+    return txt.trim().toUpperCase() === 'SELECCIONE';
+}
+
+function norm(val) {
+    return (val || '').toString().trim();
+}
+
+function normOrEmpty(val) {
+    const v = norm(val);
+    return isSelectPlaceholder(v) ? '' : v;
+}
+
+function stripHtml(s) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = s || '';
+    return (tmp.textContent || '').trim();
+}
+
+function cleanText(val) {
+    // Quita HTML, normaliza espacios y aplica norma/placeholder
+    const plain = stripHtml(val).replace(/\s+/g, ' ').trim();
+    return normOrEmpty(plain);
+}
+
+function pruneEmpty(obj) {
+    Object.keys(obj).forEach(k => (obj[k] === '' || obj[k] === null || obj[k] === undefined) && delete obj[k]);
+    return obj;
+}
+
+function hasAny(obj, keys) {
+    return keys.some(k => !!norm(obj[k]));
+}
+
+
+// ==== Notificación no intrusiva (evita solaparse con los flujos de paciente.js) ====
+function notifySwal({icon = 'info', title = '', text = '', timer = 2000}) {
+    try {
+        // Usar toast compacto para no bloquear; si hay lock activo, dejar que el patch de paciente.js lo encole.
+        const Toast = Swal && Swal.mixin ? Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: timer,
+            timerProgressBar: true
+        }) : null;
+
+        const opts = {icon, title, text /* no civeBypass: respetar lock/cola */};
+
+        if (Toast) {
+            // Si el lock está activo o hay un modal visible, deferir un poco; el patch lo encola de ser necesario
+            if ((typeof window.__civeSwalLockDepth !== 'undefined' && window.__civeSwalLockDepth > 0) ||
+                (typeof Swal !== 'undefined' && Swal.isVisible && Swal.isVisible())) {
+                setTimeout(() => Toast.fire(opts), 300);
+            } else {
+                Toast.fire(opts);
+            }
+        } else if (typeof Swal !== 'undefined' && Swal.fire) {
+            // Fallback a modal estándar (se encola gracias al patch si el lock está activo)
+            Swal.fire(opts);
+        } else {
+            console.log(`${icon === 'success' ? '✅' : icon === 'error' ? '❌' : 'ℹ️'} ${title} - ${text}`);
+        }
+    } catch (e) {
+        console.log(`${icon === 'success' ? '✅' : icon === 'error' ? '❌' : 'ℹ️'} ${title} - ${text}`);
+    }
+}
+
 // Función para extraer datos del div y enviar al servidor
 
 function extraerDatosYEnviar() {
@@ -219,16 +291,114 @@ function extraerDatosYEnviar() {
 
         console.log('Exámenes recopilados:', data.examenes);
 
-        console.log('Exámenes recopilados:', data.examenes);
+        // ====== RECETAS INTERNAS (normalizadas y validadas) ======
+        data.recetas = [];
+        document.querySelectorAll('#recetas-input .multiple-input-list__item').forEach((row) => {
+            const idRecetas = norm(row.querySelector('[id$="-idrecetas"][name$="[idRecetas]"]')?.value || '');
+            const estadoRecetaid = norm(row.querySelector('[id$="-estadorecetaid"][name$="[estadoRecetaid]"]')?.value || '');
 
-        // Validación básica
-        if (!data.hcNumber || !data.motivoConsulta) {
-            console.error('El número de historia clínica o el motivo de consulta son obligatorios.');
-            return;
-        }
+            const productoSel = row.querySelector('[id$="-producto_id"][name$="[producto_id]"]');
+            const producto_id = norm(productoSel?.value || '');
+            let producto_text = cleanText(
+                (productoSel?.selectedOptions?.[0]?.innerHTML) ||
+                (productoSel?.selectedOptions?.[0]?.textContent) ||
+                ''
+            );
 
-        data.fechaActual = new Date().toISOString().slice(0, 10);
+            const viasSel = row.querySelector('[id$="-vias"][name$="[vias]"]');
+            const vias = normOrEmpty(viasSel?.value || '');
+            const vias_text = cleanText(
+                (viasSel?.selectedOptions?.[0]?.innerHTML) ||
+                (viasSel?.selectedOptions?.[0]?.textContent) ||
+                ''
+            );
 
+            const dosis = norm(row.querySelector('[id$="-dosis"][name$="[dosis]"]')?.value || '');
+
+            const unidadSel = row.querySelector('[id$="-unidad_id"][name$="[unidad_id]"]');
+            const unidad_id = normOrEmpty(unidadSel?.value || '');
+            const unidad_text = cleanText(
+                (unidadSel?.selectedOptions?.[0]?.innerHTML) ||
+                (unidadSel?.selectedOptions?.[0]?.textContent) ||
+                ''
+            );
+
+            const pautaSel = row.querySelector('[id$="-pauta"][name$="[pauta]"]');
+            const pauta = normOrEmpty(pautaSel?.value || '');
+            const pauta_text = cleanText(
+                (pautaSel?.selectedOptions?.[0]?.innerHTML) ||
+                (pautaSel?.selectedOptions?.[0]?.textContent) ||
+                ''
+            );
+
+            const cantidad = norm(row.querySelector('[id$="-cantidad"][name$="[cantidad]"]')?.value || '');
+            const total_farmacia = norm(row.querySelector('[id$="-total_farmacia"][name$="[total_farmacia]"]')?.value || '');
+            const observaciones = norm(row.querySelector('[id$="-observaciones"][name$="[observaciones]"]')?.value || '');
+            // productoDespachado_id is not sent in new schema
+
+            const receta = {
+                idRecetas,
+                estadoRecetaid,
+                // Enviar textos en lugar de IDs porque la BD local no maneja esos IDs
+                producto: producto_text, // e.g. "ACETATO DE FLUOROMETOLONA 0.1% (FLUMETOL NF OFTENO)"
+                vias: vias_text,         // e.g. "TÓPICA"
+                dosis,
+                unidad: unidad_text,     // e.g. "GOTAS", "ML"
+                pauta: pauta_text,       // e.g. "CADA 8 HORAS"
+                cantidad,
+                total_farmacia,
+                observaciones
+            };
+
+            // Validación mínima:
+            // 1) sin producto (texto) -> descartar fila
+            if (!receta.producto) return;
+            // 2) si hay producto, exigir al menos dosis (el resto se envía si no está vacío)
+            // (si quisieras forzar unidad_id/pauta/cantidad, aquí harías return si faltan)
+
+            data.recetas.push(pruneEmpty(receta));
+        });
+
+        // ===== Extraer PIO (Presión Intraocular) si existe la tabla dinámica =====
+        data.pio = [];
+        const pioRows = document.querySelectorAll('#seriales-input-pio .multiple-input-list__item');
+        pioRows.forEach((row, idx) => {
+            const tonometroSel = row.querySelector('[id$="-po_tonometro_id"]');
+            const tonometro = tonometroSel ? (tonometroSel.selectedOptions?.[0]?.textContent?.trim() || tonometroSel.value || '') : '';
+            const od = row.querySelector('[id$="-presionintraocularod"]')?.value?.trim() || '';
+            const oi = row.querySelector('[id$="-presionintraocularoi"]')?.value?.trim() || '';
+            const patologico = (() => {
+                const cb = row.querySelector('[id$="-po_patologico"][type="checkbox"]');
+                return cb ? (cb.checked ? '1' : '0') : (row.querySelector('[name$="[po_patologico]"]')?.value || '');
+            })();
+            const horaToma = row.querySelector('[id$="-po_hora"]')?.value?.trim() || '';
+            const horaFin = row.querySelector('[id$="-hora_fin"]')?.value?.trim() || '';
+            const observacion = row.querySelector('[id$="-po_observacion"]')?.value?.trim() || '';
+
+            // Opcional: ID interno si existe
+            const registroId = row.querySelector('[id$="-id"][type="hidden"]')?.value || '';
+
+            data.pio.push({
+                id: registroId,
+                tonometro,
+                od,
+                oi,
+                patologico,
+                hora_toma: horaToma,
+                hora_fin: horaFin,
+                observacion
+            });
+        });
+
+        // Remover campos no requeridos por el backend (por seguridad)
+        delete data.recetas_externas;
+        delete data.estadoEnfermedad;
+        delete data.antecedente_alergico;
+        delete data.vigenciaReceta;
+        delete data.signos_alarma;
+        delete data.recomen_no_farmaco;
+        delete data.signos_alarma_externa;
+        delete data.recomen_no_farmaco_externa;
         // Puedes agregar otros campos relevantes de la consulta normal aquí
     }
 
@@ -257,19 +427,18 @@ function extraerDatosYEnviar() {
         })
         .then((result) => {
             if (result.success) {
-                Swal.fire({
+                notifySwal({
                     icon: 'success',
                     title: 'Guardado exitoso',
                     text: result.message || 'Datos guardados correctamente.',
-                    timer: 2000,
-                    showConfirmButton: false
+                    timer: 2000
                 });
             } else {
-                Swal.fire({
+                notifySwal({
                     icon: 'error',
                     title: 'Error al guardar',
                     text: result.message || 'Ha ocurrido un error inesperado.',
-                    confirmButtonText: 'Entendido'
+                    timer: 3500
                 });
             }
         })
@@ -277,4 +446,3 @@ function extraerDatosYEnviar() {
             console.error('❌ Error al enviar los datos:', error);
         });
 }
-

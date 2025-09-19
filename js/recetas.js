@@ -1,4 +1,10 @@
 function ejecutarRecetaEnPagina(item) {
+    // Evitar ejecuciones múltiples del mismo botón
+    if (window.recetaEjecutando) {
+        console.warn("Ya se está ejecutando una receta. Ignorando clic repetido.");
+        return;
+    }
+    window.recetaEjecutando = true;
 // Verificar que el item tenga la estructura esperada
     console.log('Item recibido en ejecutarProtocoloEnPagina:', item);
 
@@ -7,7 +13,7 @@ function ejecutarRecetaEnPagina(item) {
         return;
     }
 
-    // Asegúrate de que el DOM esté listo antes de hacer cualquier operación
+    // Asegúrate de que el DOM esté listo antes de hacer     cualquier operación
     function llenarCampoTexto(selector, valor) {
         return new Promise((resolve, reject) => {
             const textArea = document.querySelector(selector);
@@ -22,45 +28,59 @@ function ejecutarRecetaEnPagina(item) {
         });
     }
 
-    function hacerClickEnBoton(selector, numeroDeClicks) {
+    function hacerClickEnBoton(selector, veces) {
         return new Promise((resolve, reject) => {
-            const botonPlus = document.querySelector(selector);
-            if (botonPlus) {
-                console.log(`Haciendo clic en el botón "${selector}" ${numeroDeClicks} veces`);
-                let clicks = 0;
-
-                function clickBoton() {
-                    if (clicks < numeroDeClicks) {
-                        botonPlus.click();
-                        clicks++;
-                        setTimeout(clickBoton, 100); // 500ms delay between clicks
-                    } else {
-                        resolve();
-                    }
+            const clickear = (i) => {
+                if (i >= veces) {
+                    resolve();
+                    return;
                 }
 
-                clickBoton();
-            } else {
-                console.error(`El botón "${selector}" no se encontró.`);
-                reject(`El botón "${selector}" no se encontró.`);
-            }
+                const boton = document.querySelector(selector);
+                if (boton) {
+                    console.log(`Haciendo clic en el botón "${selector}" (${i + 1}/${veces})`);
+                    boton.click();
+                    setTimeout(() => clickear(i + 1), 500);
+                } else {
+                    console.error(`No se encontró el botón: ${selector}`);
+                    reject(`No se encontró el botón: ${selector}`);
+                }
+            };
+
+            clickear(0);
         });
     }
 
     function hacerClickEnSelect2(selector) {
         return new Promise((resolve, reject) => {
-            const tecnicoContainer = document.querySelector(selector);
-            if (tecnicoContainer) {
-                console.log(`Haciendo clic en el contenedor: ${selector}`);
-                const event = new MouseEvent('mousedown', {
-                    view: window, bubbles: true, cancelable: true
-                });
-                tecnicoContainer.dispatchEvent(event);
-                setTimeout(resolve, 100); // Añadir un retraso para asegurar que el menú se despliegue
-            } else {
+            const container = document.querySelector(selector);
+            if (!container) {
                 console.error(`El contenedor "${selector}" no se encontró.`);
                 reject(`El contenedor "${selector}" no se encontró.`);
+                return;
             }
+
+            console.log(`Haciendo clic en el contenedor: ${selector}`);
+            const event = new MouseEvent('mousedown', {view: window, bubbles: true, cancelable: true});
+            container.dispatchEvent(event);
+
+            let retries = 0;
+            const maxRetries = 10;
+
+            const checkField = () => {
+                const field = document.querySelector('input.select2-search__field');
+                if (field) {
+                    resolve();
+                } else if (retries < maxRetries) {
+                    retries++;
+                    setTimeout(checkField, 300);
+                } else {
+                    console.error('No se encontró el campo de búsqueda tras hacer click.');
+                    reject('No se encontró el campo de búsqueda.');
+                }
+            };
+
+            setTimeout(checkField, 200);
         });
     }
 
@@ -222,8 +242,21 @@ function ejecutarRecetaEnPagina(item) {
     function ejecutarRecetas(item) {
         if (!Array.isArray(item.recetas)) return Promise.resolve();
 
+        // Validación de consistencia entre recetaCount y recetas.length
+        const totalEsperado = item.recetaCount + 1;
+        const totalRecetas = item.recetas.length;
+        if (totalRecetas < totalEsperado) {
+            console.warn(`⚠️ El JSON contiene solo ${totalRecetas} recetas, pero se esperaban ${totalEsperado} según recetaCount.`);
+            Swal.fire({
+                icon: 'warning',
+                title: 'Inconsistencia en receta',
+                text: `Solo hay ${totalRecetas} recetas pero se esperaban ${totalEsperado}. Verifica el JSON.`,
+                timer: 5000
+            });
+        }
+
         return hacerClickEnBoton('#prescripcion', 1)
-            .then(() => hacerClickEnBoton('#recetas-input .list-cell__button .js-input-plus', item.recetaCount))
+            .then(() => hacerClickEnBoton('#recetas-input .list-cell__button .js-input-plus', item.recetas.length - 1))
             .then(() => esperarElemento(`#select2-recetas-recetasadd-0-producto_id-container`)) // Solo se ejecuta una vez
             .then(() => {
                 // Iterar sobre cada receta
@@ -326,7 +359,13 @@ function ejecutarRecetaEnPagina(item) {
 
 
     ejecutarRecetas(item)
-        .catch(error => console.error('Error en la ejecución de acciones:', error));
+        .then(() => {
+            window.recetaEjecutando = false;
+        })
+        .catch(error => {
+            console.error('Error en la ejecución de acciones:', error);
+            window.recetaEjecutando = false;
+        });
 }
 
 

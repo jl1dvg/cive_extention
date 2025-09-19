@@ -312,36 +312,103 @@
         }
     }
 
+    // Espera a que no haya un Swal visible (útil si la página muestra su propio "Guardado con éxito")
+    async function waitForSwalIdle({maxWaitMs = 15000, settleMs = 300, tickMs = 150} = {}) {
+        const hasVisible = () => (typeof Swal !== 'undefined' && Swal.isVisible && Swal.isVisible());
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+        const start = Date.now();
+        while (Date.now() - start < maxWaitMs) {
+            if (!hasVisible()) {
+                // pequeña espera de asentamiento para evitar superposición de modales consecutivos
+                await sleep(settleMs);
+                if (!hasVisible()) return true;
+            }
+            await sleep(tickMs);
+        }
+        return false; // timeout: seguimos de todos modos
+    }
+
+    // ==== CIVE: Cola/Lock para SweetAlert2 durante el flujo de finalización ====
+    (function () {
+        if (typeof window.__civeSwalSetup === 'boolean') return; // evitar doble setup
+        window.__civeSwalSetup = true;
+        window.__civeSwalQueue = [];
+        window.__civeSwalLockDepth = 0;
+        const originalFire = (typeof Swal !== 'undefined' && Swal.fire) ? Swal.fire.bind(Swal) : null;
+        window.__civeSwalOriginalFire = originalFire;
+
+        // 🧼 Quita opciones personalizadas NO reconocidas por SweetAlert2
+        function __stripSwalCustomOptions(opts) {
+            if (!opts || typeof opts !== 'object') return opts;
+            const {civeBypass, ...rest} = opts; // quita civeBypass
+            return rest;
+        }
+
+        function patchedFire(opts, ...rest) {
+            const isBypass = opts && typeof opts === 'object' && opts.civeBypass === true;
+            if (window.__civeSwalLockDepth > 0 && !isBypass) {
+                return new Promise((resolve, reject) => {
+                    // Guardamos los args originales; sanitizaremos al ejecutar
+                    window.__civeSwalQueue.push({args: [opts, ...rest], resolve, reject});
+                });
+            }
+            // Siempre sanitizar antes de delegar a SweetAlert2
+            const cleanOpts = __stripSwalCustomOptions(opts);
+            return originalFire ? originalFire(cleanOpts, ...rest) : Promise.resolve();
+        }
+
+        window.__civeEnableSwalLock = function __civeEnableSwalLock() {
+            window.__civeSwalLockDepth++;
+            if (typeof Swal !== 'undefined' && Swal.fire !== patchedFire) {
+                Swal.fire = patchedFire;
+            }
+        };
+
+        window.__civeDisableSwalLock = function __civeDisableSwalLock() {
+            if (window.__civeSwalLockDepth > 0) window.__civeSwalLockDepth--;
+            if (window.__civeSwalLockDepth === 0) {
+                // Restaurar y drenar cola
+                if (typeof Swal !== 'undefined' && window.__civeSwalOriginalFire) Swal.fire = window.__civeSwalOriginalFire;
+                const q = window.__civeSwalQueue.splice(0);
+                if (q.length && window.__civeSwalOriginalFire) {
+                    const play = () => {
+                        const item = q.shift();
+                        if (!item) return;
+                        // Sanitizar justo antes de llamar al SweetAlert real
+                        const [opts, ...rest] = item.args;
+                        const cleanOpts = __stripSwalCustomOptions(opts);
+                        window.__civeSwalOriginalFire(cleanOpts, ...rest)
+                            .then(item.resolve)
+                            .catch(item.reject)
+                            .finally(() => {
+                                setTimeout(play, 50);
+                            });
+                    };
+                    play();
+                }
+            }
+        };
+    })();
+
+    // ==== FIN Cola/Lock ====
+
     function manejarFinalizacionConsulta(paciente, endpoint, esOptometria) {
         const botonGuardar = document.getElementById('botonGuardar');
-        if (!botonGuardar) return;
-        if (botonGuardar.dataset.listenerInicializado === 'true') return;
-        botonGuardar.dataset.listenerInicializado = 'true';
-        // Evitar submit implícito del botón
-        if (botonGuardar && botonGuardar.getAttribute('type') !== 'button') {
-            botonGuardar.setAttribute('type', 'button');
-        }
-        botonGuardar.addEventListener('click', function (event) {
-            // Interceptar totalmente el clic para que ningún otro listener dispare guardado antes de tiempo
-            event.preventDefault();
-            if (typeof event.stopPropagation === 'function') event.stopPropagation();
-            if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
+        if (botonGuardar && botonGuardar.dataset.listenerInicializado === 'true') return;
+        if (botonGuardar) botonGuardar.dataset.listenerInicializado = 'true';
 
-            // Debounce para evitar flujos paralelos por doble clic rápido
-            if (botonGuardar.dataset.guardando === 'true') return;
-            botonGuardar.dataset.guardando = 'true';
+        // Flujo de dilatación/finalización SIN bloquear el guardado de la página
+        const lanzarFlujoFinalizacion = async () => {
+            // Evitar múltiples ejecuciones simultáneas
+            if (lanzarFlujoFinalizacion._running) return;
+            lanzarFlujoFinalizacion._running = true;
+            if (typeof window.__civeEnableSwalLock === 'function') window.__civeEnableSwalLock();
 
-            const form = event.target.closest('form');
-
-            // Bloquear cualquier submit del formulario mientras haya modal activo o estemos en guardado
-            const preventSubmitWhileModal = (ev) => {
-                const modalVisible = (typeof Swal !== 'undefined' && Swal.isVisible && Swal.isVisible());
-                if (modalVisible || botonGuardar.dataset.guardando === 'true') {
-                    ev.preventDefault();
-                    if (typeof ev.stopPropagation === 'function') ev.stopPropagation();
-                }
-            };
-            document.addEventListener('submit', preventSubmitWhileModal, true);
+            // Esperar a que la página termine de mostrar su propio Swal (p.ej. "Guardado con éxito")
+            try {
+                await waitForSwalIdle({maxWaitMs: 15000, settleMs: 300, tickMs: 150});
+            } catch (_) {
+            }
 
             Swal.fire({
                 title: '¿Dilataste al paciente?',
@@ -351,13 +418,13 @@
                 denyButtonText: '🆗 No',
                 reverseButtons: true,
                 allowOutsideClick: false,
-                allowEscapeKey: false
+                allowEscapeKey: false,
+                civeBypass: true
             }).then((result) => {
                 if (!result.isConfirmed && !result.isDenied) {
-                    // Usuario cerró sin elegir: limpiar estado y salir
-                    botonGuardar.dataset.guardando = 'false';
-                    document.removeEventListener('submit', preventSubmitWhileModal, true);
-                    return;
+                    if (typeof window.__civeDisableSwalLock === 'function') window.__civeDisableSwalLock();
+                    lanzarFlujoFinalizacion._running = false;
+                    return; // usuario cerró sin elegir; no interrumpimos nada
                 }
 
                 const estado = result.isConfirmed
@@ -372,12 +439,13 @@
                     confirmButtonText: '✅ Finalizar',
                     cancelButtonText: '🔙 Cancelar',
                     allowOutsideClick: false,
-                    allowEscapeKey: false
+                    allowEscapeKey: false,
+                    civeBypass: true
                 }).then((finalResult) => {
                     if (!finalResult.isConfirmed) {
+                        if (typeof window.__civeDisableSwalLock === 'function') window.__civeDisableSwalLock();
                         Swal.fire('Atención en curso', 'Puedes seguir trabajando.', 'info');
-                        botonGuardar.dataset.guardando = 'false';
-                        document.removeEventListener('submit', preventSubmitWhileModal, true);
+                        lanzarFlujoFinalizacion._running = false;
                         return;
                     }
 
@@ -388,15 +456,16 @@
                         allowEscapeKey: false,
                         didOpen: () => {
                             Swal.showLoading();
-                        }
+                        },
+                        civeBypass: true
                     });
 
+                    // POST robusto: NO bloquea el submit/guardado nativo de la página
                     postEstadoRobusto(endpoint, {form_id: paciente.form_id, estado: estado}, {
                         timeoutMs: 15000,
                         retries: 1
                     })
                         .then((data) => {
-                            // Cerrar spinner si sigue abierto
                             if (typeof Swal !== 'undefined' && Swal.isVisible && Swal.isVisible()) {
                                 try {
                                     Swal.close();
@@ -407,30 +476,33 @@
                                 const mensajeFinal = estado === ESTADOS.TERMINADO_DILATAR
                                     ? 'Consulta finalizada y se procederá a dilatar al paciente.'
                                     : 'Consulta finalizada sin dilatación.';
-                                Swal.fire('Éxito', mensajeFinal, 'success').then(() => {
-                                    localStorage.setItem(`estado_atencion_${paciente.form_id}`, 'finalizado');
-                                    sessionStorage.removeItem(`prompt_iniciar_${paciente.form_id}`);
-                                    botonGuardar.dataset.guardando = 'false';
-                                    document.removeEventListener('submit', preventSubmitWhileModal, true);
-                                    if (form) form.submit();
+                                // Persistencia local del estado; NO tocamos el submit de la página
+                                localStorage.setItem(`estado_atencion_${paciente.form_id}`, 'finalizado');
+                                sessionStorage.removeItem(`prompt_iniciar_${paciente.form_id}`);
+
+                                Swal.fire({
+                                    title: 'Éxito',
+                                    text: mensajeFinal,
+                                    icon: 'success',
+                                    civeBypass: true
+                                }).then(() => {
+                                    if (typeof window.__civeDisableSwalLock === 'function') window.__civeDisableSwalLock();
+                                    lanzarFlujoFinalizacion._running = false;
                                 });
                             } else {
-                                botonGuardar.dataset.guardando = 'false';
-                                document.removeEventListener('submit', preventSubmitWhileModal, true);
                                 const msg = (data && (data.message || data.error)) ? (data.message || data.error) : 'No se pudo enviar la información correctamente.';
-                                Swal.fire('Error', msg, 'error');
+                                Swal.fire({title: 'Error', text: msg, icon: 'error', civeBypass: true});
+                                if (typeof window.__civeDisableSwalLock === 'function') window.__civeDisableSwalLock();
+                                lanzarFlujoFinalizacion._running = false;
                             }
                         })
                         .catch((error) => {
-                            // Cerrar spinner si sigue abierto
                             if (typeof Swal !== 'undefined' && Swal.isVisible && Swal.isVisible()) {
                                 try {
                                     Swal.close();
                                 } catch (_) {
                                 }
                             }
-                            botonGuardar.dataset.guardando = 'false';
-                            document.removeEventListener('submit', preventSubmitWhileModal, true);
                             let msg = 'Fallo de red';
                             if (error && error.name === 'AbortError') {
                                 msg = '⏱️ El servidor tardó demasiado en responder.';
@@ -441,11 +513,37 @@
                             } else if (error && error.message) {
                                 msg = error.message;
                             }
-                            Swal.fire('Error', msg, 'error');
+                            Swal.fire({title: 'Error', text: msg, icon: 'error', civeBypass: true});
+                            if (typeof window.__civeDisableSwalLock === 'function') window.__civeDisableSwalLock();
                             console.error('Error:', error);
+                            lanzarFlujoFinalizacion._running = false;
                         });
                 });
             });
-        }, true);
+        };
+
+        // 1) Si la página define su propio guardado, lo envolvemos para ejecutar nuestro flujo DESPUÉS
+        try {
+            if (typeof window.guardarTodaLaConsulta === 'function' && !window.__patchedGuardarConsulta) {
+                const originalGuardar = window.guardarTodaLaConsulta;
+                window.guardarTodaLaConsulta = function patchedGuardarTodaLaConsulta(...args) {
+                    const ret = originalGuardar.apply(this, args);
+                    // Ejecutar nuestro flujo después de que el guardado propio haya corrido
+                    Promise.resolve(ret).then(() => setTimeout(lanzarFlujoFinalizacion, 0));
+                    return ret;
+                };
+                window.__patchedGuardarConsulta = true;
+                return; // listo: no necesitamos listeners adicionales
+            }
+        } catch (_) { /* si falla el patch, seguimos con fallback */
+        }
+
+        // 2) Fallback: si no existe esa función, agregamos un listener NO intrusivo al botón
+        if (botonGuardar) {
+            botonGuardar.addEventListener('click', function () {
+                // No prevenimos nada; dejamos que la página guarde normalmente
+                setTimeout(lanzarFlujoFinalizacion, 0); // siguiente tick, después de los handlers nativos
+            }, false);
+        }
     }
 })();

@@ -1,4 +1,10 @@
 function ejecutarProtocoloEnPagina(item) {
+    // Candado para evitar ejecuciones múltiples
+    if (window._cive_protocolo_en_ejecucion) {
+        console.warn('[CIVE EXT] Ya se está ejecutando el protocolo. Ignorando llamada duplicada.');
+        return;
+    }
+    window._cive_protocolo_en_ejecucion = true;
     const SELECTORS = {
         membrete: '#consultasubsecuente-membrete',
         piepagina: '#consultasubsecuente-piepagina',
@@ -145,29 +151,26 @@ function ejecutarProtocoloEnPagina(item) {
             .then(() => establecerBusqueda(selector, valor));
     }
 
-    function hacerClickEnBoton(selector, numeroDeClicks) {
+    function hacerClickEnBoton(selector, veces) {
         return new Promise((resolve, reject) => {
-            const botonPlus = document.querySelector(selector);
-            if (botonPlus) {
-                console.log(`${LOG_PREFIX} Haciendo clic en el botón "${selector}" ${numeroDeClicks} veces`);
-                resaltarElemento(botonPlus, 'green');
-                let clicks = 0;
-
-                function clickBoton() {
-                    if (clicks < numeroDeClicks) {
-                        botonPlus.click();
-                        clicks++;
-                        setTimeout(clickBoton, 100); // 500ms delay between clicks
-                    } else {
-                        resolve();
-                    }
+            const clickear = (i) => {
+                if (i >= veces) {
+                    resolve();
+                    return;
                 }
 
-                clickBoton();
-            } else {
-                console.error(`${LOG_PREFIX} El botón "${selector}" no se encontró.`);
-                reject(`El botón "${selector}" no se encontró.`);
-            }
+                const boton = document.querySelector(selector);
+                if (boton) {
+                    console.log(`Haciendo clic en el botón "${selector}" (${i + 1}/${veces})`);
+                    boton.click();
+                    setTimeout(() => clickear(i + 1), 500);
+                } else {
+                    console.error(`No se encontró el botón: ${selector}`);
+                    reject(`No se encontró el botón: ${selector}`);
+                }
+            };
+
+            clickear(0);
         });
     }
 
@@ -310,8 +313,26 @@ function ejecutarProtocoloEnPagina(item) {
             llenarCampoTexto(SELECTORS.complicacionesoperatorio, item.complicacionesoperatorio),
             llenarCampoTexto(SELECTORS.perdidasanguineat, item.perdidasanguineat),
             hacerClickEnBoton('#trabajadorprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus', item.staffCount),
-            hacerClickEnBoton('#procedimientoprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus', item.codigoCount),
-            hacerClickEnBoton('#diagnosticossub11111 .list-cell__button .js-input-plus', item.diagnosticoCount)
+            (() => {
+                const yaCreados = Array.from(
+                    document.querySelectorAll('#procedimientoprotocolo-input-subsecuente .multiple-input-list__item')
+                ).filter(row => {
+                    const select = row.querySelector('select[id^="consultasubsecuente-procedimientoprotocolo-"][id$="-procinterno"]');
+                    return select && select.value && select.value !== '';
+                }).length;
+
+                const necesarios = Array.isArray(item.codigos) ? item.codigos.length : 0;
+                const faltantes = Math.max(necesarios - yaCreados, 0);
+
+                // 🪵 Log de depuración
+                console.log(`🧮 Procedimientos: necesarios=${necesarios}, yaCreados=${yaCreados}, faltantes=${faltantes}`);
+
+                return hacerClickEnBoton(
+                    '#procedimientoprotocolo-input-subsecuente .multiple-input-list__item .js-input-plus',
+                    faltantes
+                );
+            })(),
+            hacerClickEnBoton('#diagnosticossub11111 .list-cell__button .js-input-plus', Array.isArray(item.diagnosticos) ? item.diagnosticos.length - 1 : 0)
         ]);
     };
 
@@ -576,7 +597,10 @@ Se indica al paciente que debe acudir a una consulta de control en las próximas
             });
         })
         .then(() => console.log(`${LOG_PREFIX} Clic simulado correctamente.`))
-        .catch(error => console.error(`${LOG_PREFIX} Error en la ejecución de acciones:`, error));
+        .catch(error => console.error(`${LOG_PREFIX} Error en la ejecución de acciones:`, error))
+        .finally(() => {
+            window._cive_protocolo_en_ejecucion = false;
+        });
 }
 
 // Forzar campo piepagina como solo lectura al cargar la página
