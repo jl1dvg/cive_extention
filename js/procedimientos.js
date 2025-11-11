@@ -120,7 +120,7 @@ function ejecutarProtocoloEnPagina(item) {
     }
 
     // Nueva función retry para reintentos
-    function retry(fn, maxRetries = 3, delay = 300) {
+    function retry(fn, maxRetries = 5, delay = 300) {
         return new Promise((resolve, reject) => {
             let attempt = 0;
             const tryExecute = () => {
