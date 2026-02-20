@@ -7,6 +7,13 @@ if (window.location.href.includes('/documentacion/doc-solicitud-procedimientos/h
         return t;
     }
 
+    function extraerValor(opEl) {
+        if (!opEl) return '';
+        const val = (opEl.value || '').toString().trim();
+        if (!val || /^seleccione/i.test(val) || /^ninguno$/i.test(val)) return '';
+        return val;
+    }
+
     function limpiarTextoPlano(str) {
         if (!str) return '';
         const t = String(str).trim();
@@ -47,8 +54,8 @@ if (window.location.href.includes('/documentacion/doc-solicitud-procedimientos/h
         return t === 'SI' ? 'SI' : 'NO';
     }
 
-    function extraerDatosSolicitudYEnviar(btnGuardar) {
-        const url = 'https://asistentecive.consulmed.me/api/solicitudes/guardar.php';
+    async function extraerDatosSolicitudYEnviar(btnGuardar) {
+        const apiPath = '/solicitudes/guardar.php';
         const data = {};
 
         const div = document.querySelector('.media-body.responsive');
@@ -100,14 +107,28 @@ if (window.location.href.includes('/documentacion/doc-solicitud-procedimientos/h
             if (sub) {
                 sub.querySelectorAll('tbody .multiple-input-list__item').forEach(row => {
                     const principal = row.querySelector('.list-cell__tipo input[type="checkbox"]')?.checked ? 'SI' : 'NO';
-                    const lente = extraerTexto(row.querySelector('.list-cell__lente select')?.selectedOptions?.[0]);
-                    const poder = extraerTexto(row.querySelector('.list-cell__poder select')?.selectedOptions?.[0]);
+                    const lenteSelect = row.querySelector('.list-cell__lente select');
+                    const lenteOption = lenteSelect?.selectedOptions?.[0];
+                    const lenteId = extraerValor(lenteOption);
+                    const lente = extraerTexto(lenteOption);
+
+                    const poderSelect = row.querySelector('.list-cell__poder select');
+                    const poderOption = poderSelect?.selectedOptions?.[0];
+                    const poder = extraerTexto(poderOption);
+
                     const lateralidad = extraerTexto(row.querySelector('.list-cell__lateralidad select')?.selectedOptions?.[0]);
                     const obs = limpiarTextoPlano(row.querySelector('.list-cell__observaciones textarea')?.value);
 
                     // evita empujar filas totalmente vacías
                     if (principal === 'SI' || lente || poder || lateralidad || obs) {
-                        detalles.push({principal, lente, poder, lateralidad, observaciones: obs});
+                        detalles.push({
+                            principal,
+                            lente_id: lenteId,
+                            lente,
+                            poder,
+                            lateralidad,
+                            observaciones: obs
+                        });
                     }
                 });
             }
@@ -116,7 +137,7 @@ if (window.location.href.includes('/documentacion/doc-solicitud-procedimientos/h
             const tieneContenido = tipoTxt || afiliacionTxt || procedimientoTxt || doctorTxt || fecha || observacion || productoTxt || ojos.length || detalles.length;
             if (!tieneContenido) return;
 
-            data.solicitudes.push({
+            const payloadSolicitud = {
                 secuencia: i + 1,
                 tipo: tipoTxt,
                 afiliacion: afiliacionTxt,
@@ -130,7 +151,22 @@ if (window.location.href.includes('/documentacion/doc-solicitud-procedimientos/h
                 observacion: observacion || '',
                 sesiones: sesionesVal,
                 detalles
-            });
+            };
+
+            // Exponer también campos planos a nivel de solicitud (para no depender de detalles en el backend)
+            if (detalles.length > 0) {
+                const principalDetalle = detalles.find(d => d.principal === 'SI') || detalles[0];
+                payloadSolicitud.lente_id = principalDetalle.lente_id || '';
+                payloadSolicitud.lente_nombre = principalDetalle.lente || '';
+                payloadSolicitud.lente_poder = principalDetalle.poder || '';
+                payloadSolicitud.lente_observacion = principalDetalle.observaciones || '';
+                payloadSolicitud.incision = principalDetalle.incision || '';
+                if (!payloadSolicitud.ojo || payloadSolicitud.ojo.length === 0) {
+                    payloadSolicitud.ojo = principalDetalle.lateralidad ? [principalDetalle.lateralidad] : [];
+                }
+            }
+
+            data.solicitudes.push(payloadSolicitud);
         });
 
         if (!data.solicitudes.length) return;
@@ -140,53 +176,29 @@ if (window.location.href.includes('/documentacion/doc-solicitud-procedimientos/h
         // --- DEBUG/LOG: ver lo que se envía y lo que responde el API ---
         const DEBUG_SOLICITUD = true; // poner en false si no quieres logs
         const cleaned = JSON.parse(JSON.stringify(data, (k, v) => v === '' ? null : v));
-        const payload = JSON.stringify(cleaned);
         if (DEBUG_SOLICITUD) {
+            const base = window.configCIVE ? window.configCIVE.get('apiBaseUrl') : '';
             console.groupCollapsed('📤 Envío a API (Solicitud)');
-            console.log('URL:', url);
+            console.log('Endpoint:', base ? `${base}${apiPath}` : apiPath);
             console.log('Payload:', cleaned);
             console.groupEnd();
         }
 
-        fetch(url, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: payload
-        })
-            .then(async (res) => {
-                let bodyText = '';
-                try {
-                    bodyText = await res.text();
-                } catch (_) {
-                }
-                let parsed;
-                try {
-                    parsed = JSON.parse(bodyText);
-                } catch (_) {
-                    parsed = null;
-                }
-
-                if (DEBUG_SOLICITUD) {
-                    console.groupCollapsed('📥 Respuesta API (Solicitud)');
-                    console.log('Status:', res.status, res.ok ? '(OK)' : '(ERROR)');
-                    try {
-                        console.log('Headers:', Object.fromEntries(res.headers.entries()));
-                    } catch (_) {
-                    }
-                    console.log('Body:', parsed ?? bodyText);
-                    console.groupEnd();
-                }
-
-                // Opcional: feedback visual mínimo
-                if (!res.ok) throw new Error('Error HTTP ' + res.status);
-                return parsed ?? bodyText;
-            })
-            .catch((err) => {
-                if (DEBUG_SOLICITUD) console.error('❌ Error al enviar solicitud:', err);
-            })
-            .finally(() => {
-                if (btnGuardar) btnGuardar.disabled = false;
+        try {
+            const respuesta = await window.CiveApiClient.post(apiPath, {
+                body: cleaned,
             });
+
+            if (DEBUG_SOLICITUD) {
+                console.groupCollapsed('📥 Respuesta API (Solicitud)');
+                console.log('Respuesta:', respuesta);
+                console.groupEnd();
+            }
+        } catch (err) {
+            if (DEBUG_SOLICITUD) console.error('❌ Error al enviar solicitud:', err);
+        } finally {
+            if (btnGuardar) btnGuardar.disabled = false;
+        }
     }
 
     window.extraerDatosSolicitudYEnviar = extraerDatosSolicitudYEnviar;

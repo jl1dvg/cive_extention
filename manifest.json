@@ -1,12 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Asistente CIVE",
-  "version": "6.2.9",
+  "version": "7.4.0",
   "description": "Descripción de mi extensión",
-  "permissions": [
-    "activeTab",
-    "scripting"
-  ],
+  "permissions": ["activeTab", "scripting", "storage", "alarms"],
   "host_permissions": [
     "http://asistentecive.consulmed.me/*",
     "https://asistentecive.consulmed.me/*",
@@ -16,8 +13,11 @@
     "https://cive.ddns.net/*",
     "http://cive.ddns.net:8085/*",
     "http://192.168.1.13:8085/*",
+    "https://192.168.1.13:8085/*",
     "http://localhost:8085/*",
-    "http://127.0.0.1:8085/*"
+    "https://localhost:8085/*",
+    "http://127.0.0.1:8085/*",
+    "https://127.0.0.1:8085/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -25,9 +25,31 @@
   "commands": {
     "ejecutar-examen-directo": {
       "suggested_key": {
-        "default": "Ctrl+Shift+E"
+        "default": "Ctrl+Shift+E",
+        "mac": "Command+Shift+E"
       },
-      "description": "Ejecutar examen con ID predefinido"
+      "description": "Ejecutar OCT macular (atajo legado)"
+    },
+    "ejecutar-examen-octno": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1",
+        "mac": "Command+Shift+1"
+      },
+      "description": "Ejecutar OCT nervio óptico"
+    },
+    "ejecutar-examen-angio": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+2",
+        "mac": "Command+Shift+2"
+      },
+      "description": "Ejecutar Angiografía"
+    },
+    "ejecutar-examen-selector": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+9",
+        "mac": "Command+Shift+9"
+      },
+      "description": "Elegir examen y ejecutarlo"
     }
   },
   "action": {
@@ -76,6 +98,8 @@
         "js/auto/auto.css",
         "js/angio/angio.html",
         "js/angio/angio.css",
+        "js/microespecular/microespecular.html",
+        "js/microespecular/microespecular.css",
         "data/examenes.json",
         "data/procedimientos.json",
         "data/recetas.json"
@@ -84,9 +108,13 @@
         "http://cive.ddns.net/*",
         "https://cive.ddns.net/*",
         "http://cive.ddns.net:8085/*",
+        "https://cive.ddns.net:8085/*",
         "http://192.168.1.13:8085/*",
+        "https://192.168.1.13:8085/*",
         "http://localhost:8085/*",
-        "http://127.0.0.1:8085/*"
+        "https://localhost:8085/*",
+        "http://127.0.0.1:8085/*",
+        "https://127.0.0.1:8085/*"
       ]
     }
   ],
@@ -96,15 +124,21 @@
         "http://127.0.0.1:5005/*",
         "http://cive.ddns.net/*",
         "https://cive.ddns.net/*",
+        "http://cive.ddns.net:8085/*",
+        "https://cive.ddns.net/*",
         "http://192.168.1.13:8085/*",
+        "https://192.168.1.13:8085/*",
         "http://localhost:8085/*",
+        "https://localhost:8085/*",
         "http://127.0.0.1:8085/*",
+        "https://127.0.0.1:8085/*",
         "http://192.168.1.13:8085/historia-automatica*",
         "http://cive.ddns.net:8085/historia-automatica*"
       ],
       "js": [
         "js/assets/sweetalert2.all.min.js",
         "js/config.js",
+        "js/api_client.js",
         "js/ui.js",
         "js/drag.js",
         "js/eventos.js",

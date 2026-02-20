@@ -36,6 +36,24 @@ function hasAny(obj, keys) {
     return keys.some(k => !!norm(obj[k]));
 }
 
+function pruneEmptyCollections(payload, keys = []) {
+    keys.forEach((key) => {
+        if (Array.isArray(payload[key]) && payload[key].length === 0) {
+            delete payload[key];
+        }
+    });
+}
+
+function findRows(selectors, fallbackSelector = '.multiple-input-list__item') {
+    for (const selector of selectors) {
+        const rows = document.querySelectorAll(selector);
+        if (rows.length) {
+            return rows;
+        }
+    }
+    return document.querySelectorAll(fallbackSelector);
+}
+
 
 // ==== Notificación no intrusiva (evita solaparse con los flujos de paciente.js) ====
 function notifySwal({icon = 'info', title = '', text = '', timer = 2000}) {
@@ -72,7 +90,7 @@ function notifySwal({icon = 'info', title = '', text = '', timer = 2000}) {
 
 // Función para extraer datos del div y enviar al servidor
 
-function extraerDatosYEnviar() {
+async function extraerDatosYEnviar() {
     const btnGuardar = document.getElementById('interconsulta-btn-guardar');
     if (btnGuardar) btnGuardar.disabled = true;
 
@@ -81,7 +99,7 @@ function extraerDatosYEnviar() {
 
     // Determinar el URL según el tipo de formato
     const isProtocoloQuirurgico = document.querySelector('#consultasubsecuente-membrete') !== null;
-    const url = isProtocoloQuirurgico ? 'https://asistentecive.consulmed.me/api/protocolos/guardar.php' : 'https://asistentecive.consulmed.me/api/consultas/guardar.php';
+    const apiPath = isProtocoloQuirurgico ? '/protocolos/guardar.php' : '/consultas/guardar.php';
 
     if (isProtocoloQuirurgico) {
         // Extraer datos para protocolo quirúrgico
@@ -147,7 +165,12 @@ function extraerDatosYEnviar() {
         data.tipoAnestesia = document.querySelector('#consultasubsecuente-anestesia_id')?.selectedOptions[0]?.textContent || '';
 
         // Recopilar datos del protocolo
-        document.querySelectorAll('.multiple-input-list__item').forEach((item) => {
+        const staffRows = findRows([
+            '#trabajadorprotocolo-input-subsecuente .multiple-input-list__item',
+            '#trabajadorprotocolo-input .multiple-input-list__item'
+        ]);
+
+        staffRows.forEach((item) => {
             const funcion = item.querySelector('.list-cell__funcion select')?.selectedOptions[0]?.textContent.trim() || '';
             const doctor = item.querySelector('.list-cell__doctor select')?.selectedOptions[0]?.textContent.trim() || '';
 
@@ -189,14 +212,24 @@ function extraerDatosYEnviar() {
 
         // Extraer procedimientos
         data.procedimientos = [];
-        document.querySelectorAll('.multiple-input-list__item').forEach((item) => {
+        const procedureRows = findRows([
+            '#procedimientoprotocolo-input-subsecuente .multiple-input-list__item',
+            '#procedimientoprotocolo-input .multiple-input-list__item'
+        ]);
+
+        procedureRows.forEach((item) => {
             const procInterno = item.querySelector('.list-cell__procInterno select')?.selectedOptions[0]?.textContent.trim() || '';
             if (procInterno) data.procedimientos.push({procInterno});
         });
 
         // Extraer diagnósticos
         data.diagnosticos = [];
-        document.querySelectorAll('.multiple-input-list__item').forEach((item) => {
+        const diagnosticoRows = findRows([
+            '#diagnosticossub11111 .multiple-input-list__item',
+            '#diagnosticosconsultaexterna .multiple-input-list__item'
+        ]);
+
+        diagnosticoRows.forEach((item) => {
             const idDiagnostico = item.querySelector('.list-cell__idDiagnostico select')?.selectedOptions[0]?.textContent.trim() || '';
             const evidencia = item.querySelector('.list-cell__evidencia .cbx-icon')?.textContent.trim() || '';
             const ojo = item.querySelector('.list-cell__ojo_id select')?.selectedOptions[0]?.textContent.trim() || '';
@@ -255,9 +288,13 @@ function extraerDatosYEnviar() {
 
         // Extraer los exámenes seleccionados
         data.examenes = [];
-        document.querySelectorAll('.examendiv').forEach(examenDiv => {
+        document.querySelectorAll('.examendiv, .examendivimagen').forEach(examenDiv => {
             const examenCheckbox = examenDiv.querySelector('input[type="text"]');
-            if (examenCheckbox && examenCheckbox.value === '1') { // Verificar si el examen está seleccionado
+            const wrapper = examenDiv.querySelector('.cbx');
+            const hasIcon = !!wrapper?.querySelector('.cbx-icon i');
+            const isChecked = Boolean(examenCheckbox && examenCheckbox.value === '1') || hasIcon;
+
+            if (isChecked) { // Verificar si el examen está seleccionado
                 const examenNombreCompleto = examenDiv.querySelector('.cbx-label').textContent.trim();
 
                 // Descomponer el nombre de forma flexible
@@ -378,7 +415,7 @@ function extraerDatosYEnviar() {
             // Opcional: ID interno si existe
             const registroId = row.querySelector('[id$="-id"][type="hidden"]')?.value || '';
 
-            data.pio.push({
+            const payload = {
                 id: registroId,
                 tonometro,
                 od,
@@ -387,7 +424,22 @@ function extraerDatosYEnviar() {
                 hora_toma: horaToma,
                 hora_fin: horaFin,
                 observacion
-            });
+            };
+
+            const hasData = hasAny(payload, [
+                'tonometro',
+                'od',
+                'oi',
+                'patologico',
+                'hora_toma',
+                'hora_fin',
+                'observacion',
+                'id',
+            ]);
+
+            if (hasData) {
+                data.pio.push(payload);
+            }
         });
 
         // Remover campos no requeridos por el backend (por seguridad)
@@ -402,47 +454,44 @@ function extraerDatosYEnviar() {
         // Puedes agregar otros campos relevantes de la consulta normal aquí
     }
 
+    pruneEmptyCollections(data, ['diagnosticos', 'examenes', 'recetas', 'pio', 'procedimientos']);
+
     // Enviar los datos al backend
     console.log('Datos a enviar:', data);
-    fetch(url, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data),
-    })
-        .then(async (response) => {
-            const raw = await response.text();
-            console.group('%c📤 Envío a API', 'color: green; font-weight: bold;');
-            console.log('✅ Datos enviados:', data);
-            console.log('📥 Respuesta RAW:', raw);
-            console.groupEnd();
-
-            try {
-                const json = JSON.parse(raw);
-                console.log('📥 Respuesta JSON parseada:', json);
-                return json;
-            } catch (e) {
-                console.error('❌ Error al parsear JSON:', e, raw);
-                throw e;
-            }
-        })
-        .then((result) => {
-            if (result.success) {
-                notifySwal({
-                    icon: 'success',
-                    title: 'Guardado exitoso',
-                    text: result.message || 'Datos guardados correctamente.',
-                    timer: 2000
-                });
-            } else {
-                notifySwal({
-                    icon: 'error',
-                    title: 'Error al guardar',
-                    text: result.message || 'Ha ocurrido un error inesperado.',
-                    timer: 3500
-                });
-            }
-        })
-        .catch((error) => {
-            console.error('❌ Error al enviar los datos:', error);
+    try {
+        const resultado = await window.CiveApiClient.post(apiPath, {
+            body: data,
         });
+
+        console.group('%c📤 Envío a API', 'color: green; font-weight: bold;');
+        console.log('✅ Datos enviados:', data);
+        console.log('📥 Respuesta normalizada:', resultado);
+        console.groupEnd();
+
+        if (resultado?.success) {
+            notifySwal({
+                icon: 'success',
+                title: 'Guardado exitoso',
+                text: resultado.message || 'Datos guardados correctamente.',
+                timer: 2000
+            });
+        } else {
+            notifySwal({
+                icon: 'error',
+                title: 'Error al guardar',
+                text: resultado?.message || 'Ha ocurrido un error inesperado.',
+                timer: 3500
+            });
+        }
+    } catch (error) {
+        console.error('❌ Error al enviar los datos:', error);
+        notifySwal({
+            icon: 'error',
+            title: 'Error al enviar',
+            text: error?.message || 'No se pudo comunicar con el API.',
+            timer: 3500
+        });
+    } finally {
+        if (btnGuardar) btnGuardar.disabled = false;
+    }
 }
